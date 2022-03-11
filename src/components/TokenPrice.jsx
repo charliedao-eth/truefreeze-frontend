@@ -24,14 +24,15 @@ function TokenPrice(props) {
 
   return (
     <div style={styles.token}>
-      {
-        props.svgImage ? props.svgImage :
-          <img
-            src={props.image || noLogoToken}
-            alt="logo"
-            style={{ height: props?.size || "35px" }}
-          />
-      }
+      {props.svgImage ? (
+        props.svgImage
+      ) : (
+        <img
+          src={props.image || noLogoToken}
+          alt="logo"
+          style={{ height: props?.size || "35px" }}
+        />
+      )}
 
       <span
         style={{ cursor: "pointer" }}

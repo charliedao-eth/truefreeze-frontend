@@ -23,7 +23,8 @@ const Application = () => {
   } else {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        Server environment variables missing. Cannot render True Freeze application.
+        Server environment variables missing. Cannot render True Freeze
+        application.
       </div>
     );
   }

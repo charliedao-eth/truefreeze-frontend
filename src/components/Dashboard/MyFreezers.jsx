@@ -10,16 +10,19 @@ import rinkebyContracts from "contracts/contractInfo";
  */
 
 function MyFreezers(props) {
-    const { account, isAuthenticated } = useMoralis();
-    if (!props.address && (!account || !isAuthenticated))
-        return <Skeleton />;
+  const { account, isAuthenticated } = useMoralis();
+  if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
-    return (
-        <div>
-            <h3>My Freezers</h3>
-            <NFTBalance filterByContractAddress={rinkebyContracts.nonFungiblePositionManager.address} />
-        </div>
-    );
+  return (
+    <div>
+      <h3>My Freezers</h3>
+      <NFTBalance
+        filterByContractAddress={
+          rinkebyContracts.nonFungiblePositionManager.address
+        }
+      />
+    </div>
+  );
 }
 
 export default MyFreezers;

@@ -11,20 +11,19 @@ import Staking from "./Staking";
  */
 
 function Dashboard(props) {
-    const { account, isAuthenticated } = useMoralis();
-    if (!props.address && (!account || !isAuthenticated))
-        return <Skeleton />;
+  const { account, isAuthenticated } = useMoralis();
+  if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
-    return (
-        <div>
-            {/* TODO Split each view below into their own routes */}
-            <LockUnlock />
-            <hr />
-            <MyFreezers />
-            <hr />
-            <Staking />
-        </div>
-    );
+  return (
+    <div>
+      {/* TODO Split each view below into their own routes */}
+      <LockUnlock />
+      <hr />
+      <MyFreezers />
+      <hr />
+      <Staking />
+    </div>
+  );
 }
 
 export default Dashboard;

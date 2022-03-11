@@ -8,15 +8,10 @@ import { Skeleton } from "antd";
  */
 
 function Staking(props) {
-    const { account, isAuthenticated } = useMoralis();
-    if (!props.address && (!account || !isAuthenticated))
-        return <Skeleton />;
+  const { account, isAuthenticated } = useMoralis();
+  if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
-    return (
-        <div>
-            Staking todo
-        </div>
-    );
+  return <div>Staking todo</div>;
 }
 
 export default Staking;
