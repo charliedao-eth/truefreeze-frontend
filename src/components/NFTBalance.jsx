@@ -71,6 +71,9 @@ function NFTBalance({ filterByContractAddress = "" }) {
     setAmount(e.target.value);
   };
 
+  // TODO useEffect to fetch getProgress, getUnlockCost
+  // TODO withdrawWAsset (unlock and pay fees in one step) <-- needs user clarity
+
   return (
     <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <div style={styles.NFTs}>

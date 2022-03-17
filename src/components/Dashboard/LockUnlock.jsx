@@ -10,17 +10,17 @@ import rinkebyContracts from "contracts/contractInfo";
  */
 
 function LockUnlock(props) {
-  const { account, isAuthenticated } = useMoralis();
+  const { Moralis, account, isAuthenticated } = useMoralis();
   const { runContractFunction, error, isLoading, contractResponse } =
     useWeb3Contract({
       abi: rinkebyContracts.TrueFreezeGovernor.abi,
-      address: rinkebyContracts.TrueFreezeGovernor.address,
+      contractAddress: rinkebyContracts.TrueFreezeGovernor.address,
       functionName: "lockWAsset",
       params: {
-        _amount: 10000000000000000,
-        _lockDuration: 1,
+        _amount: Moralis.Units.ETH(0.01),
+        _lockDuration: 2,
       },
-    });
+    }); // TODO don't hardcode params of course
 
   if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
