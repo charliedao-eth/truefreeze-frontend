@@ -1,7 +1,6 @@
 import { useMoralis } from "react-moralis";
 import { Skeleton } from "antd";
 import NFTBalance from "components/NFTBalance";
-import rinkebyContracts from "contracts/contractInfo";
 
 /**
  * The dapp post-authetication home page
@@ -10,6 +9,7 @@ import rinkebyContracts from "contracts/contractInfo";
  */
 
 function MyFreezers(props) {
+  const {contract} = props;
   const { account, isAuthenticated } = useMoralis();
   if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
@@ -18,7 +18,7 @@ function MyFreezers(props) {
       <h3>My Freezers</h3>
       <NFTBalance
         filterByContractAddress={
-          rinkebyContracts.nonFungiblePositionManager.address
+          contract.nonFungiblePositionManager.address
         }
       />
     </div>

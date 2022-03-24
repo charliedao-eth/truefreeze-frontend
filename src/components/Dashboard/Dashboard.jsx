@@ -4,7 +4,6 @@ import { Skeleton } from "antd";
 import LockUnlock from "./LockUnlock";
 import MyFreezers from "./MyFreezers";
 import Staking from "./Staking";
-import rinkebyContracts from "contracts/contractInfo";
 
 /**
  * The dapp post-authetication home page
@@ -14,23 +13,25 @@ import rinkebyContracts from "contracts/contractInfo";
 
 function Dashboard(props) {
   const { account, isAuthenticated } = useMoralis();
-  if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
+  const {contract} = props;
+  if (!contract || (!props.address && (!account || !isAuthenticated))) return <Skeleton />;
+
 
   return (
     <div>
       {/* TODO Split each view below into their own routes */}
-      <DashboardData account={account} />
+      <DashboardData account={account} contract={contract}/>
       <hr />
-      <LockUnlock />
+      <LockUnlock contract={contract} />
       <hr />
-      <MyFreezers />
+      <MyFreezers contract={contract} />
       <hr />
-      <Staking />
+      <Staking contract={contract} />
     </div>
   );
 }
 
-function DashboardData({ account }) {
+function DashboardData({ account, contract }) {
   // TODO create generic helpers for fetching data to separate UI from logic
   const [frTokenTotalSupply, setFrTokenTotalSupply] = useState(""); // keep BigNumbers as strings in javascript to avoid rounding errors due to differences between JS and ethereum
   const [frTokenAllowance, setFrTokenAllowance] = useState("");
@@ -44,28 +45,28 @@ function DashboardData({ account }) {
     runContractFunction: getFrTokenTotalSupply,
     error: getFrTokenTotalSupplyError,
   } = useWeb3Contract({
-    abi: rinkebyContracts.frToken.abi,
-    contractAddress: rinkebyContracts.frToken.address,
+    abi: contract.frToken.abi,
+    contractAddress: contract.frToken.address,
     functionName: "totalSupply",
   });
   const {
     runContractFunction: getFrTokenAllowance,
     error: getFrTokenAllowanceError,
   } = useWeb3Contract({
-    abi: rinkebyContracts.frToken.abi,
-    contractAddress: rinkebyContracts.frToken.address,
+    abi: contract.frToken.abi,
+    contractAddress: contract.frToken.address,
     functionName: "allowance",
     params: {
       owner: account,
-      spender: rinkebyContracts.TrueFreezeGovernor.address,
+      spender: contract.TrueFreezeGovernor.address,
     },
   });
   const {
     runContractFunction: getFrTokenBalance,
     error: getFrTokenBalanceError,
   } = useWeb3Contract({
-    abi: rinkebyContracts.frToken.abi,
-    contractAddress: rinkebyContracts.frToken.address,
+    abi: contract.frToken.abi,
+    contractAddress: contract.frToken.address,
     functionName: "balanceOf",
     params: {
       account: account,
@@ -76,24 +77,24 @@ function DashboardData({ account }) {
     runContractFunction: getFrzTotalSupply,
     error: getFrzTotalSupplyError,
   } = useWeb3Contract({
-    abi: rinkebyContracts.FRZ.abi,
-    contractAddress: rinkebyContracts.FRZ.address,
+    abi: contract.FRZ.abi,
+    contractAddress: contract.FRZ.address,
     functionName: "totalSupply",
   });
   const { runContractFunction: getFrzAllowance, error: getFrzAllowanceError } =
     useWeb3Contract({
-      abi: rinkebyContracts.FRZ.abi,
-      contractAddress: rinkebyContracts.FRZ.address,
+      abi: contract.FRZ.abi,
+      contractAddress: contract.FRZ.address,
       functionName: "allowance",
       params: {
         owner: account,
-        spender: rinkebyContracts.TrueFreezeGovernor.address,
+        spender: contract.TrueFreezeGovernor.address,
       },
     });
   const { runContractFunction: getFrzBalance, error: getFrzBalanceError } =
     useWeb3Contract({
-      abi: rinkebyContracts.FRZ.abi,
-      contractAddress: rinkebyContracts.FRZ.address,
+      abi: contract.FRZ.abi,
+      contractAddress: contract.FRZ.address,
       functionName: "balanceOf",
       params: {
         account: account,

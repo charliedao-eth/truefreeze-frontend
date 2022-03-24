@@ -1,7 +1,6 @@
 import { useMoralis } from "react-moralis";
 import { Skeleton } from "antd";
 import { useWeb3Contract } from "react-moralis";
-import rinkebyContracts from "contracts/contractInfo";
 
 /**
  * The dapp post-authetication home page
@@ -10,11 +9,12 @@ import rinkebyContracts from "contracts/contractInfo";
  */
 
 function LockUnlock(props) {
+  const {contract} = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { runContractFunction, error, isLoading, contractResponse } =
     useWeb3Contract({
-      abi: rinkebyContracts.TrueFreezeGovernor.abi,
-      contractAddress: rinkebyContracts.TrueFreezeGovernor.address,
+      abi: contract.TrueFreezeGovernor.abi,
+      contractAddress: contract.TrueFreezeGovernor.address,
       functionName: "lockWAsset",
       params: {
         _amount: Moralis.Units.ETH(0.01),

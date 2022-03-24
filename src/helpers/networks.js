@@ -8,11 +8,11 @@ export const networkConfigs = {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://ropsten.etherscan.io/",
   },
-  "0x4": {
+  "0x2a": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://kovan.etherscan.io/",
   },
-  "0x2a": {
+  "0x4": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://rinkeby.etherscan.io/",
   },
@@ -68,6 +68,7 @@ export const networkConfigs = {
     rpcUrl: "https://rpc-mumbai.matic.today/",
     blockExplorerUrl: "https://mumbai.polygonscan.com/",
   },
+  // TODO FTM and aribtrum configs, polygon and avax testnet configs
 };
 
 export const getNativeByChain = (chain) =>
