@@ -10,7 +10,11 @@ const IS_PRODUCTION_MODE = process.env.NODE_ENV !== "development";
 
 const Application = () => {
   const isServerInfoConfigured = APP_ID && SERVER_URL ? true : false;
-  console.log(`True Freeze front end is running in ${IS_PRODUCTION_MODE ? 'production' : 'dev'} mode.`);
+  console.log(
+    `True Freeze front end is running in ${
+      IS_PRODUCTION_MODE ? "production" : "dev"
+    } mode.`,
+  );
 
   //Validate
   if (!APP_ID || !SERVER_URL)

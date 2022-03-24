@@ -50,8 +50,13 @@ const styles = {
 };
 
 const App = () => {
-  const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading, chainId } =
-    useMoralis();
+  const {
+    isWeb3Enabled,
+    enableWeb3,
+    isAuthenticated,
+    isWeb3EnableLoading,
+    chainId,
+  } = useMoralis();
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
@@ -62,12 +67,9 @@ const App = () => {
 
   const contract = contractsByChain[chainId];
 
-  if(!contract) { // TODO display an error page + chain switcher
-    return (
-      <div>
-        Chain {chainId} is unsupported.
-      </div>
-    )
+  if (!contract) {
+    // TODO display an error page + chain switcher
+    return <div>Chain {chainId} is unsupported.</div>;
   }
 
   // TODO check dev-mode (isProductionMode in ../index.js) and display a warning banner at the top of the screen
@@ -78,12 +80,15 @@ const App = () => {
         <Header style={styles.header}>
           <Logo />
           <div style={styles.headerRight}>
-            <Chains />
-            ({!chainId ? null : <TokenPrice
-              address={contract?.frToken?.address}
-              chain={chainId}
-              svgImage={svgs['frEth']?.()}
-            />})
+            <Chains />(
+            {!chainId ? null : (
+              <TokenPrice
+                address={contract?.frToken?.address}
+                chain={chainId}
+                svgImage={svgs["frEth"]?.()}
+              />
+            )}
+            )
             {/* Token price calls will fail as there's no exchange data yet. Clearly! */}
             <NativeBalance />
             <Account />

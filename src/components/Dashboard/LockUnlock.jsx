@@ -9,7 +9,7 @@ import { useWeb3Contract } from "react-moralis";
  */
 
 function LockUnlock(props) {
-  const {contract} = props;
+  const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { runContractFunction, error, isLoading, contractResponse } =
     useWeb3Contract({

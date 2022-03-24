@@ -9,7 +9,7 @@ import NFTBalance from "components/NFTBalance";
  */
 
 function MyFreezers(props) {
-  const {contract} = props;
+  const { contract } = props;
   const { account, isAuthenticated } = useMoralis();
   if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
 
@@ -17,9 +17,7 @@ function MyFreezers(props) {
     <div>
       <h3>My Freezers</h3>
       <NFTBalance
-        filterByContractAddress={
-          contract.nonFungiblePositionManager.address
-        }
+        filterByContractAddress={contract.nonFungiblePositionManager.address}
       />
     </div>
   );

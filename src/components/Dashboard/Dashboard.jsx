@@ -13,14 +13,14 @@ import Staking from "./Staking";
 
 function Dashboard(props) {
   const { account, isAuthenticated } = useMoralis();
-  const {contract} = props;
-  if (!contract || (!props.address && (!account || !isAuthenticated))) return <Skeleton />;
-
+  const { contract } = props;
+  if (!contract || (!props.address && (!account || !isAuthenticated)))
+    return <Skeleton />;
 
   return (
     <div>
       {/* TODO Split each view below into their own routes */}
-      <DashboardData account={account} contract={contract}/>
+      <DashboardData account={account} contract={contract} />
       <hr />
       <LockUnlock contract={contract} />
       <hr />
