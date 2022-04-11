@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
+import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo, FTMLogo } from "./Logos";
 import { useChain, useMoralis } from "react-moralis";
 
 const styles = {
@@ -81,9 +81,14 @@ const menuItems = [
     value: "Avalanche Testnet",
     icon: <AvaxLogo />,
   },
+  {
+    key: "0xfa",
+    value: "FTM",
+    icon: <FTMLogo />
+  },
 ];
 
-function Chains() {
+function Chains({ supportedChainIds }) {
   const { switchNetwork, chainId, chain } = useChain();
   const { isAuthenticated } = useMoralis();
   const [selected, setSelected] = useState({});
@@ -104,7 +109,7 @@ function Chains() {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      {menuItems.map((item) => (
+      {filterToSupportedChains(menuItems, supportedChainIds).map((item) => (
         <Menu.Item key={item.key} icon={item.icon} style={styles.item}>
           <span style={{ marginLeft: "5px" }}>{item.value}</span>
         </Menu.Item>
@@ -128,6 +133,13 @@ function Chains() {
       </Dropdown>
     </div>
   );
+}
+
+function filterToSupportedChains(menuItems, supportedChainIds) {
+  if (!supportedChainIds || supportedChainIds?.length === 0) {
+    return menuItems;
+  }
+  return menuItems.filter((menuItem) => supportedChainIds.includes(menuItem.key));
 }
 
 export default Chains;

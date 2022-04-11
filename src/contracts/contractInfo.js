@@ -189,12 +189,15 @@ const testnetContracts = {
 };
 
 const productionContracts = {
-
+  "0x1": {...rinkebyTestContracts}, // TODO replace with real ethereum addresses. this is just a placeholder for development
 };
 
 export const contracts = {
   ...testnetContracts,
   ...productionContracts,
 };
+
+export const supportedTestnetChainIds = [...Object.keys(testnetContracts)];
+export const supportedProductionChainIds = [...Object.keys(productionContracts)];
 
 export default contracts;
