@@ -84,7 +84,7 @@ const menuItems = [
   {
     key: "0xfa",
     value: "FTM",
-    icon: <FTMLogo />
+    icon: <FTMLogo />,
   },
 ];
 
@@ -139,7 +139,9 @@ function filterToSupportedChains(menuItems, supportedChainIds) {
   if (!supportedChainIds || supportedChainIds?.length === 0) {
     return menuItems;
   }
-  return menuItems.filter((menuItem) => supportedChainIds.includes(menuItem.key));
+  return menuItems.filter((menuItem) =>
+    supportedChainIds.includes(menuItem.key),
+  );
 }
 
 export default Chains;

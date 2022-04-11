@@ -6,7 +6,10 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import contractsByChain, {supportedTestnetChainIds, supportedProductionChainIds} from "contracts/contractInfo";
+import contractsByChain, {
+  supportedTestnetChainIds,
+  supportedProductionChainIds,
+} from "contracts/contractInfo";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import TokenPrice from "components/TokenPrice";
@@ -66,7 +69,9 @@ const App = ({ IS_PRODUCTION_MODE }) => {
   }, [isAuthenticated, isWeb3Enabled]);
 
   const contract = contractsByChain[chainId];
-  const supportedChainIds = IS_PRODUCTION_MODE ? supportedProductionChainIds : supportedTestnetChainIds;
+  const supportedChainIds = IS_PRODUCTION_MODE
+    ? supportedProductionChainIds
+    : supportedTestnetChainIds;
 
   if (!contract) {
     // TODO display an error page + chain switcher
