@@ -33,21 +33,27 @@ function Dashboard(props) {
 }
 
 function DashboardData({ contract }) {
-  const { isInitialized, tokenData, errors, /*methods,*/ } = useToken({ contract });
+  const { isInitialized, tokenData, errors /*methods,*/ } = useToken({
+    contract,
+  });
 
   if (!isInitialized) {
     return <Skeleton />;
   }
 
-  const { frTokenTotalSupply,
+  const {
+    frTokenTotalSupply,
     frTokenBalance,
     frzTotalSupply,
     frzAllowance,
-    frzBalance, } = tokenData;
-
+    frzBalance,
+  } = tokenData;
 
   // TODO \/ we can remove this var and the output after development is completely
-  const allErrors = Object.keys(errors).map((errorKey) => [errorKey, errors[errorKey]]);
+  const allErrors = Object.keys(errors).map((errorKey) => [
+    errorKey,
+    errors[errorKey],
+  ]);
 
   return (
     <Fragment>
@@ -61,9 +67,14 @@ function DashboardData({ contract }) {
       <br />
       Your FRZ allowance: {frzAllowance}
       <br />
-      <ol>Errors: {allErrors.map(([errorLocation, errorValue]) => (
-        <li>{errorLocation}: {errorValue || "OK"}</li>
-      ))}</ol>
+      <ol>
+        Errors:{" "}
+        {allErrors.map(([errorLocation, errorValue]) => (
+          <li>
+            {errorLocation}: {errorValue || "OK"}
+          </li>
+        ))}
+      </ol>
     </Fragment>
   );
 }
