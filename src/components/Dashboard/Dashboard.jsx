@@ -33,15 +33,11 @@ function Dashboard(props) {
 }
 
 function DashboardData({ contract }) {
-  const { isInitialized, tokenData, errors, methods, } = useToken({
+  const { isInitialized, tokenData, errors, methods } = useToken({
     contract,
   });
-  const {
-    frTokenTotalSupply,
-    frTokenBalance,
-    frzTotalSupply,
-    frzBalance,
-  } = tokenData;
+  const { frTokenTotalSupply, frTokenBalance, frzTotalSupply, frzBalance } =
+    tokenData;
 
   const { isFrTokenAllowed } = methods;
 
@@ -50,7 +46,9 @@ function DashboardData({ contract }) {
   useEffect(() => {
     if (isInitialized) {
       (async () => {
-        const result = await isFrTokenAllowed({ spender: contract.frTokenStaking.address });
+        const result = await isFrTokenAllowed({
+          spender: contract.frTokenStaking.address,
+        });
         setTemp(result + "");
       })();
     }
@@ -60,16 +58,11 @@ function DashboardData({ contract }) {
     return <Skeleton />;
   }
 
-  
-
-  
-
   // TODO \/ we can remove this var and the output after development is completely
   const allErrors = Object.keys(errors).map((errorKey) => [
     errorKey,
     errors[errorKey],
   ]);
-
 
   return (
     <Fragment>
