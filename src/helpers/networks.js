@@ -1,3 +1,5 @@
+// this file is out of date and missing some wrapped token contract urls
+
 export const networkConfigs = {
   "0x1": {
     currencySymbol: "ETH",
@@ -15,6 +17,7 @@ export const networkConfigs = {
   "0x4": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://rinkeby.etherscan.io/",
+    wrapped: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
   },
   "0x5": {
     currencySymbol: "ETH",

@@ -1,6 +1,7 @@
-import { useEffect, useState, Fragment } from "react";
-import { useMoralis, useWeb3Contract } from "react-moralis";
+import { Fragment } from "react";
+import { useMoralis } from "react-moralis";
 import { Skeleton } from "antd";
+import useToken from "hooks/useToken";
 import LockUnlock from "./LockUnlock";
 import MyFreezers from "./MyFreezers";
 import Staking from "./Staking";
@@ -31,123 +32,38 @@ function Dashboard(props) {
   );
 }
 
-function DashboardData({ account, contract }) {
-  // TODO create generic helpers for fetching data to separate UI from logic
-  const [frTokenTotalSupply, setFrTokenTotalSupply] = useState(""); // keep BigNumbers as strings in javascript to avoid rounding errors due to differences between JS and ethereum
-  const [frTokenAllowance, setFrTokenAllowance] = useState("");
-  const [frTokenBalance, setFrTokenBalance] = useState("");
-  const [frzTotalSupply, setFrzTotalSupply] = useState("");
-  const [frzAllowance, setFrzAllowance] = useState("");
-  const [frzBalance, setFrzBalance] = useState("");
+function DashboardData({ contract }) {
+  const { isInitialized, tokenData, errors, /*methods,*/ } = useToken({ contract });
 
-  // TODO reduce boilerplate below with abstraction
-  const {
-    runContractFunction: getFrTokenTotalSupply,
-    error: getFrTokenTotalSupplyError,
-  } = useWeb3Contract({
-    abi: contract.frToken.abi,
-    contractAddress: contract.frToken.address,
-    functionName: "totalSupply",
-  });
-  const {
-    runContractFunction: getFrTokenAllowance,
-    error: getFrTokenAllowanceError,
-  } = useWeb3Contract({
-    abi: contract.frToken.abi,
-    contractAddress: contract.frToken.address,
-    functionName: "allowance",
-    params: {
-      owner: account,
-      spender: contract.TrueFreezeGovernor.address,
-    },
-  });
-  const {
-    runContractFunction: getFrTokenBalance,
-    error: getFrTokenBalanceError,
-  } = useWeb3Contract({
-    abi: contract.frToken.abi,
-    contractAddress: contract.frToken.address,
-    functionName: "balanceOf",
-    params: {
-      account: account,
-    },
-  });
+  if (!isInitialized) {
+    return <Skeleton />;
+  }
 
-  const {
-    runContractFunction: getFrzTotalSupply,
-    error: getFrzTotalSupplyError,
-  } = useWeb3Contract({
-    abi: contract.FRZ.abi,
-    contractAddress: contract.FRZ.address,
-    functionName: "totalSupply",
-  });
-  const { runContractFunction: getFrzAllowance, error: getFrzAllowanceError } =
-    useWeb3Contract({
-      abi: contract.FRZ.abi,
-      contractAddress: contract.FRZ.address,
-      functionName: "allowance",
-      params: {
-        owner: account,
-        spender: contract.TrueFreezeGovernor.address,
-      },
-    });
-  const { runContractFunction: getFrzBalance, error: getFrzBalanceError } =
-    useWeb3Contract({
-      abi: contract.FRZ.abi,
-      contractAddress: contract.FRZ.address,
-      functionName: "balanceOf",
-      params: {
-        account: account,
-      },
-    });
+  const { frTokenTotalSupply,
+    frTokenBalance,
+    frzTotalSupply,
+    frzAllowance,
+    frzBalance, } = tokenData;
 
-  useEffect(() => {
-    (async () => {
-      // TODO performance optimization: don't synchronously await each call. wait for all with Promise.all instead
-      const frTokenTotalSupplyResults = await getFrTokenTotalSupply(); // TODO generic error handling for contract read and write methods
-      const frTokenAllowanceResults = await getFrTokenAllowance();
-      const frTokenBalanceResults = await getFrTokenBalance();
 
-      const frzTotalSupplyResults = await getFrzTotalSupply(); // TODO generic error handling for contract read and write methods
-      const frzAllowanceResults = await getFrzAllowance();
-      const frzBalanceResults = await getFrzBalance();
-
-      setFrTokenTotalSupply(
-        frTokenTotalSupplyResults?.toString() || "Failed to load",
-      );
-      setFrTokenAllowance(
-        frTokenAllowanceResults?.toString() || "Failed to load",
-      );
-      setFrTokenBalance(frTokenBalanceResults?.toString() || "Failed to load");
-
-      setFrzTotalSupply(frzTotalSupplyResults?.toString() || "Failed to load");
-      setFrzAllowance(frzAllowanceResults?.toString() || "Failed to load");
-      setFrzBalance(frzBalanceResults?.toString() || "Failed to load");
-    })();
-  }, [getFrTokenTotalSupply]); // this will run only one time
+  // TODO \/ we can remove this var and the output after development is completely
+  const allErrors = Object.keys(errors).map((errorKey) => [errorKey, errors[errorKey]]);
 
   return (
     <Fragment>
       Total frToken supply: {frTokenTotalSupply}
       <br />
-      Your frToken allowance: {frTokenAllowance}
-      <br />
       Your frToken balance: {frTokenBalance}
       <br />
       Total FRZ supply: {frzTotalSupply}
       <br />
-      Your FRZ allowance: {frzAllowance}
-      <br />
       Your FRZ balance: {frzBalance}
       <br />
-      {getFrTokenTotalSupplyError &&
-        JSON.stringify(getFrTokenTotalSupplyError)}{" "}
-      {/* TODO real error handling */}
-      {getFrTokenAllowanceError && JSON.stringify(getFrTokenAllowanceError)}
-      {getFrTokenBalanceError && JSON.stringify(getFrTokenBalanceError)}
-      {getFrzTotalSupplyError && JSON.stringify(getFrzTotalSupplyError)}
-      {getFrzAllowanceError && JSON.stringify(getFrzAllowanceError)}
-      {getFrzBalanceError && JSON.stringify(getFrzBalanceError)}
+      Your FRZ allowance: {frzAllowance}
+      <br />
+      <ol>Errors: {allErrors.map(([errorLocation, errorValue]) => (
+        <li>{errorLocation}: {errorValue || "OK"}</li>
+      ))}</ol>
     </Fragment>
   );
 }
