@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { Skeleton } from "antd";
 import useToken from "hooks/useToken";
@@ -33,27 +33,43 @@ function Dashboard(props) {
 }
 
 function DashboardData({ contract }) {
-  const { isInitialized, tokenData, errors /*methods,*/ } = useToken({
+  const { isInitialized, tokenData, errors, methods, } = useToken({
     contract,
   });
+  const {
+    frTokenTotalSupply,
+    frTokenBalance,
+    frzTotalSupply,
+    frzBalance,
+  } = tokenData;
+
+  const { isFrTokenAllowed } = methods;
+
+  const [temp, setTemp] = useState("");
+
+  useEffect(() => {
+    if (isInitialized) {
+      (async () => {
+        const result = await isFrTokenAllowed({ spender: contract.frTokenStaking.address });
+        setTemp(result + "");
+      })();
+    }
+  }, [isInitialized]);
 
   if (!isInitialized) {
     return <Skeleton />;
   }
 
-  const {
-    frTokenTotalSupply,
-    frTokenBalance,
-    frzTotalSupply,
-    frzAllowance,
-    frzBalance,
-  } = tokenData;
+  
+
+  
 
   // TODO \/ we can remove this var and the output after development is completely
   const allErrors = Object.keys(errors).map((errorKey) => [
     errorKey,
     errors[errorKey],
   ]);
+
 
   return (
     <Fragment>
@@ -65,8 +81,7 @@ function DashboardData({ contract }) {
       <br />
       Your FRZ balance: {frzBalance}
       <br />
-      Your FRZ allowance: {frzAllowance}
-      <br />
+      Is frTokenApproved? {temp}
       <ol>
         Errors:{" "}
         {allErrors.map(([errorLocation, errorValue]) => (
