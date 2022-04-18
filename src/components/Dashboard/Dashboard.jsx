@@ -39,17 +39,23 @@ function DashboardData({ contract }) {
   const { frTokenTotalSupply, frTokenBalance, frzTotalSupply, frzBalance } =
     tokenData;
 
-  const { isFrTokenAllowed } = methods;
+  const { isFrTokenAllowed, isFrzAllowed, isWrappedTokenAllowed } = methods;
 
-  const [temp, setTemp] = useState("");
+  const [temp, setTemp] = useState([false, false, false]); // TODO remove. used to debug token state
 
-  useEffect(() => {
+  useEffect(() => { // TODO remove. used to debug token state
     if (isInitialized) {
       (async () => {
-        const result = await isFrTokenAllowed({
-          spender: contract.frTokenStaking.address,
+        let frFresult = await isFrTokenAllowed({
+          spender: "0x8cFBE91Da3a4636b8D0D5aB2b1eB55785A5B3a68",
         });
-        setTemp(result + "");
+        let frzFresult = await isFrzAllowed({
+          spender: "0x8cFBE91Da3a4636b8D0D5aB2b1eB55785A5B3a68",
+        });
+        let wethResult = await isWrappedTokenAllowed({
+          spender: "0x8cFBE91Da3a4636b8D0D5aB2b1eB55785A5B3a68",
+        });
+        setTemp([frFresult, frzFresult, wethResult]);
       })();
     }
   }, [isInitialized]);
@@ -74,11 +80,16 @@ function DashboardData({ contract }) {
       <br />
       Your FRZ balance: {frzBalance}
       <br />
-      Is frTokenApproved? {temp}
+      Is frToken approved? {temp[0] + ""}
+      <br />
+      Is FRZ approved? {temp[1] + ""}
+      <br />
+      Is wrapped asset approved? {temp[2] + ""}
+      <br />
       <ol>
         Errors:{" "}
-        {allErrors.map(([errorLocation, errorValue]) => (
-          <li>
+        {allErrors.map(([errorLocation, errorValue], index) => (
+          <li key={index + "-dashboard-err"}>
             {errorLocation}: {errorValue || "OK"}
           </li>
         ))}

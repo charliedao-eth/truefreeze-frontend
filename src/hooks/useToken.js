@@ -7,6 +7,7 @@ export default function useToken({ contract }) {
     isInitialized: isMoralisInitialized,
     account,
     chainId,
+    Moralis,
   } = useMoralis();
   const Web3Api = useMoralisWeb3Api();
 
@@ -51,28 +52,36 @@ export default function useToken({ contract }) {
     spender,
     tokenAddress,
     tokenABI,
-    spenderParamName,
-    amountParamName,
+    spenderParamName = "spender", // TODO we can pull these from the frToken or FRZ abi objects, but is these really going to change?
+    amountParamName = "amount",
   }) => {
     const options = {
-      chain: chainId,
-      address: tokenAddress,
-      function_name: "approve",
+      contractAddress: tokenAddress,
+      functionName: "approve",
       abi: tokenABI,
       params: {
         [spenderParamName]: spender,
         [amountParamName]: "100000000000000000000000000", // TODO check if this is OKAY cross chain, etc.
       },
     };
-    return await Web3Api.native.runContractFunction(options);
+    return await Moralis.executeFunction(options); // this returns a transaction promise. use await transation.wait() to wait for chain confirmation
   };
-  const allowFrz = _allowFrz(); // TODO
-  const allowFrToken = _allowFrToken(); // TODO
+  const allowFrz = async ({ spender }) => genericTokenApproval({
+    spender,
+    tokenAddress: contract.FRZ.address,
+    tokenABI: contract.FRZ.abi,
+  });
+  const allowFrToken = async ({ spender }) =>
+    genericTokenApproval({
+      spender,
+      tokenAddress: contract.frToken.address,
+      tokenABI: contract.frToken.abi,
+    });
   const allowWrappedToken = async ({ spender }) =>
     genericTokenApproval({
       spender,
       tokenAddress: getWrappedNative(chainId),
-      tokenABI: wrappedTokenMetadata.ABI,
+      tokenABI: wrappedTokenMetadata.abi,
       spenderParamName: wrappedTokenMetadata.spenderParamName,
       amountParamName: wrappedTokenMetadata.amountParamName,
     });
@@ -142,16 +151,6 @@ export default function useToken({ contract }) {
 }
 
 // these are pulled out as private helper functions purely for code readability
-const _allowFrz = () => {
-  return () => {
-    throw new Error("Not implemented ");
-  };
-};
-const _allowFrToken = () => {
-  return () => {
-    throw new Error("Not implemented ");
-  };
-};
 
 const _frTokenTotalSupply = ({ contract }) => {
   let {
