@@ -66,11 +66,12 @@ export default function useToken({ contract }) {
     };
     return await Moralis.executeFunction(options); // this returns a transaction promise. use await transation.wait() to wait for chain confirmation
   };
-  const allowFrz = async ({ spender }) => genericTokenApproval({
-    spender,
-    tokenAddress: contract.FRZ.address,
-    tokenABI: contract.FRZ.abi,
-  });
+  const allowFrz = async ({ spender }) =>
+    genericTokenApproval({
+      spender,
+      tokenAddress: contract.FRZ.address,
+      tokenABI: contract.FRZ.abi,
+    });
   const allowFrToken = async ({ spender }) =>
     genericTokenApproval({
       spender,

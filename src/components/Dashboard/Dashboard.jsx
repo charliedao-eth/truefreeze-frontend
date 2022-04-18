@@ -43,7 +43,8 @@ function DashboardData({ contract }) {
 
   const [temp, setTemp] = useState([false, false, false]); // TODO remove. used to debug token state
 
-  useEffect(() => { // TODO remove. used to debug token state
+  useEffect(() => {
+    // TODO remove. used to debug token state
     if (isInitialized) {
       (async () => {
         let frFresult = await isFrTokenAllowed({
