@@ -3,7 +3,6 @@ import { Skeleton } from "antd";
 import useToken from "hooks/useToken";
 import NFTBalance from "components/NFTBalance";
 
-
 /**
  * The dapp post-authetication home page
  * @param {*} props
@@ -14,20 +13,27 @@ function MyFreezers(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
-  const { isWrappedTokenAllowed, allowWrappedToken, isFrTokenAllowed, allowFrToken } = methods;
+  const {
+    isWrappedTokenAllowed,
+    allowWrappedToken,
+    isFrTokenAllowed,
+    allowFrToken,
+  } = methods;
 
-  if (!isInitialized || !props.address && (!account || !isAuthenticated)) return <Skeleton />;
+  if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
+    return <Skeleton />;
 
   const unlockFreezer = async (freezerNFT) => {
     console.log("Unlocking freezer:");
     console.log(freezerNFT);
 
-    if(!freezerNFT || (!(freezerNFT.token_id) && freezerNFT.token_id !== 0)) {
+    if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
       console.error("Missing freezer token_id. Cannot unlock.");
       return 0.0;
     }
 
-    try { // buncha token approvals checks and writes
+    try {
+      // buncha token approvals checks and writes
       const wrappedTokenAllowedResult = await isWrappedTokenAllowed({
         spender: contract.TrueFreezeGovernor.address,
       });
@@ -52,8 +58,7 @@ function MyFreezers(props) {
         const approveFrTokenTransaction = await allowFrToken({
           spender: contract.TrueFreezeGovernor.address,
         });
-        const blockchainConfirmation2 =
-          await approveFrTokenTransaction.wait();
+        const blockchainConfirmation2 = await approveFrTokenTransaction.wait();
         console.log(approveFrTokenTransaction);
         console.log(blockchainConfirmation2);
       }
@@ -77,12 +82,15 @@ function MyFreezers(props) {
       const freezerTransaction = await Moralis.executeFunction(options);
       return freezerTransaction.wait(); // in case you want to listen for blockchain confirmation
     } catch (err) {
-      console.error(`Failed to unlock freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
+      console.error(
+        `Failed to unlock freezer: ${
+          freezerNFT && freezerNFT.token_id
+        }. ${err}`,
+      );
     }
-
-  }
+  };
   const fetchProgress = async (freezerNFT) => {
-    if(!freezerNFT || (!(freezerNFT.token_id) && freezerNFT.token_id !== 0)) {
+    if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
       console.error("Missing freezer tokenId. Cannot fetch unlock progress.");
       return 0.0;
     }
@@ -102,11 +110,15 @@ function MyFreezers(props) {
       progressAmount = freezerTransaction.toString();
       progressAmount = Number(progressAmount).toFixed(1);
     } catch (err) {
-      console.error(`Failed to fetch unlock progress for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
+      console.error(
+        `Failed to fetch unlock progress for freezer: ${
+          freezerNFT && freezerNFT.token_id
+        }. ${err}`,
+      );
     }
 
     return progressAmount;
-  }
+  };
 
   return (
     <div>
