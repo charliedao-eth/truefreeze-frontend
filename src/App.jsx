@@ -14,6 +14,7 @@ import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import TokenPrice from "components/TokenPrice";
 import Dashboard from "components/Dashboard/Dashboard";
+import Claim from "components/Claim/Claim";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
 import NativeBalance from "components/NativeBalance";
@@ -105,6 +106,9 @@ const App = ({ IS_PRODUCTION_MODE }) => {
           <Switch>
             <Route exact path="/dashboard">
               <Dashboard contract={contract} />
+            </Route>
+            <Route exact path="/claim">
+              <Claim contract={contract} />
             </Route>
             <Route path="/">
               <Redirect to="/dashboard" />

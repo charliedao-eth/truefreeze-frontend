@@ -17,6 +17,9 @@ export default function useToken({ contract }) {
   const [frzTotalSupply, setFrzTotalSupply] = useState("");
   const [frzBalance, setFrzBalance] = useState("");
 
+  // TODO use FRZ and frToken contract getters to fetch token metadata, then use that metadata to add our custom tokens to their wallet token list like so:
+  // https://docs.metamask.io/guide/registering-your-token.html
+
   const { getFrTokenTotalSupply, frTokenTotalSupplyError } =
     _frTokenTotalSupply({ contract, account });
 
