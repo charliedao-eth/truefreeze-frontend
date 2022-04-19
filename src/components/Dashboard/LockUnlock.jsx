@@ -23,7 +23,7 @@ function LockUnlock(props) {
     if (!amount || amount.length <= 0) {
       throw new Error("Freezer lock amount is invalid. Cannot lock: " + amount);
     }
-    if (!durationInDays || durationInDays < 10) {
+    if (!durationInDays || durationInDays < 1) {
       throw new Error(
         "Freezer lock duration is invalid. Cannot lock for: " +
           durationInDays +

@@ -4,7 +4,7 @@ import { Skeleton } from "antd";
 import useToken from "hooks/useToken";
 import LockUnlock from "./LockUnlock";
 import MyFreezers from "./MyFreezers";
-import Staking from "./Staking";
+import StakeAndBurn from "./StakeAndBurn";
 
 /**
  * The dapp post-authetication home page
@@ -27,7 +27,7 @@ function Dashboard(props) {
       <hr />
       <MyFreezers contract={contract} />
       <hr />
-      <Staking contract={contract} />
+      <StakeAndBurn contract={contract} />
     </div>
   );
 }
