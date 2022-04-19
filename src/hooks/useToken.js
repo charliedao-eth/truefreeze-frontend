@@ -98,7 +98,7 @@ export default function useToken({ contract }) {
     } else {
       return frzAllowedResult;
     }
-  }
+  };
   const checkThenAllowFrToken = async ({ spender }) => {
     const frTokenAllowedResult = await isFrTokenAllowed({ spender });
     if (!frTokenAllowedResult) {
@@ -107,16 +107,18 @@ export default function useToken({ contract }) {
     } else {
       return frTokenAllowedResult;
     }
-  }
+  };
   const checkThenAllowWrapped = async ({ spender }) => {
     const wrappedTokenAllowedResult = await isWrappedTokenAllowed({ spender });
     if (!wrappedTokenAllowedResult) {
-      const approveWrappedTokenTransaction = await allowWrappedToken({ spender });
+      const approveWrappedTokenTransaction = await allowWrappedToken({
+        spender,
+      });
       return await approveWrappedTokenTransaction.wait();
     } else {
       return wrappedTokenAllowedResult;
     }
-  }
+  };
 
   const refreshTokenData = async () => {
     const fetchAndSetFns = [

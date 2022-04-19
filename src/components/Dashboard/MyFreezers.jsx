@@ -13,10 +13,7 @@ function MyFreezers(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
-  const {
-    checkThenAllowFrToken,
-    checkThenAllowWrapped
-  } = methods;
+  const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
     return <Skeleton />;
@@ -31,8 +28,12 @@ function MyFreezers(props) {
     }
 
     try {
-      await checkThenAllowFrToken({spender: contract.TrueFreezeGovernor.address});
-      await checkThenAllowWrapped({spender: contract.TrueFreezeGovernor.address});
+      await checkThenAllowFrToken({
+        spender: contract.TrueFreezeGovernor.address,
+      });
+      await checkThenAllowWrapped({
+        spender: contract.TrueFreezeGovernor.address,
+      });
     } catch (err) {
       console.error(err);
       throw new Error("Token approvals failed. Cannot unlock freezer.");

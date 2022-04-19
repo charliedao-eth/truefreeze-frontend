@@ -32,7 +32,9 @@ function LockUnlock(props) {
     }
 
     try {
-      await checkThenAllowWrapped({ spender: contract.TrueFreezeGovernor.address });
+      await checkThenAllowWrapped({
+        spender: contract.TrueFreezeGovernor.address,
+      });
 
       const options = {
         contractAddress: contract.TrueFreezeGovernor.address,
