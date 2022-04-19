@@ -1,5 +1,5 @@
 import { useMoralis } from "react-moralis";
-import { Skeleton } from "antd";
+import { Skeleton, Button } from "antd";
 import useToken from "hooks/useToken";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ import { useState } from "react";
 function LockUnlock(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = useToken({contract});
+  const { isInitialized, methods } = useToken({ contract });
   const { isWrappedTokenAllowed, allowWrappedToken } = methods;
   const [isLocking, setIsLocking] = useState(false);
 
@@ -20,19 +20,28 @@ function LockUnlock(props) {
     setIsLocking(true);
 
     // TODO proper UI input validation. Also pull these values right from the smart contract or embed in the local contract data
-    if(!amount || amount.length <= 0) {
+    if (!amount || amount.length <= 0) {
       throw new Error("Freezer lock amount is invalid. Cannot lock: " + amount);
-    } 
-    if(!durationInDays || durationInDays < 10) {
-      throw new Error("Freezer lock duration is invalid. Cannot lock for: " + durationInDays + " days");
+    }
+    if (!durationInDays || durationInDays < 10) {
+      throw new Error(
+        "Freezer lock duration is invalid. Cannot lock for: " +
+          durationInDays +
+          " days",
+      );
     }
 
     try {
-      const wrappedTokenAllowedResult = await isWrappedTokenAllowed({ spender: contract.TrueFreezeGovernor.address });
+      const wrappedTokenAllowedResult = await isWrappedTokenAllowed({
+        spender: contract.TrueFreezeGovernor.address,
+      });
       console.log(wrappedTokenAllowedResult);
-      if(!wrappedTokenAllowedResult) {
-        const approveWrappedTokenTransaction = await allowWrappedToken({ spender: contract.TrueFreezeGovernor.address });
-        const blockchainConfirmation = await approveWrappedTokenTransaction.wait();
+      if (!wrappedTokenAllowedResult) {
+        const approveWrappedTokenTransaction = await allowWrappedToken({
+          spender: contract.TrueFreezeGovernor.address,
+        });
+        const blockchainConfirmation =
+          await approveWrappedTokenTransaction.wait();
         console.log(approveWrappedTokenTransaction);
         console.log(blockchainConfirmation);
       }
@@ -55,7 +64,7 @@ function LockUnlock(props) {
       return freezerConfirmation;
     } catch (err) {
       // TODO user error messaging
-      console.error("Freezer locking request failed. ")
+      console.error("Freezer locking request failed. ");
       console.error(err);
     } finally {
       setIsLocking(false);
@@ -67,12 +76,15 @@ function LockUnlock(props) {
   return (
     <div>
       Lock Unlock
-      <button onClick={() => lockWrappedToken(Moralis.Units.ETH(0.01), 10)} disabled={isLocking || !isInitialized}>
+      <Button
+        onClick={() => lockWrappedToken(Moralis.Units.ETH(0.01), 10)}
+        disabled={isLocking || !isInitialized}
+        loading={isLocking}
+      >
         Lock 0.01 ETH
-      </button>
+      </Button>
     </div>
   );
 }
-
 
 export default LockUnlock;
