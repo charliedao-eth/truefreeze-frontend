@@ -90,6 +90,34 @@ export default function useToken({ contract }) {
       amountParamName: wrappedTokenMetadata.amountParamName,
     });
 
+  const checkThenAllowFrz = async ({ spender }) => {
+    const frzAllowedResult = await isFrzAllowed({ spender });
+    if (!frzAllowedResult) {
+      const approveFrzTransaction = await allowFrz({ spender });
+      return await approveFrzTransaction.wait();
+    } else {
+      return frzAllowedResult;
+    }
+  }
+  const checkThenAllowFrToken = async ({ spender }) => {
+    const frTokenAllowedResult = await isFrTokenAllowed({ spender });
+    if (!frTokenAllowedResult) {
+      const approveFrTokenTransaction = await allowFrToken({ spender });
+      return await approveFrTokenTransaction.wait();
+    } else {
+      return frTokenAllowedResult;
+    }
+  }
+  const checkThenAllowWrapped = async ({ spender }) => {
+    const wrappedTokenAllowedResult = await isWrappedTokenAllowed({ spender });
+    if (!wrappedTokenAllowedResult) {
+      const approveWrappedTokenTransaction = await allowWrappedToken({ spender });
+      return await approveWrappedTokenTransaction.wait();
+    } else {
+      return wrappedTokenAllowedResult;
+    }
+  }
+
   const refreshTokenData = async () => {
     const fetchAndSetFns = [
       [getFrTokenTotalSupply, setFrTokenTotalSupply],
@@ -150,6 +178,9 @@ export default function useToken({ contract }) {
       allowFrz,
       allowFrToken,
       allowWrappedToken,
+      checkThenAllowFrz,
+      checkThenAllowFrToken,
+      checkThenAllowWrapped,
     },
   };
 }

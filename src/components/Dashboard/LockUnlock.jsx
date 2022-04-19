@@ -13,7 +13,7 @@ function LockUnlock(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
-  const { isWrappedTokenAllowed, allowWrappedToken } = methods;
+  const { checkThenAllowWrapped } = methods;
   const [isLocking, setIsLocking] = useState(false);
 
   const lockWrappedToken = async (amount, durationInDays) => {
@@ -32,19 +32,7 @@ function LockUnlock(props) {
     }
 
     try {
-      const wrappedTokenAllowedResult = await isWrappedTokenAllowed({
-        spender: contract.TrueFreezeGovernor.address,
-      });
-      console.log(wrappedTokenAllowedResult);
-      if (!wrappedTokenAllowedResult) {
-        const approveWrappedTokenTransaction = await allowWrappedToken({
-          spender: contract.TrueFreezeGovernor.address,
-        });
-        const blockchainConfirmation =
-          await approveWrappedTokenTransaction.wait();
-        console.log(approveWrappedTokenTransaction);
-        console.log(blockchainConfirmation);
-      }
+      await checkThenAllowWrapped({ spender: contract.TrueFreezeGovernor.address });
 
       const options = {
         contractAddress: contract.TrueFreezeGovernor.address,

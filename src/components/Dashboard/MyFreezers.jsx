@@ -14,10 +14,8 @@ function MyFreezers(props) {
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
   const {
-    isWrappedTokenAllowed,
-    allowWrappedToken,
-    isFrTokenAllowed,
-    allowFrToken,
+    checkThenAllowFrToken,
+    checkThenAllowWrapped
   } = methods;
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
@@ -33,35 +31,8 @@ function MyFreezers(props) {
     }
 
     try {
-      // buncha token approvals checks and writes
-      const wrappedTokenAllowedResult = await isWrappedTokenAllowed({
-        spender: contract.TrueFreezeGovernor.address,
-      });
-      console.log(wrappedTokenAllowedResult);
-
-      if (!wrappedTokenAllowedResult) {
-        const approveWrappedTokenTransaction = await allowWrappedToken({
-          spender: contract.TrueFreezeGovernor.address,
-        });
-        const blockchainConfirmation =
-          await approveWrappedTokenTransaction.wait();
-        console.log(approveWrappedTokenTransaction);
-        console.log(blockchainConfirmation);
-      }
-
-      const frTokenAllowedResult = await isFrTokenAllowed({
-        spender: contract.TrueFreezeGovernor.address,
-      });
-      console.log(frTokenAllowedResult);
-
-      if (!frTokenAllowedResult) {
-        const approveFrTokenTransaction = await allowFrToken({
-          spender: contract.TrueFreezeGovernor.address,
-        });
-        const blockchainConfirmation2 = await approveFrTokenTransaction.wait();
-        console.log(approveFrTokenTransaction);
-        console.log(blockchainConfirmation2);
-      }
+      await checkThenAllowFrToken({spender: contract.TrueFreezeGovernor.address});
+      await checkThenAllowWrapped({spender: contract.TrueFreezeGovernor.address});
     } catch (err) {
       console.error(err);
       throw new Error("Token approvals failed. Cannot unlock freezer.");
