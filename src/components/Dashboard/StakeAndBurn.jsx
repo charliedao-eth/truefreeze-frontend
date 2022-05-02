@@ -9,10 +9,7 @@ function StakeAndBurn(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
-  const {
-    checkThenAllowFrToken,
-    checkThenAllowFrz,
-  } = methods;
+  const { checkThenAllowFrToken, checkThenAllowFrz } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
