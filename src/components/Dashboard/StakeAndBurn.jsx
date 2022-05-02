@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { useMoralis } from "react-moralis";
-import { Button, Skeleton } from "antd";
+import { Button, Skeleton, Tabs } from "antd";
 import useToken from "hooks/useToken";
 
-/**
- * The dapp post-authetication home page
- * @param {*} props
- * @returns <Staking> JSX Elemenet
- */
+const { TabPane } = Tabs;
 
 function StakeAndBurn(props) {
   const { contract } = props;
@@ -15,7 +11,7 @@ function StakeAndBurn(props) {
   const { isInitialized, methods } = useToken({ contract });
   const {
     checkThenAllowFrToken,
-    checkThenAllowFrz /*checkThenAllowWrapped */,
+    checkThenAllowFrz,
   } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
@@ -49,8 +45,9 @@ function StakeAndBurn(props) {
     setIsTransacting(true);
     try {
       await Promise.all(
-        approvals.map((approvalFunction) =>
-          approvalFunction({ spender: contract[contractName].address }), // spender is assumed to be the contract we're interacting with
+        approvals.map(
+          (approvalFunction) =>
+            approvalFunction({ spender: contract[contractName].address }), // spender is assumed to be the contract we're interacting with
         ),
       );
       let options = {
@@ -130,10 +127,18 @@ function StakeAndBurn(props) {
 
   return (
     <div>
-      <Burn />
-      <Stake />
       {/* TODO split this into tabs */}
-      <ClaimRewards />
+      <Tabs defaultActiveKey="1" centered>
+        <TabPane tab="Burn" key="1">
+          <Burn />
+        </TabPane>
+        <TabPane tab="Stake" key="2">
+          <Stake />
+        </TabPane>
+        <TabPane tab="Rewards" key="3">
+          <ClaimRewards />
+        </TabPane>
+      </Tabs>
     </div>
   );
 }
