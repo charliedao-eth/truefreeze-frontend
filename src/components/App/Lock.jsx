@@ -6,10 +6,10 @@ import { useState } from "react";
 /**
  * The dapp post-authetication home page
  * @param {*} props
- * @returns <LockUnlock> JSX Elemenet
+ * @returns <Lock> JSX Elemenet
  */
 
-function LockUnlock(props) {
+function Lock(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = useToken({ contract });
@@ -65,7 +65,7 @@ function LockUnlock(props) {
 
   return (
     <div>
-      Lock Unlock
+      Lock
       <Button
         onClick={() => lockWrappedToken(Moralis.Units.ETH(0.01), 10)}
         disabled={isLocking || !isInitialized}
@@ -77,4 +77,4 @@ function LockUnlock(props) {
   );
 }
 
-export default LockUnlock;
+export default Lock;
