@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Button, Skeleton, Tabs } from "antd";
 import useToken from "hooks/useToken";
@@ -11,6 +11,8 @@ function StakeAndBurn(props) {
   const { isInitialized, methods } = useToken({ contract });
   const { checkThenAllowFrToken, checkThenAllowFrz } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
+
+  useEffect(() => changeBg('burn'), []); // trigger the bg change to the default special gradient
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
     return <Skeleton />;
@@ -122,17 +124,29 @@ function StakeAndBurn(props) {
     );
   }
 
+  function changeBg(selectedTabKey) {
+    document.querySelector('.gradient-bg')?.classList.remove('gradient-bg-red', 'gradient-bg-green', 'gradient-bg-blue');
+
+    if(selectedTabKey === 'burn') {
+      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-red');
+    } else if (selectedTabKey === 'rewards') {
+      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-green');
+    } else {
+      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-blue');
+    }
+  }
+
   return (
     <div>
       {/* TODO split this into tabs */}
-      <Tabs defaultActiveKey="1" centered>
-        <TabPane tab="Burn" key="1">
+      <Tabs defaultActiveKey="burn" centered onChange={changeBg}>
+        <TabPane tab="Burn" key="burn">
           <Burn />
         </TabPane>
-        <TabPane tab="Stake" key="2">
+        <TabPane tab="Stake" key="stake">
           <Stake />
         </TabPane>
-        <TabPane tab="Rewards" key="3">
+        <TabPane tab="Rewards" key="rewards">
           <ClaimRewards />
         </TabPane>
       </Tabs>

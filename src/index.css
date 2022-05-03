@@ -62,9 +62,36 @@ select {
 .gradient-bg {
   background: url("./assets/gradientbg.png") no-repeat;
   background-size: cover;
+  background-position-x: center;
+  transition: background 0.5s ease-in;
+}
+.gradient-bg-red {
+  background: url("./assets/gradientbgred.png") no-repeat;
+  background-position-x: center;
+  background-size: cover;
+}
+.gradient-bg-blue {
+  background: url("./assets/gradientbgblue.png") no-repeat;
+  background-position-x: center;
+  background-size: cover;
+}
+.gradient-bg-green {
+  background: url("./assets/gradientbggreen.png") no-repeat;
+  background-position-x: center;
+  background-size: cover;
+}
+
+.appPageContent {
+  margin-top: 40px;
+  max-width: 100%;
+  width: 845px;
 }
 
 /* antd overrides */
 .ant-menu-horizontal > .ant-menu-item:not(.ant-menu-item-selected) a {
   color: #ffffff;
+}
+.myfreezers .ant-card-cover .ant-image-img {
+  margin: auto;
+  width: 85%;
 }

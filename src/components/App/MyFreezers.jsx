@@ -93,8 +93,7 @@ function MyFreezers(props) {
   };
 
   return (
-    <div>
-      <h3>My Freezers</h3>
+    <div className="appPageContent myfreezers">
       <NFTBalance
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}
