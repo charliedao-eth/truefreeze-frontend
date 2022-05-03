@@ -1,10 +1,7 @@
-
 function Landing() {
   return (
     <div>
-      <h2>
-        Landing page
-      </h2>
+      <h2>Landing page</h2>
       TODO
     </div>
   );

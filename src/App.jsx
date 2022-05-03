@@ -18,11 +18,22 @@ import Lock from "components/App/Lock";
 import MyFreezers from "components/App/MyFreezers";
 import StakeAndBurn from "components/App/StakeAndBurn";
 
-import { Layout, Menu } from "antd";
-import "antd/dist/antd.css";
+import { Layout, Menu, ConfigProvider } from "antd";
+import "antd/dist/antd.variable.min.css";
 import NativeBalance from "components/NativeBalance";
 import Text from "antd/lib/typography/Text";
 const { Header, Footer } = Layout;
+import logoSVG from "./assets/truefreezelogo.svg";
+
+ConfigProvider.config({
+  theme: {
+    primaryColor: '#00E6B5',
+    headingColor: '#FFFFFF',
+    textColor: '#FFFFFF',
+    textColorSecondary: '#426788',
+    linkColor: '#FFFFFF',
+  },
+});
 
 const styles = {
   content: {
@@ -37,14 +48,14 @@ const styles = {
     position: "fixed",
     zIndex: 1,
     width: "100%",
-    background: "#fff",
+    height: "initial",
+    background: "none",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "Roboto, sans-serif",
-    borderBottom: "2px solid rgba(0, 0, 0, 0.06)",
-    padding: "0 10px",
-    boxShadow: "0 1px 10px rgb(151 164 175 / 10%)",
+    borderBottom: "1px solid #FFFFFF",
+    padding: "40px 100px 20px 100px",
   },
   headerRight: {
     display: "flex",
@@ -55,9 +66,17 @@ const styles = {
     flex: "1",
     justifyContent: "right",
   },
-  selectedNav: {
-    textDecoration: 'underline',
-  }
+  navbar: {
+    background: "none",
+    border: "none",
+    color: "#FFFFFF",
+    width: "480px", 
+    maxWidth: "100%", 
+    justifyContent: "center"
+  },
+  navbarItem: {
+    borderColor: "#00E6B5",
+  },
 };
 
 const App = ({ IS_PRODUCTION_MODE }) => {
@@ -91,26 +110,37 @@ const App = ({ IS_PRODUCTION_MODE }) => {
   const WrapWithLayout = (props) => {
     return (
       <Fragment>
-        {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
-        <div style={styles.content}>
-          {props.children}
-        </div>
-        <Footer style={{ textAlign: "center" }}>
+        {props.useAppHeader ? (
+          <AppHeader selectedNav={props.selectedNav} />
+        ) : (
+          <GenericHeader />
+        )}
+        <div style={styles.content}>{props.children}</div>
+        <Footer style={{ textAlign: "center", background: "none" }}>
           <Text style={{ display: "block" }}>footer info todo</Text>
         </Footer>
       </Fragment>
     );
-  }
-
+  };
 
   const AppHeader = (props) => {
     return (
       <Header style={styles.header}>
         <Logo />
-        <Menu mode="horizontal" selectedKeys={props.selectedNav} style={{width:"480px", maxWidth:"100%", justifyContent: "center"}}>
-          <Menu.Item key='lock'><a href="/lock">Lock</a></Menu.Item>
-          <Menu.Item key='myfreezers'><a href="/myfreezers">My Freezers</a></Menu.Item>
-          <Menu.Item key='stakeandburn'><a href="/stakeandburn">Stake and Burn</a></Menu.Item>
+        <Menu
+          mode="horizontal"
+          selectedKeys={props.selectedNav}
+          style={styles.navbar}
+        >
+          <Menu.Item key="lock">
+            <a href="/lock">Lock</a>
+          </Menu.Item>
+          <Menu.Item key="myfreezers">
+            <a href="/myfreezers">My Freezers</a>
+          </Menu.Item>
+          <Menu.Item key="stakeandburn">
+            <a href="/stakeandburn">Stake and Burn</a>
+          </Menu.Item>
         </Menu>
         <div style={styles.headerRight}>
           <Chains supportedChainIds={supportedChainIds} />
@@ -132,25 +162,35 @@ const App = ({ IS_PRODUCTION_MODE }) => {
     </Header>
   );
 
-
   return (
-    <Layout style={{ height: "100vh", overflow: "auto" }}>
+    <ConfigProvider>
+    <Layout style={{ height: "100vh", overflow: "auto" }} className="gradient-bg">
       <Router>
         <Switch>
           <Route exact path="/landing">
-            <WrapWithLayout useAppHeader={false}><Landing /></WrapWithLayout>
+            <WrapWithLayout useAppHeader={false}>
+              <Landing />
+            </WrapWithLayout>
           </Route>
           <Route exact path="/claim">
-            <WrapWithLayout useAppHeader={false}><Claim contract={contract} /></WrapWithLayout>
+            <WrapWithLayout useAppHeader={false}>
+              <Claim contract={contract} />
+            </WrapWithLayout>
           </Route>
           <Route exact path="/lock">
-            <WrapWithLayout useAppHeader={true} selectedNav={'lock'}><Lock contract={contract} /></WrapWithLayout>
+            <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
+              <Lock contract={contract} />
+            </WrapWithLayout>
           </Route>
           <Route exact path="/myfreezers">
-            <WrapWithLayout useAppHeader={true} selectedNav={'myfreezers'}><MyFreezers contract={contract} /></WrapWithLayout>
+            <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
+              <MyFreezers contract={contract} />
+            </WrapWithLayout>
           </Route>
           <Route exact path="/stakeandburn">
-            <WrapWithLayout useAppHeader={true} selectedNav={'stakeandburn'}><StakeAndBurn contract={contract} /></WrapWithLayout>
+            <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
+              <StakeAndBurn contract={contract} />
+            </WrapWithLayout>
           </Route>
           <Route path="/app">
             <Redirect to="/lock" />
@@ -161,10 +201,14 @@ const App = ({ IS_PRODUCTION_MODE }) => {
         </Switch>
       </Router>
     </Layout>
+    </ConfigProvider>
   );
 };
 
-
-export const Logo = () => <div style={{ display: "flex", flex: "1" }}>logo todo</div>;
+export const Logo = () => (
+  <div style={{ display: "flex", flex: "1" }}>
+    <img src={logoSVG} />
+  </div>
+);
 
 export default App;
