@@ -60,12 +60,11 @@ select {
 }
 
 .gradient-bg {
-  background: url('./assets/gradientbg.png') no-repeat;
+  background: url("./assets/gradientbg.png") no-repeat;
   background-size: cover;
 }
 
-
 /* antd overrides */
-.ant-menu-horizontal>.ant-menu-item:not(.ant-menu-item-selected) a {
-  color: #FFFFFF;
+.ant-menu-horizontal > .ant-menu-item:not(.ant-menu-item-selected) a {
+  color: #ffffff;
 }

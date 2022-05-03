@@ -27,11 +27,11 @@ import logoSVG from "./assets/truefreezelogo.svg";
 
 ConfigProvider.config({
   theme: {
-    primaryColor: '#00E6B5',
-    headingColor: '#FFFFFF',
-    textColor: '#FFFFFF',
-    textColorSecondary: '#426788',
-    linkColor: '#FFFFFF',
+    primaryColor: "#00E6B5",
+    headingColor: "#FFFFFF",
+    textColor: "#FFFFFF",
+    textColorSecondary: "#426788",
+    linkColor: "#FFFFFF",
   },
 });
 
@@ -70,9 +70,9 @@ const styles = {
     background: "none",
     border: "none",
     color: "#FFFFFF",
-    width: "480px", 
-    maxWidth: "100%", 
-    justifyContent: "center"
+    width: "480px",
+    maxWidth: "100%",
+    justifyContent: "center",
   },
   navbarItem: {
     borderColor: "#00E6B5",
@@ -164,43 +164,46 @@ const App = ({ IS_PRODUCTION_MODE }) => {
 
   return (
     <ConfigProvider>
-    <Layout style={{ height: "100vh", overflow: "auto" }} className="gradient-bg">
-      <Router>
-        <Switch>
-          <Route exact path="/landing">
-            <WrapWithLayout useAppHeader={false}>
-              <Landing />
-            </WrapWithLayout>
-          </Route>
-          <Route exact path="/claim">
-            <WrapWithLayout useAppHeader={false}>
-              <Claim contract={contract} />
-            </WrapWithLayout>
-          </Route>
-          <Route exact path="/lock">
-            <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
-              <Lock contract={contract} />
-            </WrapWithLayout>
-          </Route>
-          <Route exact path="/myfreezers">
-            <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
-              <MyFreezers contract={contract} />
-            </WrapWithLayout>
-          </Route>
-          <Route exact path="/stakeandburn">
-            <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
-              <StakeAndBurn contract={contract} />
-            </WrapWithLayout>
-          </Route>
-          <Route path="/app">
-            <Redirect to="/lock" />
-          </Route>
-          <Route path="/">
-            <Redirect to="/landing" />
-          </Route>
-        </Switch>
-      </Router>
-    </Layout>
+      <Layout
+        style={{ height: "100vh", overflow: "auto" }}
+        className="gradient-bg"
+      >
+        <Router>
+          <Switch>
+            <Route exact path="/landing">
+              <WrapWithLayout useAppHeader={false}>
+                <Landing />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/claim">
+              <WrapWithLayout useAppHeader={false}>
+                <Claim contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/lock">
+              <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
+                <Lock contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/myfreezers">
+              <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
+                <MyFreezers contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/stakeandburn">
+              <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
+                <StakeAndBurn contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route path="/app">
+              <Redirect to="/lock" />
+            </Route>
+            <Route path="/">
+              <Redirect to="/landing" />
+            </Route>
+          </Switch>
+        </Router>
+      </Layout>
     </ConfigProvider>
   );
 };
