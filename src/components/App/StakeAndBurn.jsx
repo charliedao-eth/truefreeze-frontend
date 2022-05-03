@@ -12,7 +12,7 @@ function StakeAndBurn(props) {
   const { checkThenAllowFrToken, checkThenAllowFrz } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
-  useEffect(() => changeBg('burn'), []); // trigger the bg change to the default special gradient
+  useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
     return <Skeleton />;
@@ -125,14 +125,22 @@ function StakeAndBurn(props) {
   }
 
   function changeBg(selectedTabKey) {
-    document.querySelector('.gradient-bg')?.classList.remove('gradient-bg-red', 'gradient-bg-green', 'gradient-bg-blue');
+    document
+      .querySelector(".gradient-bg")
+      ?.classList.remove(
+        "gradient-bg-red",
+        "gradient-bg-green",
+        "gradient-bg-blue",
+      );
 
-    if(selectedTabKey === 'burn') {
-      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-red');
-    } else if (selectedTabKey === 'rewards') {
-      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-green');
+    if (selectedTabKey === "burn") {
+      document.querySelector(".gradient-bg")?.classList.add("gradient-bg-red");
+    } else if (selectedTabKey === "rewards") {
+      document
+        .querySelector(".gradient-bg")
+        ?.classList.add("gradient-bg-green");
     } else {
-      document.querySelector('.gradient-bg')?.classList.add('gradient-bg-blue');
+      document.querySelector(".gradient-bg")?.classList.add("gradient-bg-blue");
     }
   }
 
