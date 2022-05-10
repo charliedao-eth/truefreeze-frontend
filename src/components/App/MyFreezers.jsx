@@ -98,8 +98,12 @@ function MyFreezers(props) {
     <div className="appPageContent myfreezers">
       <section className="myFreezers-toolbar white-text">
         <div className="wallet-info">
-          <div><b>WALLET</b></div>
-          <div>0x...{account?.substring(account?.length - 4, account?.length)}</div>
+          <div>
+            <b>WALLET</b>
+          </div>
+          <div>
+            0x...{account?.substring(account?.length - 4, account?.length)}
+          </div>
         </div>
         <div className="sorting inline-flex space-between center notReady">
           <span className="m-r-1">TIME</span>
@@ -107,11 +111,15 @@ function MyFreezers(props) {
         </div>
         <div className="curriencies inline-flex flex-align--right">
           <div className="frToken-holdings m-r-1">
-            <div><b>frETH</b></div>
+            <div>
+              <b>frETH</b>
+            </div>
             <div className="notReady">000.00</div>
           </div>
           <div className="frz-holdings">
-            <div><b>FRZ</b></div>
+            <div>
+              <b>FRZ</b>
+            </div>
             <div className="notReady">00.00</div>
           </div>
         </div>
