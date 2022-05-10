@@ -143,8 +143,14 @@ function NFTBalance({
         key={keyname}
       >
         {!nft ? null : (
-          <Button onClick={() => unlockFreezer(nft)}>
-            Unlock{progressAmount ? ` (${progressAmount}%)` : ""}
+          <Button className="redeem-freezer" title={(progressAmount || "--") + "% progress"} onClick={() => unlockFreezer(nft)}>
+            <span className="redeem-text"><span>REDEEM</span></span>
+            {progressAmount ? (
+              <span style={{width: Math.min(+progressAmount, 101)+"%"}} className="progress-gradient" title={progressAmount + "% progress"}>
+                &nbsp;
+              </span>
+            ) : null
+            }
           </Button>
         )}
       </Card>

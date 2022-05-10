@@ -39,7 +39,6 @@ const styles = {
   content: {
     display: "flex",
     justifyContent: "center",
-    fontFamily: "Roboto, sans-serif",
     color: "#041836",
     marginTop: "130px",
     padding: "10px",
@@ -53,7 +52,6 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    fontFamily: "Roboto, sans-serif",
     borderBottom: "1px solid #FFFFFF",
     padding: "40px 100px 20px 100px",
   },
