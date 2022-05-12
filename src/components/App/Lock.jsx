@@ -4,8 +4,6 @@ import useToken from "hooks/useToken";
 import { useState } from "react";
 import chartplaceholder from "../../assets/chartplaceholder.png";
 
-
-
 /**
  * The dapp post-authetication home page
  * @param {*} props
@@ -103,7 +101,7 @@ function Lock(props) {
             AMOUNT
             <InputNumber
               style={{
-                width: '100%',
+                width: "100%",
               }}
               defaultValue="1"
               min="0"
