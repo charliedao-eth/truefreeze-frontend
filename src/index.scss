@@ -1,3 +1,5 @@
+@import './vars';
+
 *,
 *::before,
 *::after {
@@ -89,15 +91,43 @@ select {
 }
 
 /* antd overrides */
-.ant-menu-horizontal > .ant-menu-item:not(.ant-menu-item-selected) a {
-  color: #ffffff;
-}
-.myfreezers .ant-card-cover .ant-image-img {
-  margin: auto;
-  width: 85%;
+.truefreeze {
+  .ant-btn {
+    border-radius: 28px;
+
+    &.full-width {
+      width: 100%;
+    }
+  }
+  .ant-btn-primary {
+    color: $darkGrey;
+    font-size: 16px;
+  }
+  .ant-menu-horizontal > .ant-menu-item:not(.ant-menu-item-selected) a {
+    color: #ffffff;
+  }
+  .myfreezers .ant-card-cover .ant-image-img {
+    margin: auto;
+    width: 85%;
+  }
+  .ant-input-number {
+    background: transparent;
+    border: none;
+    width: 100%;
+    
+    input {
+      height: 78px;
+      border: 1px solid #557282;
+      border-radius: 10px;
+      background: #4C4D4F;
+      color: #BDBEC6;
+      font-size: 35px;
+      padding: 0px 8px 16px 8px;
+    }
+  }
 }
 
-.myfreezers .myFreezers-toolbar {
+.page-toolbar {
   border-bottom: 1px solid #FFFFFF;
   display: flex;
   font-size: 18px;
@@ -135,12 +165,22 @@ select {
 .font-20 {
   font-size: 20px;
 }
-
+.flex {
+  display: flex;
+}
+.flex-half {
+  flex: 1;
+  flex-basis: 50%;
+  width: 50%;
+}
 .inline-flex {
   display: inline-flex;
 }
 .space-between {
   justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
 }
 .center {
   align-items: center;
@@ -148,8 +188,21 @@ select {
 .flex-align--right {
   justify-content: right;
 }
+
+.m-t-2 {
+  margin-top: 2em;
+}
 .m-r-1 {
   margin-right: 1em;
+}
+.m-r-2 {
+  margin-right: 2em;
+}
+.m-1 {
+  margin: 1em;
+}
+.p-1 {
+  padding: 1em;
 }
 
 .white-text {
@@ -203,5 +256,31 @@ select {
       width: 0%;
       z-index: 2;
     }
+  }
+}
+
+.lock-page {
+  .lock-card {
+    background: rgba(255,255,255,0.09);
+    border-radius: 20px;
+    box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 305px; 
+    padding: 16px 24px;
+
+    .card-title {
+      color: #FFFFFF;
+      font-size: 21px;
+    }
+  }
+  .lock-chart {
+    max-width: 305px;
+  }
+  .img-placeholder {
+    border-radius: 20px;
+    max-width: 100%;
   }
 }

@@ -91,7 +91,7 @@ function Claim(props) {
         Good news. This address has {`${userClaimData?.amount} `}FRZ available
         to claim!
       </h2>
-      <Button loading={isClaiming} onClick={claim}>
+      <Button type="primary" size="large" loading={isClaiming} onClick={claim}>
         Claim
       </Button>
     </div>

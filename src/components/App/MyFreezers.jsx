@@ -96,7 +96,7 @@ function MyFreezers(props) {
 
   return (
     <div className="appPageContent myfreezers">
-      <section className="myFreezers-toolbar white-text">
+      <section className="page-toolbar white-text">
         <div className="wallet-info">
           <div>
             <b>WALLET</b>

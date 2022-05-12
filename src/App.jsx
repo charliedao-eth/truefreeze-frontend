@@ -164,7 +164,7 @@ const App = ({ IS_PRODUCTION_MODE }) => {
     <ConfigProvider>
       <Layout
         style={{ height: "100vh", overflow: "auto" }}
-        className="gradient-bg"
+        className="truefreeze gradient-bg"
       >
         <Router>
           <Switch>
