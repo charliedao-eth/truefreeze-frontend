@@ -6,7 +6,7 @@ import "./index.scss";
 
 const APP_ID = process.env.REACT_APP_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
-const IS_PRODUCTION_MODE = process.env.NODE_ENV !== "development";
+const IS_PRODUCTION_MODE = false; //process.env.NODE_ENV !== "development";
 
 const Application = () => {
   const isServerInfoConfigured = APP_ID && SERVER_URL ? true : false;
@@ -24,7 +24,7 @@ const Application = () => {
   if (isServerInfoConfigured) {
     return (
       <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
-        <App isProductionMode={IS_PRODUCTION_MODE} />
+        <App IS_PRODUCTION_MODE={IS_PRODUCTION_MODE} />
       </MoralisProvider>
     );
   } else {

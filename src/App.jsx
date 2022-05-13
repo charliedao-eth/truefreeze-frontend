@@ -77,7 +77,7 @@ const styles = {
   },
 };
 
-const App = ({ IS_PRODUCTION_MODE }) => {
+const App = ({ IS_PRODUCTION_MODE = true }) => {
   const {
     isWeb3Enabled,
     enableWeb3,
@@ -88,8 +88,9 @@ const App = ({ IS_PRODUCTION_MODE }) => {
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
-    if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading)
+    if (!isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading) {
       enableWeb3({ provider: connectorId });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
