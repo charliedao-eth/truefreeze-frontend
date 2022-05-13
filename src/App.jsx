@@ -1,4 +1,4 @@
-import { useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import {
   BrowserRouter as Router,
@@ -18,7 +18,8 @@ import Lock from "components/App/Lock";
 import MyFreezers from "components/App/MyFreezers";
 import StakeAndBurn from "components/App/StakeAndBurn";
 
-import { Layout, Menu, ConfigProvider } from "antd";
+import { Layout, Menu, ConfigProvider, message, Skeleton } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import "antd/dist/antd.variable.min.css";
 import NativeBalance from "components/NativeBalance";
 import Text from "antd/lib/typography/Text";
@@ -78,12 +79,15 @@ const styles = {
 };
 
 const App = ({ IS_PRODUCTION_MODE = true }) => {
+  const [connectionTimeout, setConnectionTimeout] = useState();
+
   const {
     isWeb3Enabled,
     enableWeb3,
     isAuthenticated,
     isWeb3EnableLoading,
     chainId,
+    isUnauthenticated,
   } = useMoralis();
 
   useEffect(() => {
@@ -99,10 +103,25 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     ? supportedProductionChainIds
     : supportedTestnetChainIds;
 
-  if (!contract) {
-    // TODO display an error page + chain switcher
-    return <div>Chain {chainId} is unsupported.</div>;
-  }
+  useEffect(() => {
+    const key = 'cannot-connect';
+    if(!contract || isUnauthenticated) {
+      setConnectionTimeout(setTimeout(
+        () => (
+          message.info({
+            key,
+            content: (<span>Click 'Connect wallet' or switch to a supported chain to get started. <CloseOutlined style={{color: "#333333"}}/> </span>),
+            duration: 10000,
+            onClick: () => {
+              message.destroy(key)},
+          })
+        ), 1000
+      ));
+    } else {
+      clearTimeout(connectionTimeout);
+      message.destroy(key);
+    }
+  }, [chainId, contract, isUnauthenticated]);
 
   // TODO check dev-mode (isProductionMode in ../index.js) and display a warning banner at the top of the screen
 
@@ -160,6 +179,23 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
       </div>
     </Header>
   );
+
+  const DisconnectedWallet = () => (
+    <ConfigProvider>
+      <Layout
+        style={{ height: "100vh", overflow: "auto" }}
+        className="truefreeze gradient-bg"
+      >
+        <WrapWithLayout useAppHeader={false}>
+          <Skeleton />
+        </WrapWithLayout>
+      </Layout>
+    </ConfigProvider>
+  );
+
+  if(!contract || isUnauthenticated) {
+    return <DisconnectedWallet />;
+  }
 
   return (
     <ConfigProvider>

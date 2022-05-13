@@ -1,0 +1,10 @@
+name = "true-freeze-site-worker"
+workers_dev = true
+main = "./site-worker.js"
+compatibility_date = "2022-05-06"
+
+[site]
+bucket = "./build"
+
+[build]
+    command = "yarn run build"
