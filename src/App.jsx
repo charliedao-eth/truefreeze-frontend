@@ -104,19 +104,27 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     : supportedTestnetChainIds;
 
   useEffect(() => {
-    const key = 'cannot-connect';
-    if(!contract || isUnauthenticated) {
-      setConnectionTimeout(setTimeout(
-        () => (
-          message.info({
-            key,
-            content: (<span>Click 'Connect wallet' or switch to a supported chain to get started. <CloseOutlined style={{color: "#333333"}}/> </span>),
-            duration: 10000,
-            onClick: () => {
-              message.destroy(key)},
-          })
-        ), 1000
-      ));
+    const key = "cannot-connect";
+    if (!contract || isUnauthenticated) {
+      setConnectionTimeout(
+        setTimeout(
+          () =>
+            message.info({
+              key,
+              content: (
+                <span>
+                  Click 'Connect wallet' or switch to a supported chain to get
+                  started. <CloseOutlined style={{ color: "#333333" }} />{" "}
+                </span>
+              ),
+              duration: 10000,
+              onClick: () => {
+                message.destroy(key);
+              },
+            }),
+          1000,
+        ),
+      );
     } else {
       clearTimeout(connectionTimeout);
       message.destroy(key);
@@ -193,7 +201,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     </ConfigProvider>
   );
 
-  if(!contract || isUnauthenticated) {
+  if (!contract || isUnauthenticated) {
     return <DisconnectedWallet />;
   }
 

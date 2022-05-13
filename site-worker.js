@@ -19,7 +19,6 @@ addEventListener("fetch", (event) => {
 async function handleEvent(event) {
   let options = {};
 
-
   try {
     if (DEBUG) {
       // customize caching
@@ -28,7 +27,9 @@ async function handleEvent(event) {
       };
     }
 
-    const page = await getAssetFromKV(event, { mapRequestToAsset: serveSinglePageApp });
+    const page = await getAssetFromKV(event, {
+      mapRequestToAsset: serveSinglePageApp,
+    });
 
     // allow headers to be altered
     const response = new Response(page.body, page);
