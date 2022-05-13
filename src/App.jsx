@@ -84,7 +84,6 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   const {
     isWeb3Enabled,
     enableWeb3,
-    isAuthenticated,
     isWeb3EnableLoading,
     chainId,
     isUnauthenticated,
@@ -92,11 +91,11 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
-    if (!isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading) {
+    if (isUnauthenticated && !isWeb3Enabled && !isWeb3EnableLoading) {
       enableWeb3({ provider: connectorId });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, isWeb3Enabled]);
+  }, [isUnauthenticated, isWeb3Enabled]); // TODO disable for initial page load (only trigger on route change, so that we don't hit people with a MM permission popup without their consent first)
 
   const contract = contractsByChain[chainId];
   const supportedChainIds = IS_PRODUCTION_MODE
