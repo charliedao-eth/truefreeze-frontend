@@ -37,11 +37,12 @@ function MyFreezers(props) {
     } catch (err) {
       console.error(err);
       message.error({
-        content: "Token approvals failed. Cannot unlock freezer. Press to see error logs.",
+        content:
+          "Token approvals failed. Cannot unlock freezer. Press to see error logs.",
         duration: 4,
         onClick: () => alert(JSON.stringify(err)),
       });
-      return 'error';
+      return "error";
     }
 
     // TODO use getWAssetFees and getUnlockCost + balances from useToken() to estimate if this will fail BEFORE the user tries the transaction. better ux by removing that frustring failure case
@@ -67,9 +68,13 @@ function MyFreezers(props) {
       message.error({
         content: "Freezer unlocking failed. Press to see error logs.",
         duration: 4,
-        onClick: () => alert(`freezer ${freezerNFT?.token_id} unlock failed: ` + JSON.stringify(err)),
+        onClick: () =>
+          alert(
+            `freezer ${freezerNFT?.token_id} unlock failed: ` +
+              JSON.stringify(err),
+          ),
       });
-      return 'error';
+      return "error";
     }
   };
   const fetchProgress = async (freezerNFT) => {

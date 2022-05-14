@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
-import { Button, Card, Image, Tooltip, Modal, Input, Skeleton, message } from "antd";
+import {
+  Button,
+  Card,
+  Image,
+  Tooltip,
+  Modal,
+  Input,
+  Skeleton,
+  message,
+} from "antd";
 import { FileSearchOutlined, SendOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
@@ -113,10 +122,10 @@ function NFTBalance({
     }); // tracks multiple freezers unlocking at the same time
 
     try {
-      const unlockSuccess = (await unlockFreezer(nft)) !== 'error';
-      if(unlockSuccess) {
+      const unlockSuccess = (await unlockFreezer(nft)) !== "error";
+      if (unlockSuccess) {
         message.success(`Freezer unlocked successfully`, 3);
-        window.localStorage.setItem(`freezer_${nft.token_id}`, 'unlocked');
+        window.localStorage.setItem(`freezer_${nft.token_id}`, "unlocked");
       }
     } finally {
       setIsUnlocking({
@@ -124,7 +133,7 @@ function NFTBalance({
         [nft?.token_id]: false,
       });
     }
-  }
+  };
 
   // TODO useEffect to fetch getProgress, getUnlockCost
   // TODO withdrawWAsset (unlock and pay fees in one step) <-- needs user clarity
@@ -162,7 +171,9 @@ function NFTBalance({
         }
         key={keyname}
         className={
-          (window.localStorage.getItem(`freezer_${nft.token_id}`) === 'unlocked') ? 'hide-nft' : '' 
+          window.localStorage.getItem(`freezer_${nft.token_id}`) === "unlocked"
+            ? "hide-nft"
+            : ""
         }
       >
         {!nft ? null : (
@@ -173,7 +184,7 @@ function NFTBalance({
             disabled={isUnlocking[nft.token_id]}
           >
             <span className="redeem-text">
-              <span>{isUnlocking[nft.token_id] ? 'REDEEMING' :'REDEEM'}</span>
+              <span>{isUnlocking[nft.token_id] ? "REDEEMING" : "REDEEM"}</span>
             </span>
             {progressAmount ? (
               <span
@@ -202,7 +213,10 @@ function NFTBalance({
   };
 
   return (
-    <div className={className} style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
+    <div
+      className={className}
+      style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}
+    >
       <div style={styles.NFTs}>
         <Skeleton loading={!freezers}>{renderNFTs(freezers)}</Skeleton>
       </div>
