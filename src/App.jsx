@@ -91,7 +91,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
-    if (isUnauthenticated && !isWeb3Enabled && !isWeb3EnableLoading) {
+    if (!isWeb3Enabled && !isWeb3EnableLoading) {
       enableWeb3({ provider: connectorId });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -165,6 +165,9 @@ select {
 .font-20 {
   font-size: 20px;
 }
+.font-35 {
+  font-size: 35px;
+}
 .flex {
   display: flex;
 }
@@ -172,6 +175,9 @@ select {
   flex: 1;
   flex-basis: 50%;
   width: 50%;
+}
+.flex-row {
+  flex-direction: row;
 }
 .inline-flex {
   display: inline-flex;
@@ -184,6 +190,9 @@ select {
 }
 .center {
   align-items: center;
+}
+.bottom {
+  align-items: flex-end;
 }
 .flex-align--right {
   justify-content: right;
@@ -203,6 +212,9 @@ select {
 }
 .p-1 {
   padding: 1em;
+}
+.p-l-1 {
+  padding-left: 1em;
 }
 
 .white-text {
@@ -267,8 +279,9 @@ select {
     -webkit-box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    height: 380px;
     justify-content: space-between;
-    max-width: 305px; 
+    max-width: 305px;
     padding: 16px 24px;
 
     .card-title {
@@ -282,5 +295,8 @@ select {
   .img-placeholder {
     border-radius: 20px;
     max-width: 100%;
+  }
+  .choke-label {
+    margin-bottom: -10px;
   }
 }
