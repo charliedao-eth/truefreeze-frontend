@@ -26,7 +26,7 @@ function Lock(props) {
 
     amount = Moralis.Units.ETH(amount);
     const durationInDays = durationInMonths * 30; // can't think of a better approximation! close enough?
-    
+
     // TODO proper UI input validation. Also pull these values right from the smart contract or embed in the local contract data
     if (!amount || amount.length <= 0) {
       throw new Error("Freezer lock amount is invalid. Cannot lock: " + amount);
@@ -59,10 +59,8 @@ function Lock(props) {
       const freezerConfirmation = await freezerTransaction.wait();
       console.log(freezerConfirmation);
       Modal.success({
-        content: (
-          `You successfully locked ${amountLocked} ETH for ${timeLocked} months.`
-        )
-      })
+        content: `You successfully locked ${amountLocked} ETH for ${timeLocked} months.`,
+      });
 
       return freezerConfirmation;
     } catch (err) {
@@ -73,7 +71,7 @@ function Lock(props) {
         content: "Freezer locking failed. Press to see error logs.",
         duration: 4,
         onClick: () => alert(JSON.stringify(err)),
-      })
+      });
     } finally {
       setIsLocking(false);
     }
@@ -127,14 +125,19 @@ function Lock(props) {
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
-              <Select className="flex-half" value={timeLocked} style={{ width: 120 }} onChange={setTimeLocked} >
-                  {
-                    (new Array(24)).fill(1).map((_val, index) => (
-                      <Option value={(index + 1)}>{(index + 1)}</Option>
-                    ))
-                  }
+              <Select
+                className="flex-half"
+                value={timeLocked}
+                style={{ width: 120 }}
+                onChange={setTimeLocked}
+              >
+                {new Array(24).fill(1).map((_val, index) => (
+                  <Option value={index + 1}>{index + 1}</Option>
+                ))}
               </Select>
-              <span className="white-text flex-half align-left p-l-1">MONTHS</span>
+              <span className="white-text flex-half align-left p-l-1">
+                MONTHS
+              </span>
             </div>
           </div>
           <div>
