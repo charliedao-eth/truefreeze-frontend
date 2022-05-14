@@ -64,30 +64,40 @@ select {
 
 .gradient-bg {
   background: url("./assets/gradientbg.png") no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   background-position-x: center;
   transition: background 0.5s ease-in;
 }
 .gradient-bg-red {
   background: url("./assets/gradientbgred.png") no-repeat;
   background-position-x: center;
-  background-size: cover;
+  background-size: 100% 100%;
 }
 .gradient-bg-blue {
   background: url("./assets/gradientbgblue.png") no-repeat;
   background-position-x: center;
-  background-size: cover;
+  background-size: 100% 100%;
 }
 .gradient-bg-green {
   background: url("./assets/gradientbggreen.png") no-repeat;
   background-position-x: center;
-  background-size: cover;
+  background-size: 100% 100%;
+}
+
+#root {
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .appPageContent {
   margin-top: 40px;
   max-width: 100%;
   width: 845px;
+}
+
+.page-scroll-container {
+  max-height: min(800px, 70vh);
+  overflow: auto;
 }
 
 /* antd overrides */
@@ -226,6 +236,10 @@ select {
     padding-top: 0;
   }
 
+  .hide-nft {
+    display: none !important;
+  }
+
   .redeem-freezer {
     background-color: #426788;
     border-radius: 6px;
@@ -238,6 +252,13 @@ select {
     position: relative;
     text-align: center;
     width: 100%;
+
+    &[disabled] {
+      background-color: #CCC;
+      color: #EEE;
+      cursor: not-allowed;
+      filter: saturate(0.1);
+    }
 
     > .redeem-text {
       align-items: center;

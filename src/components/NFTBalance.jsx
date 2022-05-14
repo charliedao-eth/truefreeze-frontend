@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
-import { Button, Card, Image, Tooltip, Modal, Input, Skeleton } from "antd";
+import { Button, Card, Image, Tooltip, Modal, Input, Skeleton, message } from "antd";
 import { FileSearchOutlined, SendOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
@@ -23,12 +23,11 @@ function NFTBalance({
   filterByContractAddress = "",
   fetchProgress,
   unlockFreezer,
+  className = "",
 }) {
   filterByContractAddress = filterByContractAddress?.toLowerCase();
 
-  const { data: NFTBalances } = useNFTBalances({
-    token_addresses: [filterByContractAddress],
-  });
+  const { data: NFTBalances } = useNFTBalances();
   const { Moralis, chainId } = useMoralis();
   const [visible, setVisibility] = useState(false);
   const [receiverToSend, setReceiver] = useState(null);
@@ -37,6 +36,7 @@ function NFTBalance({
   const [isPending, setIsPending] = useState(false);
   const [freezers, setFreezers] = useState(null);
   const [unlockProgress, setUnlockProgress] = useState(null);
+  const [isUnlocking, setIsUnlocking] = useState({});
   const { verifyMetadata } = useVerifyMetadata();
 
   useEffect(() => {
@@ -106,6 +106,26 @@ function NFTBalance({
     setAmount(e.target.value);
   };
 
+  const startUnlock = async (nft) => {
+    setIsUnlocking({
+      ...isUnlocking,
+      [nft?.token_id]: true,
+    }); // tracks multiple freezers unlocking at the same time
+
+    try {
+      const unlockSuccess = (await unlockFreezer(nft)) !== 'error';
+      if(unlockSuccess) {
+        message.success(`Freezer unlocked successfully`, 3);
+        window.localStorage.setItem(`freezer_${nft.token_id}`, 'unlocked');
+      }
+    } finally {
+      setIsUnlocking({
+        ...isUnlocking,
+        [nft?.token_id]: false,
+      });
+    }
+  }
+
   // TODO useEffect to fetch getProgress, getUnlockCost
   // TODO withdrawWAsset (unlock and pay fees in one step) <-- needs user clarity
 
@@ -141,15 +161,19 @@ function NFTBalance({
           />
         }
         key={keyname}
+        className={
+          (window.localStorage.getItem(`freezer_${nft.token_id}`) === 'unlocked') ? 'hide-nft' : '' 
+        }
       >
         {!nft ? null : (
           <Button
             className="redeem-freezer"
             title={(progressAmount || "--") + "% progress"}
-            onClick={() => unlockFreezer(nft)}
+            onClick={() => startUnlock(nft)}
+            disabled={isUnlocking[nft.token_id]}
           >
             <span className="redeem-text">
-              <span>REDEEM</span>
+              <span>{isUnlocking[nft.token_id] ? 'REDEEMING' :'REDEEM'}</span>
             </span>
             {progressAmount ? (
               <span
@@ -178,7 +202,7 @@ function NFTBalance({
   };
 
   return (
-    <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
+    <div className={className} style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <div style={styles.NFTs}>
         <Skeleton loading={!freezers}>{renderNFTs(freezers)}</Skeleton>
       </div>

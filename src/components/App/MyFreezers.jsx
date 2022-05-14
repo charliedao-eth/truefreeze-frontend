@@ -1,5 +1,5 @@
 import { useMoralis } from "react-moralis";
-import { Skeleton } from "antd";
+import { Skeleton, message } from "antd";
 import useToken from "hooks/useToken";
 import NFTBalance from "components/NFTBalance";
 
@@ -36,7 +36,12 @@ function MyFreezers(props) {
       });
     } catch (err) {
       console.error(err);
-      throw new Error("Token approvals failed. Cannot unlock freezer.");
+      message.error({
+        content: "Token approvals failed. Cannot unlock freezer. Press to see error logs.",
+        duration: 4,
+        onClick: () => alert(JSON.stringify(err)),
+      });
+      return 'error';
     }
 
     // TODO use getWAssetFees and getUnlockCost + balances from useToken() to estimate if this will fail BEFORE the user tries the transaction. better ux by removing that frustring failure case
@@ -59,6 +64,12 @@ function MyFreezers(props) {
           freezerNFT && freezerNFT.token_id
         }. ${err}`,
       );
+      message.error({
+        content: "Freezer unlocking failed. Press to see error logs.",
+        duration: 4,
+        onClick: () => alert(`freezer ${freezerNFT?.token_id} unlock failed: ` + JSON.stringify(err)),
+      });
+      return 'error';
     }
   };
   const fetchProgress = async (freezerNFT) => {
@@ -128,6 +139,7 @@ function MyFreezers(props) {
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}
         fetchProgress={fetchProgress}
+        className="page-scroll-container"
       />
     </div>
   );
