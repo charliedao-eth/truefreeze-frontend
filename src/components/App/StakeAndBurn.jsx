@@ -145,16 +145,39 @@ function StakeAndBurn(props) {
   }
 
   return (
-    <div>
-      {/* TODO split this into tabs */}
+    <div className="appPageContent stakeandburn">
+      <section className="page-toolbar white-text m-b-1">
+        <div className="wallet-info">
+          <div>
+            <b>WALLET</b>
+          </div>
+          <div>
+            0x...{account?.substring(account?.length - 4, account?.length)}
+          </div>
+        </div>
+        <div className="curriencies inline-flex flex-align--right">
+          <div className="frToken-holdings m-r-1">
+            <div>
+              <b>frETH</b>
+            </div>
+            <div className="notReady">000.00</div>
+          </div>
+          <div className="frz-holdings">
+            <div>
+              <b>FRZ</b>
+            </div>
+            <div className="notReady">00.00</div>
+          </div>
+        </div>
+      </section>
       <Tabs defaultActiveKey="burn" centered onChange={changeBg}>
-        <TabPane tab="Burn" key="burn">
+        <TabPane tab="BURN" key="burn">
           <Burn />
         </TabPane>
-        <TabPane tab="Stake" key="stake">
+        <TabPane tab="STAKE" key="stake">
           <Stake />
         </TabPane>
-        <TabPane tab="Rewards" key="rewards">
+        <TabPane tab="REWARDS" key="rewards">
           <ClaimRewards />
         </TabPane>
       </Tabs>
