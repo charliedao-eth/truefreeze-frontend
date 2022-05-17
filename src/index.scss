@@ -272,10 +272,124 @@ select {
 .p-l-1 {
   padding-left: 1em;
 }
+.p-t-2 {
+  padding-top: 2em;
+}
+.p-r-2 {
+  padding-right: 2em;
+}
+.p-b-2 {
+  padding-bottom: 2em;
+}
+.p-l-2 {
+  padding-left: 2em;
+}
+
+.width-200 {
+  width: 200px;
+}
 
 .white-text {
   color: #FFFFFF;
 }
+.text-align-center {
+  text-align: center;
+}
+
+// general TF app styles
+
+.translucent-card {
+  background: rgba(255,255,255,0.09);
+  border-radius: 20px;
+  box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+  justify-content: space-between;
+  max-width: 305px;
+  padding: 4px 24px 16px;
+  position: relative;
+
+  &.wide {
+    max-width: none;
+    width: 560px;
+  }
+
+  &.small {
+    height: 100px;
+    padding-top: 22px;
+    width: 200px;
+
+    > .card-icon {
+      right: 16px;
+    }
+  }
+
+  &.tall {
+    height: 370px;
+  }
+
+  &.taller {
+    height: 400px;
+  }
+
+  .card-title {
+    color: #FFFFFF;
+    font-size: 21px;
+  }
+  .choke-label {
+    margin-bottom: -10px;
+  }
+
+  .card-icon {
+    color: #FFFFFF;
+    fill: #FFFFFF;
+    height: 38px;
+    position: absolute;
+    right: 24px;
+    top: 8px;
+
+    &.eth-icon { // the viewbox isn't square. just manually bumping pixels to align inside circle per icon
+      height: 32px;
+      right: 25px;
+      top: 11px;
+    }
+  }
+}
+
+.truefreeze {
+  .uhoh.ant-btn {
+    background-color: $uhoh;
+    border-color: $uhoh;
+    color: #EEEEEE;
+
+    &:hover, &:focus, &:active {
+      color: #FFFFFF;
+      background: lighten($uhoh, 5%);
+    }
+  }
+  .cool.ant-btn {
+    background-color: $cool;
+    border-color: $cool;
+    color: #EEEEEE;
+
+    &:hover, &:focus, &:active {
+      color: #FFFFFF;
+      background: lighten($cool, 5%);
+    }
+  }
+  .transparent-card {
+    @extend .translucent-card;
+    background: none;
+    border: 1px solid #FFFFFF;
+    text-align: center;
+  }
+}
+
+
+// specific page styles
 
 .myfreezers {
   .ant-card-body {
@@ -339,23 +453,6 @@ select {
 }
 
 .lock-page {
-  .lock-card {
-    background: rgba(255,255,255,0.09);
-    border-radius: 20px;
-    box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    height: 380px;
-    justify-content: space-between;
-    max-width: 305px;
-    padding: 16px 24px;
-
-    .card-title {
-      color: #FFFFFF;
-      font-size: 21px;
-    }
-  }
   .lock-chart {
     max-width: 305px;
   }
@@ -363,7 +460,22 @@ select {
     border-radius: 20px;
     max-width: 100%;
   }
-  .choke-label {
-    margin-bottom: -10px;
+}
+
+.stakeandburn {
+  .claim-tab {
+    .claim-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 8px;
+      position: relative;
+    }
+    .claim-currency {
+      padding-right: 1em;
+      position: absolute;
+      right: 200px;
+      text-align: right;
+    }
   }
 }

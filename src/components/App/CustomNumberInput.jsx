@@ -1,17 +1,17 @@
 import { InputNumber } from "antd";
 
-export default function CustomNumberInput({ onAmountChange }) {
+export default function CustomNumberInput({ value, onAmountChange, label = "" }) {
   return (
     <label>
-      AMOUNT
+      {label}
       <InputNumber
         style={{
           width: "100%",
         }}
-        defaultValue="1"
+        value={value}
         min="0"
         step="0.1"
-        precision={8}
+        precision={4}
         onChange={onAmountChange}
         stringMode
       />

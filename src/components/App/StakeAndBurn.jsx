@@ -1,7 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import { Button, Skeleton, Tabs } from "antd";
+import CustomNumberInput from "./CustomNumberInput";
 import useToken from "hooks/useToken";
+import burnIcon from "../../assets/burnicon.svg";
+import lockIcon from "../../assets/lockicon.svg";
+import frethIcon from "../../assets/frethicon.svg";
+import frzIcon from "../../assets/frzicon.svg";
+import ethIcon from "../../assets/ethicon.svg";
+import circleIcon from "../../assets/circleicon.svg";
 
 const { TabPane } = Tabs;
 
@@ -94,33 +101,164 @@ function StakeAndBurn(props) {
   function Burn() {
     return (
       <div>
-        {/* TODO Un-hardcode the burn amount */}
-        <Button loading={isTransacting} onClick={() => burnFrToken(100)}>
-          burn frToken
-        </Button>
+        <div className="text-align-center white-text">
+          <div>Burn frETH to earn FRZ. Burnt frETH is gone forever.</div>
+          <div>In exchange, you earn a flow of FRZ.</div>
+          <div>Staked FRZ will earn you a portion of early withdrawal fees paid by other users.</div>
+        </div>
+        <div className="flex justify-center m-t-2">
+          <section className="translucent-card flex-half m-r-2">
+            <img src={burnIcon} className="card-icon" />
+            <h3 className="card-title">BURN</h3>
+            <CustomNumberInput onAmountChange={(val) => alert('noop TODO' + val)} value={0} label="AMOUNT" />
+            <Button className="uhoh" loading={false /**TODO */} onClick={() => burnFrToken(100)}>
+              BURN frToken
+            </Button>
+            <div>
+              <div className="choke-label">EARN</div>
+              <div>
+                <span className="font-35 notReady">99.99</span>
+                <span className="p-l-1">frETH</span>
+              </div>
+            </div>
+          </section>
+          <section className="transparent-card flex-half">
+            <div>
+              <div>
+                <span className="font-35 notReady">9999.99</span>
+                <span className="p-l-1">frETH</span>
+              </div>
+              <div>
+                Total Burnt
+              </div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35 notReady">99.99</span>
+                <span className="p-l-1">frETH</span>
+              </div>
+              <div>
+                FRZ Flow Share
+              </div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35 notReady">99.99</span>
+                <span className="p-l-1">frETH</span>
+              </div>
+              <div>
+                Your Burnt
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     );
   }
   function Stake() {
     return (
       <div>
-        {/* TODO Un-hardcode the stake amounts */}
-        <Button loading={isTransacting} onClick={() => stakeFrz(100)}>
-          stake FRZ
-        </Button>
-        <Button loading={isTransacting} onClick={() => withdrawFrz(100)}>
-          withdraw FRZ
-        </Button>
+        <div className="text-align-center white-text p-r-2 p-l-2">
+          <div>By staking your FRZ, you will earn a portion of penalties paid by other users. These penalties are paid in frETH and WETH and can be claimed on the 'CLAIM' tab.</div>
+        </div>
+        <div className="flex justify-center m-t-2">
+          <section className="translucent-card taller flex-half m-r-2">
+            <img src={lockIcon} className="card-icon" />
+            <h3 className="card-title">STAKE</h3>
+            <CustomNumberInput onAmountChange={(val) => alert('noop TODO' + val)} value={0} label="AMOUNT" />
+            <Button type="primary" loading={isTransacting} onClick={() => stakeFrz(100)}>
+              STAKE FRZ
+            </Button>
+            <h3 className="card-title m-t-1">UNSTAKE</h3>
+            <CustomNumberInput onAmountChange={(val) => alert('noop TODO' + val)} value={0} label="AMOUNT" />
+            <Button type="primary" loading={isTransacting} onClick={() => withdrawFrz(100)}>
+              UNSTAKE FRZ
+            </Button>
+          </section>
+          <section className="transparent-card taller flex-half">
+            <div>
+              <div>
+                <span className="font-35 notReady">99</span>
+                <span className="p-l-1">FRZ</span>
+              </div>
+              <div>
+                Your Staked
+              </div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35 notReady">9,999</span>
+                <span className="p-l-1">FRZ</span>
+              </div>
+              <div>
+                Total Staked
+              </div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35 notReady">1,232</span>
+              </div>
+              <div>
+                frETH Penalties Paid
+              </div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35 notReady">1,232</span>
+                <span className="p-l-1"></span>
+              </div>
+              <div>
+                WETH Penalties Paid
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     );
   }
   function ClaimRewards() {
     return (
-      <div>
-        <Button loading={isTransacting} onClick={claimAllRewards}>
-          claim all
-        </Button>
-      </div>
+      <Fragment>
+        <div className="text-align-center white-text p-r-2 p-l-2">
+          <div>Claim the fees you've earned from staking your FRZ. Claim each token individually or all at once.</div>
+        </div>
+        <div className="flex justify-center claim-tab m-t-2">
+          <div className="transparent-card wide taller flex flex-column center">
+            <div className="claim-row">
+              <div className="transparent-card small">
+                <div className="claim-currency font-35">frETH</div>
+                <img src={frethIcon} className="card-icon" />
+                <div>
+                  <span className="font-35 notReady">35</span>
+                  <span className="p-l-1">frETH</span>
+                </div>
+              </div>
+            </div>
+            <div className="claim-row">
+              <div className="transparent-card small">
+                <div className="claim-currency font-35">FRZ</div>
+                <img src={frzIcon} className="card-icon" />
+                <div>
+                  <span className="font-35 notReady">22</span>
+                  <span className="p-l-1">FRZ</span>
+                </div>
+              </div>
+            </div>
+            <div className="claim-row">
+              <div className="transparent-card small">
+                <div className="claim-currency font-35">WETH</div>
+                <img src={ethIcon} className="card-icon eth-icon" />
+                <img src={circleIcon} className="card-icon" />
+                <div>
+                  <span className="font-35 notReady">35</span>
+                  <span className="p-l-1">WETH</span>
+                </div>
+              </div>
+            </div>
+            <Button className="cool width-200 m-t-1" loading={isTransacting} onClick={claimAllRewards}>CLAIM ALL</Button>
+          </div>
+        </div>
+      </Fragment>
     );
   }
 

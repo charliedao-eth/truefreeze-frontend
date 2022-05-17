@@ -1,8 +1,10 @@
 import { useMoralis } from "react-moralis";
-import { Skeleton, Button, InputNumber, Select, Modal, message } from "antd";
+import { Skeleton, Button, Select, Modal, message } from "antd";
 import useToken from "hooks/useToken";
 import { useState } from "react";
 import chartplaceholder from "../../assets/chartplaceholder.png";
+import CustomNumberInput from "./CustomNumberInput";
+import lockIcon from "../../assets/lockicon.svg";
 
 const { Option } = Select;
 
@@ -106,22 +108,10 @@ function Lock(props) {
         </div>
       </section>
       <div className="flex justify-center m-t-2">
-        <section className="white-text lock-card flex-half m-r-2">
+        <section className="translucent-card tall flex-half m-r-2">
+          <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
-          <label>
-            AMOUNT
-            <InputNumber
-              style={{
-                width: "100%",
-              }}
-              value={amountLocked}
-              min="0"
-              step="0.1"
-              precision={4}
-              onChange={(val) => setAmountLocked(parseFloat(val))}
-              stringMode
-            />
-          </label>
+          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val))} value={amountLocked} label="AMOUNT" />
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
