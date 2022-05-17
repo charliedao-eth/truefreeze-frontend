@@ -111,7 +111,11 @@ function Lock(props) {
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
-          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val))} value={amountLocked} label="AMOUNT" />
+          <CustomNumberInput
+            onAmountChange={(val) => setAmountLocked(parseFloat(val))}
+            value={amountLocked}
+            label="AMOUNT"
+          />
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">

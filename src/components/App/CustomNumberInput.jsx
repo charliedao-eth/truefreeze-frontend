@@ -1,6 +1,10 @@
 import { InputNumber } from "antd";
 
-export default function CustomNumberInput({ value, onAmountChange, label = "" }) {
+export default function CustomNumberInput({
+  value,
+  onAmountChange,
+  label = "",
+}) {
   return (
     <label>
       {label}
