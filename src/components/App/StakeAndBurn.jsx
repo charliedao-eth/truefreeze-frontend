@@ -15,9 +15,13 @@ const { TabPane } = Tabs;
 function StakeAndBurn(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = useToken({ contract });
-  const { checkThenAllowFrToken, checkThenAllowFrz } = methods;
+  const { isInitialized, methods, tokenData } = useToken({ contract });
+  const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
+  const { frTokenBalance, frzBalance, } = tokenData;
   const [isTransacting, setIsTransacting] = useState(false);
+  const [burnAmount, setBurnAmount] = useState(0);
+  const [stakeAmount, setStakeAmount] = useState(0);
+  const [unstakeAmount, setUnstakeAmount] = useState(0);
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
 
@@ -69,6 +73,7 @@ function StakeAndBurn(props) {
       return confirmation;
     } finally {
       setIsTransacting(false);
+      refreshTokenData();
     }
   };
 
@@ -114,14 +119,16 @@ function StakeAndBurn(props) {
             <img src={burnIcon} className="card-icon" />
             <h3 className="card-title">BURN</h3>
             <CustomNumberInput
-              onAmountChange={(val) => alert("noop TODO" + val)}
-              value={0}
+              onAmountChange={(val) => setBurnAmount(val)}
+              value={burnAmount}
               label="AMOUNT"
+              stringMode={false}
+              step={1}
             />
             <Button
               className="uhoh"
-              loading={false /**TODO */}
-              onClick={() => burnFrToken(100)}
+              loading={isTransacting}
+              onClick={() => burnFrToken(burnAmount)}
             >
               BURN frToken
             </Button>
@@ -175,27 +182,31 @@ function StakeAndBurn(props) {
             <img src={lockIcon} className="card-icon" />
             <h3 className="card-title">STAKE</h3>
             <CustomNumberInput
-              onAmountChange={(val) => alert("noop TODO" + val)}
-              value={0}
+              onAmountChange={(val) => setStakeAmount(val)}
+              value={stakeAmount}
               label="AMOUNT"
+              stringMode={false}
+              step={1}
             />
             <Button
               type="primary"
               loading={isTransacting}
-              onClick={() => stakeFrz(100)}
+              onClick={() => stakeFrz(stakeAmount)}
             >
               STAKE FRZ
             </Button>
             <h3 className="card-title m-t-1">UNSTAKE</h3>
             <CustomNumberInput
-              onAmountChange={(val) => alert("noop TODO" + val)}
-              value={0}
+              onAmountChange={(val) => setUnstakeAmount(val)}
+              value={unstakeAmount}
               label="AMOUNT"
+              stringMode={false}
+              step={1}
             />
             <Button
               type="primary"
               loading={isTransacting}
-              onClick={() => withdrawFrz(100)}
+              onClick={() => withdrawFrz(unstakeAmount)}
             >
               UNSTAKE FRZ
             </Button>
@@ -324,13 +335,13 @@ function StakeAndBurn(props) {
             <div>
               <b>frETH</b>
             </div>
-            <div className="notReady">000.00</div>
+            <div>{frTokenBalance}</div>
           </div>
           <div className="frz-holdings">
             <div>
               <b>FRZ</b>
             </div>
-            <div className="notReady">00.00</div>
+            <div>{frzBalance}</div>
           </div>
         </div>
       </section>

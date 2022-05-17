@@ -171,7 +171,7 @@ export default function useToken({ contract }) {
 
     methods: {
       // use these to refresh the token data
-      refreshTokenData,
+      refreshTokenData, // TODO add whitelist of keys to limit refresh to specific tokens
 
       // check or set allowance
       isFrzAllowed,

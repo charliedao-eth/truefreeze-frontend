@@ -4,6 +4,7 @@ export default function CustomNumberInput({
   value,
   onAmountChange,
   label = "",
+  ...props
 }) {
   return (
     <label>
@@ -18,6 +19,7 @@ export default function CustomNumberInput({
         precision={4}
         onChange={onAmountChange}
         stringMode
+        {...props}
       />
     </label>
   );
