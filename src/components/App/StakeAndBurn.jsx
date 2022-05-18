@@ -16,8 +16,9 @@ function StakeAndBurn(props) {
   const { contract } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = useToken({ contract });
-  const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
-  const { frTokenBalance, frzBalance, } = tokenData;
+  const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } =
+    methods;
+  const { frTokenBalance, frzBalance } = tokenData;
   const [isTransacting, setIsTransacting] = useState(false);
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
@@ -101,15 +102,39 @@ function StakeAndBurn(props) {
       functionName: "getReward",
     });
 
-  const burnButton = ({amount: burnAmount}) => {
-    return <Button className="uhoh" loading={isTransacting} onClick={() => burnFrToken(burnAmount)}>BURN frToken</Button>;
-  }
-  const stakeButton = ({amount: stakeAmount}) => {
-    return <Button type="primary" loading={isTransacting} onClick={() => stakeFrz(stakeAmount)}>STAKE FRZ</Button>;
-  }
-  const unstakeButton = ({amount: unstakeAmount}) => {
-    return <Button type="primary" loading={isTransacting} onClick={() => withdrawFrz(unstakeAmount)} >UNSTAKE FRZ</Button>;
-  }
+  const burnButton = ({ amount: burnAmount }) => {
+    return (
+      <Button
+        className="uhoh"
+        loading={isTransacting}
+        onClick={() => burnFrToken(burnAmount)}
+      >
+        BURN frToken
+      </Button>
+    );
+  };
+  const stakeButton = ({ amount: stakeAmount }) => {
+    return (
+      <Button
+        type="primary"
+        loading={isTransacting}
+        onClick={() => stakeFrz(stakeAmount)}
+      >
+        STAKE FRZ
+      </Button>
+    );
+  };
+  const unstakeButton = ({ amount: unstakeAmount }) => {
+    return (
+      <Button
+        type="primary"
+        loading={isTransacting}
+        onClick={() => withdrawFrz(unstakeAmount)}
+      >
+        UNSTAKE FRZ
+      </Button>
+    );
+  };
 
   function Burn() {
     return (
@@ -126,10 +151,7 @@ function StakeAndBurn(props) {
           <section className="translucent-card flex-half m-r-2">
             <img src={burnIcon} className="card-icon" />
             <h3 className="card-title">BURN</h3>
-            <CurrencyAmountAction
-              label="AMOUNT"
-              ActionButton={burnButton}
-            />
+            <CurrencyAmountAction label="AMOUNT" ActionButton={burnButton} />
             <div>
               <div className="choke-label">EARN</div>
               <div>
@@ -179,15 +201,9 @@ function StakeAndBurn(props) {
           <section className="translucent-card taller flex-half m-r-2">
             <img src={lockIcon} className="card-icon" />
             <h3 className="card-title">STAKE</h3>
-            <CurrencyAmountAction
-              label="AMOUNT"
-              ActionButton={stakeButton}
-            />
+            <CurrencyAmountAction label="AMOUNT" ActionButton={stakeButton} />
             <h3 className="card-title m-t-1">UNSTAKE</h3>
-            <CurrencyAmountAction
-              label="AMOUNT"
-              ActionButton={unstakeButton}
-            />
+            <CurrencyAmountAction label="AMOUNT" ActionButton={unstakeButton} />
           </section>
           <section className="transparent-card taller flex-half">
             <div>
@@ -296,7 +312,6 @@ function StakeAndBurn(props) {
       document.querySelector(".gradient-bg")?.classList.add("gradient-bg-blue");
     }
   }
-  
 
   return (
     <div className="appPageContent stakeandburn">
@@ -314,13 +329,15 @@ function StakeAndBurn(props) {
             <div>
               <b>frETH</b>
             </div>
-            <div>{frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : '--'}</div>
+            <div>
+              {frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}
+            </div>
           </div>
           <div className="frz-holdings">
             <div>
               <b>FRZ</b>
             </div>
-            <div>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : '--'}</div>
+            <div>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : "--"}</div>
           </div>
         </div>
       </section>
@@ -340,19 +357,22 @@ function StakeAndBurn(props) {
 }
 
 function CurrencyAmountAction({
-  defaultValue="0",
+  defaultValue = "0",
   label = "",
   ActionButton,
 }) {
   const [amount, setAmount] = useState(defaultValue);
 
-
   return (
     <Fragment>
-      <CustomNumberInput value={amount} label={label} onAmountChange={setAmount}/>
+      <CustomNumberInput
+        value={amount}
+        label={label}
+        onAmountChange={setAmount}
+      />
       <ActionButton amount={amount} />
     </Fragment>
-  )
-};
+  );
+}
 
 export default StakeAndBurn;

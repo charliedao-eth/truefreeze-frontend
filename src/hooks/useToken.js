@@ -133,8 +133,8 @@ export default function useToken({ contract }) {
     };
 
     const convertUnits = (inDec18) => {
-      return (inDec18?.length > 0) ? Moralis.Units.FromWei(inDec18) : null;
-    }
+      return inDec18?.length > 0 ? Moralis.Units.FromWei(inDec18) : null;
+    };
 
     const fetches = fetchAndSetFns.map(([fetchFn]) => {
       return fetchFn()
@@ -143,7 +143,9 @@ export default function useToken({ contract }) {
     });
     const results = await Promise.allSettled(fetches); // wait until all fetches complete or error out
 
-    fetchAndSetFns.forEach(([, setFn], index) => setFn(convertUnits(results[index].value))); // set the hook state for each reults
+    fetchAndSetFns.forEach(([, setFn], index) =>
+      setFn(convertUnits(results[index].value)),
+    ); // set the hook state for each reults
   };
 
   useEffect(() => {
