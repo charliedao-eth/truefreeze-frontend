@@ -35,5 +35,6 @@
     "linebreak-style": 0,
     "prettier/prettier": "warn",
     "no-debugger": "warn",
+    "no-unused-vars": "warn"
   }
 }
