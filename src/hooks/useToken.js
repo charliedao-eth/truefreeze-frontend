@@ -17,6 +17,19 @@ export default function useToken({ contract }) {
   const [frzTotalSupply, setFrzTotalSupply] = useState("");
   const [frzBalance, setFrzBalance] = useState("");
 
+  useEffect(() => {
+    if (isMoralisInitialized) {
+      (async () => {
+        await refreshTokenData();
+        setIsInitialized(true);
+      })();
+    }
+  }, [isMoralisInitialized, contract]);
+
+  if (!contract) {
+    return null;
+  }
+
   // TODO use FRZ and frToken contract getters to fetch token metadata, then use that metadata to add our custom tokens to their wallet token list like so:
   // https://docs.metamask.io/guide/registering-your-token.html
 
@@ -147,15 +160,6 @@ export default function useToken({ contract }) {
       setFn(convertUnits(results[index].value)),
     ); // set the hook state for each reults
   };
-
-  useEffect(() => {
-    if (isMoralisInitialized) {
-      (async () => {
-        await refreshTokenData();
-        setIsInitialized(true);
-      })();
-    }
-  }, [isMoralisInitialized, contract]);
 
   return {
     isInitialized, // true indicates that token data has been loaded at least once

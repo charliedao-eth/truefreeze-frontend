@@ -1,7 +1,8 @@
 import { useMoralis } from "react-moralis";
-import { Skeleton, message } from "antd";
+import { message } from "antd";
 import useToken from "hooks/useToken";
 import NFTBalance from "components/NFTBalance";
+import PageToolbar from "./PageToolbar";
 
 /**
  * The dapp post-authetication home page
@@ -15,8 +16,11 @@ function MyFreezers(props) {
   const { isInitialized, methods } = useToken({ contract });
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
-  if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
-    return <Skeleton />;
+  if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
+    return (
+      <div className="appPageContent" />
+    );
+  }
 
   const unlockFreezer = async (freezerNFT) => {
     console.log("Unlocking freezer:");
@@ -112,34 +116,12 @@ function MyFreezers(props) {
 
   return (
     <div className="appPageContent myfreezers">
-      <section className="page-toolbar white-text">
-        <div className="wallet-info">
-          <div>
-            <b>WALLET</b>
-          </div>
-          <div>
-            0x...{account?.substring(account?.length - 4, account?.length)}
-          </div>
-        </div>
+      <PageToolbar contract={contract}>
         <div className="sorting inline-flex space-between center notReady">
           <span className="m-r-1">TIME</span>
           <span>ETH</span>
         </div>
-        <div className="curriencies inline-flex flex-align--right">
-          <div className="frToken-holdings m-r-1">
-            <div>
-              <b>frETH</b>
-            </div>
-            <div className="notReady">000.00</div>
-          </div>
-          <div className="frz-holdings">
-            <div>
-              <b>FRZ</b>
-            </div>
-            <div className="notReady">00.00</div>
-          </div>
-        </div>
-      </section>
+      </PageToolbar>
       <NFTBalance
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}

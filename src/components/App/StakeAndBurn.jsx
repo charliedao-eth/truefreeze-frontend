@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { useMoralis } from "react-moralis";
-import { Button, Skeleton, Tabs } from "antd";
+import { Button, Tabs } from "antd";
 import CustomNumberInput from "./CustomNumberInput";
 import useToken from "hooks/useToken";
 import burnIcon from "../../assets/burnicon.svg";
@@ -9,6 +9,7 @@ import frethIcon from "../../assets/frethicon.svg";
 import frzIcon from "../../assets/frzicon.svg";
 import ethIcon from "../../assets/ethicon.svg";
 import circleIcon from "../../assets/circleicon.svg";
+import PageToolbar from "./PageToolbar";
 
 const { TabPane } = Tabs;
 
@@ -23,8 +24,11 @@ function StakeAndBurn(props) {
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
 
-  if (!isInitialized || (!props.address && (!account || !isAuthenticated)))
-    return <Skeleton />;
+  if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
+    return (
+      <div className="appPageContent" />
+    );
+  }
 
   const genericAmountTransaction = async ({
     contractName,
@@ -315,32 +319,7 @@ function StakeAndBurn(props) {
 
   return (
     <div className="appPageContent stakeandburn">
-      <section className="page-toolbar white-text m-b-1">
-        <div className="wallet-info">
-          <div>
-            <b>WALLET</b>
-          </div>
-          <div>
-            0x...{account?.substring(account?.length - 4, account?.length)}
-          </div>
-        </div>
-        <div className="curriencies inline-flex flex-align--right">
-          <div className="frToken-holdings m-r-1">
-            <div>
-              <b>frETH</b>
-            </div>
-            <div>
-              {frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}
-            </div>
-          </div>
-          <div className="frz-holdings">
-            <div>
-              <b>FRZ</b>
-            </div>
-            <div>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : "--"}</div>
-          </div>
-        </div>
-      </section>
+      <PageToolbar contract={contract} />
       <Tabs defaultActiveKey="burn" centered onChange={changeBg}>
         <TabPane tab="BURN" key="burn">
           <Burn />

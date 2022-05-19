@@ -27,8 +27,15 @@ function Claim(props) {
     })();
   }, [account]);
 
-  if (!contract || (!props.address && (!account || !isAuthenticated)))
-    return <Skeleton />;
+  if (!contract || (!props.address && (!account || !isAuthenticated))) {
+    return (
+      <div className="appPageContent">
+        <div className="page-skeleton-wrapper">
+          <Skeleton />;
+        </div>
+      </div>
+    );
+  }
 
   async function checkIfClaimed() {
     const options = {

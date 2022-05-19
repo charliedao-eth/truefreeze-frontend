@@ -5,6 +5,7 @@ import { useState } from "react";
 import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
+import PageToolbar from "./PageToolbar";
 
 const { Option } = Select;
 
@@ -79,34 +80,15 @@ function Lock(props) {
     }
   };
 
-  if (!props.address && (!account || !isAuthenticated)) return <Skeleton />;
+  if (!props.address && (!account || !isAuthenticated)) {
+    return (
+      <div className="appPageContent" />
+    );
+  }
 
   return (
     <div className="appPageContent lock-page">
-      <section className="page-toolbar white-text">
-        <div className="wallet-info">
-          <div>
-            <b>WALLET</b>
-          </div>
-          <div>
-            0x...{account?.substring(account?.length - 4, account?.length)}
-          </div>
-        </div>
-        <div className="curriencies inline-flex flex-align--right">
-          <div className="frToken-holdings m-r-1">
-            <div>
-              <b>frETH</b>
-            </div>
-            <div className="notReady">000.00</div>
-          </div>
-          <div className="frz-holdings">
-            <div>
-              <b>FRZ</b>
-            </div>
-            <div className="notReady">00.00</div>
-          </div>
-        </div>
-      </section>
+      <PageToolbar contract={contract} />
       <div className="flex justify-center m-t-2">
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />

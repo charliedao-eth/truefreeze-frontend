@@ -21,10 +21,13 @@ import StakeAndBurn from "components/App/StakeAndBurn";
 import { Layout, Menu, ConfigProvider, message, Skeleton } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "antd/dist/antd.variable.min.css";
-import NativeBalance from "components/NativeBalance";
 import Text from "antd/lib/typography/Text";
 const { Header, Footer } = Layout;
 import logoSVG from "./assets/truefreezelogo.svg";
+import gradientBgBlue from "./assets/gradientbgblue.png";
+import gradientBgGreen from "./assets/gradientbggreen.png";
+import gradientBgRed from "./assets/gradientbgred.png";
+import { NotFoundError } from "@cloudflare/kv-asset-handler";
 
 ConfigProvider.config({
   theme: {
@@ -64,6 +67,7 @@ const styles = {
     fontWeight: "600",
     flex: "1",
     justifyContent: "right",
+    position: "relative",
   },
   navbar: {
     background: "none",
@@ -141,7 +145,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           <GenericHeader />
         )}
         <div style={styles.content}>{props.children}</div>
-        <Footer style={{ textAlign: "center", background: "none" }}>
+        <Footer className="slow-show" style={{ textAlign: "center", background: "none" }}>
           <Text style={{ display: "block" }}>footer info todo</Text>
         </Footer>
       </Fragment>
@@ -169,7 +173,6 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         </Menu>
         <div style={styles.headerRight}>
           <Chains supportedChainIds={supportedChainIds} />
-          <NativeBalance />
           <Account />
           {props?.location?.pathname}
         </div>
@@ -191,10 +194,12 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     <ConfigProvider>
       <Layout
         style={{ height: "100vh", overflow: "auto" }}
-        className="truefreeze gradient-bg"
+        className="truefreeze gradient-bg disconnected-wallet"
       >
         <WrapWithLayout useAppHeader={false}>
-          <Skeleton />
+          <div className="skeleton-wrapper" styles={{marginTop: "100px", width: "50%"}}>
+            <Skeleton />
+          </div>
         </WrapWithLayout>
       </Layout>
     </ConfigProvider>
@@ -206,6 +211,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   return (
     <ConfigProvider>
+      <PrefetchImages />
       <Layout
         style={{ height: "100vh", overflow: "auto" }}
         className="truefreeze gradient-bg"
@@ -249,6 +255,14 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     </ConfigProvider>
   );
 };
+
+export const PrefetchImages = () => ( // tell the browser to download these backgrounds ahead of time to prevent flickering
+  <div style={{display: "none", position: "fixed"}}>
+    <img width="1" height="1" src={gradientBgBlue} />
+    <img width="1" height="1" src={gradientBgGreen} />
+    <img width="1" height="1" src={gradientBgRed} />
+  </div>
+);
 
 export const Logo = () => (
   <div style={{ display: "flex", flex: "1" }}>
