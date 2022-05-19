@@ -25,9 +25,7 @@ function StakeAndBurn(props) {
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
-    return (
-      <div className="appPageContent" />
-    );
+    return <div className="appPageContent" />;
   }
 
   const genericAmountTransaction = async ({

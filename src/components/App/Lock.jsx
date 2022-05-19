@@ -81,9 +81,7 @@ function Lock(props) {
   };
 
   if (!props.address && (!account || !isAuthenticated)) {
-    return (
-      <div className="appPageContent" />
-    );
+    return <div className="appPageContent" />;
   }
 
   return (

@@ -145,7 +145,10 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           <GenericHeader />
         )}
         <div style={styles.content}>{props.children}</div>
-        <Footer className="slow-show" style={{ textAlign: "center", background: "none" }}>
+        <Footer
+          className="slow-show"
+          style={{ textAlign: "center", background: "none" }}
+        >
           <Text style={{ display: "block" }}>footer info todo</Text>
         </Footer>
       </Fragment>
@@ -197,7 +200,10 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         className="truefreeze gradient-bg disconnected-wallet"
       >
         <WrapWithLayout useAppHeader={false}>
-          <div className="skeleton-wrapper" styles={{marginTop: "100px", width: "50%"}}>
+          <div
+            className="skeleton-wrapper"
+            styles={{ marginTop: "100px", width: "50%" }}
+          >
             <Skeleton />
           </div>
         </WrapWithLayout>
@@ -256,8 +262,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   );
 };
 
-export const PrefetchImages = () => ( // tell the browser to download these backgrounds ahead of time to prevent flickering
-  <div style={{display: "none", position: "fixed"}}>
+export const PrefetchImages = () => (
+  // tell the browser to download these backgrounds ahead of time to prevent flickering
+  <div style={{ display: "none", position: "fixed" }}>
     <img width="1" height="1" src={gradientBgBlue} />
     <img width="1" height="1" src={gradientBgGreen} />
     <img width="1" height="1" src={gradientBgRed} />

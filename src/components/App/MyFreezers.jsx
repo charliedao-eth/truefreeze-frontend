@@ -17,9 +17,7 @@ function MyFreezers(props) {
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
-    return (
-      <div className="appPageContent" />
-    );
+    return <div className="appPageContent" />;
   }
 
   const unlockFreezer = async (freezerNFT) => {
