@@ -1,7 +1,6 @@
-import { useMoralis } from "react-moralis";
-import { Skeleton, Button, Select, Modal, message } from "antd";
-import useToken from "hooks/useToken";
 import { useState } from "react";
+import { useMoralis } from "react-moralis";
+import { Button, Select, Modal, message } from "antd";
 import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
@@ -16,9 +15,9 @@ const { Option } = Select;
  */
 
 function Lock(props) {
-  const { contract } = props;
+  const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = useToken({ contract });
+  const { isInitialized, methods } = tokens;
   const { checkThenAllowWrapped } = methods;
   const [isLocking, setIsLocking] = useState(false);
   const [amountLocked, setAmountLocked] = useState(1);
@@ -86,7 +85,7 @@ function Lock(props) {
 
   return (
     <div className="appPageContent lock-page">
-      <PageToolbar contract={contract} />
+      <PageToolbar tokens={tokens} />
       <div className="flex justify-center m-t-2">
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
@@ -106,7 +105,7 @@ function Lock(props) {
                 onChange={setTimeLocked}
               >
                 {new Array(24).fill(1).map((_val, index) => (
-                  <Option value={index + 1}>{index + 1}</Option>
+                  <Option value={index + 1} key={`lock-amt-month-${index + 1}`}>{index + 1}</Option>
                 ))}
               </Select>
               <span className="white-text flex-half align-left p-l-1">

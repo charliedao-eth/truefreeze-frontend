@@ -1,6 +1,5 @@
 import { useMoralis } from "react-moralis";
 import { message } from "antd";
-import useToken from "hooks/useToken";
 import NFTBalance from "components/NFTBalance";
 import PageToolbar from "./PageToolbar";
 
@@ -11,9 +10,9 @@ import PageToolbar from "./PageToolbar";
  */
 
 function MyFreezers(props) {
-  const { contract } = props;
+  const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = useToken({ contract });
+  const { isInitialized, methods } = tokens;
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
@@ -114,7 +113,7 @@ function MyFreezers(props) {
 
   return (
     <div className="appPageContent myfreezers">
-      <PageToolbar contract={contract}>
+      <PageToolbar tokens={tokens}>
         <div className="sorting inline-flex space-between center notReady">
           <span className="m-r-1">TIME</span>
           <span>ETH</span>

@@ -1,12 +1,10 @@
 import { useMoralis, useNativeBalance } from "react-moralis";
-import useToken from "hooks/useToken";
 
 export default function PageToolbar(props) {
-  const contract = props.contract;
+  const { tokens } = props;
   const { account, Moralis } = useMoralis();
-  const { tokenData } = useToken({ contract });
-  const { frTokenBalance, frzBalance } = tokenData;
-  const { data: balance, nativeToken } = useNativeBalance(props);
+  const { frTokenBalance, frzBalance, wrappedTokenBalance } = tokens.tokenData;
+  const { data: balance, nativeToken } = useNativeBalance();
 
   const nativeAmounts = {
     balance:
@@ -32,6 +30,14 @@ export default function PageToolbar(props) {
             <b>{nativeAmounts.symbol}</b>
           </div>
           <div>{nativeAmounts.balance}</div>
+        </div>
+        <div>
+          <div>
+            <b>WRAPPED{/** TODO fetch symbol */}</b>
+          </div>
+          <div>
+            {wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(2) : "--"}
+          </div>
         </div>
       </div>
       {props.children}

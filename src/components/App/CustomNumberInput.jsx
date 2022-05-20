@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { InputNumber } from "antd";
-import { renderSync } from "sass";
 
 export default function CustomNumberInput({
   value,

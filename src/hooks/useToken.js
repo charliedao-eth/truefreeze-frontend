@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { useMoralis, useWeb3Contract, useMoralisWeb3Api } from "react-moralis";
+import { useState } from "react";
+import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { getWrappedNative, getWrappedABI } from "helpers/networks";
 
 export default function useToken({ contract }) {
   const {
-    isInitialized: isMoralisInitialized,
     account,
     chainId,
     Moralis,
@@ -16,35 +15,84 @@ export default function useToken({ contract }) {
   const [frTokenBalance, setFrTokenBalance] = useState("");
   const [frzTotalSupply, setFrzTotalSupply] = useState("");
   const [frzBalance, setFrzBalance] = useState("");
+  const [wrappedTokenBalance, setWrappedTokenBalance] = useState("");
 
-  useEffect(() => {
-    if (isMoralisInitialized) {
-      (async () => {
-        await refreshTokenData();
-        setIsInitialized(true);
-      })();
-    }
-  }, [isMoralisInitialized, contract]);
+  /*
+  wrappedTokenBalance
 
-  if (!contract) {
-    return null;
-  }
+  frTokenBurnt
+  frTokenTotalBurnt
+  frzFlowShare
+  
+  frzStaked
+  frzTotalStaked
+  
+  frTokenTotalPenalities
+  wrappedTokenTotalPenalities
+
+  frTokenRewards
+  frzRewards
+  wrappedTokenRewards
+
+  */
 
   // TODO use FRZ and frToken contract getters to fetch token metadata, then use that metadata to add our custom tokens to their wallet token list like so:
   // https://docs.metamask.io/guide/registering-your-token.html
 
-  const { getFrTokenTotalSupply, frTokenTotalSupplyError } =
-    _frTokenTotalSupply({ contract, account });
+  const wrappedTokenMetadata = { ...getWrappedABI(chainId), tokenAddress: getWrappedNative(chainId) };
+  // TODO make more generic balance and supply functions and use some switching logic to reduce the amount of code here
+  const _getWrappedTokenBalance = async ({ tokenAddress }) => {
+    tokenAddress = tokenAddress.toLowerCase();
+    const options = {
+      chain: chainId,
+    };
+    const response = await Web3Api.account.getTokenBalances(options); // note, this api can fetch all ERC-20s at once, but we're not using that in anticipation of switching to web 3 provider + ether.js refactor
+    return response.filter((tokenBalance) => tokenBalance.token_address.toLowerCase() === tokenAddress).map((tokenBalance) => tokenBalance.balance); // grab just the balance from the one we want
+  }
+  const _frTokenTotalSupply = async ({ contract }) => {
+    const options = {
+      contractAddress: contract.frToken.address,
+      functionName: "totalSupply",
+      abi: contract.frToken.abi,
+    };
+    return await Moralis.executeFunction(options);
+  };
+  const _frTokenBalance = async ({ contract, account }) => {
+    const options = {
+      contractAddress: contract.frToken.address,
+      functionName: "balanceOf",
+      abi: contract.frToken.abi,
+      params: {
+        account: account,
+      }
+    };
+    return await Moralis.executeFunction(options);
+  };
+  const _frzTotalSupply = async ({ contract }) => {
+      const options = {
+        abi: contract.FRZ.abi,
+        contractAddress: contract.FRZ.address,
+        functionName: "totalSupply",
+      };
+      return await Moralis.executeFunction(options);
+  };
+  const _frzBalance = async ({ contract, account }) => {
+      const options = {
+        abi: contract.FRZ.abi,
+        contractAddress: contract.FRZ.address,
+        functionName: "balanceOf",
+        params: {
+          account: account,
+        }
+      };
+      return await Moralis.executeFunction(options);
+  };
 
-  const { getFrTokenBalance, frTokenBalanceError } = _frTokenBalance({
-    contract,
-    account,
-  });
-  const { getFrzTotalSupply, frzTotalSupplyError } = _frzTotalSupply({
-    contract,
-    account,
-  });
-  const { getFrzBalance, frzBalanceError } = _frzBalance({ contract, account });
+  const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress })
+  const getFrTokenTotalSupply = async () => _frTokenTotalSupply({ contract, account });
+  const getFrTokenBalance = async () => _frTokenBalance({ contract, account, });
+  const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account, });
+  const getFrzBalance = async () => _frzBalance({ contract, account });
 
   const genericIsTokenAllowed = async ({ spender, tokenAddress }) => {
     const options = {
@@ -56,13 +104,9 @@ export default function useToken({ contract }) {
     const { allowance } = await Web3Api.token.getTokenAllowance(options);
     return isTokenAllowed(allowance);
   };
-  const wrappedTokenMetadata = getWrappedABI(chainId);
-  const isFrzAllowed = async ({ spender }) =>
-    genericIsTokenAllowed({ spender, tokenAddress: contract.FRZ.address });
-  const isFrTokenAllowed = async ({ spender }) =>
-    genericIsTokenAllowed({ spender, tokenAddress: contract.frToken.address });
-  const isWrappedTokenAllowed = async ({ spender }) =>
-    genericIsTokenAllowed({ spender, tokenAddress: getWrappedNative(chainId) });
+  const isFrzAllowed = async ({ spender }) => genericIsTokenAllowed({ spender, tokenAddress: contract.FRZ.address });
+  const isFrTokenAllowed = async ({ spender }) => genericIsTokenAllowed({ spender, tokenAddress: contract.frToken.address });
+  const isWrappedTokenAllowed = async ({ spender }) => genericIsTokenAllowed({ spender, tokenAddress: wrappedTokenMetadata.tokenAddress });
 
   const genericTokenApproval = async ({
     spender,
@@ -97,7 +141,7 @@ export default function useToken({ contract }) {
   const allowWrappedToken = async ({ spender }) =>
     genericTokenApproval({
       spender,
-      tokenAddress: getWrappedNative(chainId),
+      tokenAddress: wrappedTokenMetadata.tokenAddress,
       tokenABI: wrappedTokenMetadata.abi,
       spenderParamName: wrappedTokenMetadata.spenderParamName,
       amountParamName: wrappedTokenMetadata.amountParamName,
@@ -139,6 +183,7 @@ export default function useToken({ contract }) {
       [getFrTokenBalance, setFrTokenBalance],
       [getFrzTotalSupply, setFrzTotalSupply],
       [getFrzBalance, setFrzBalance],
+      [getWrappedTokenBalance, setWrappedTokenBalance],
     ];
     const handleFetchError = (err) => {
       console.error(err);
@@ -159,6 +204,10 @@ export default function useToken({ contract }) {
     fetchAndSetFns.forEach(([, setFn], index) =>
       setFn(convertUnits(results[index].value)),
     ); // set the hook state for each reults
+
+    if(!isInitialized) {
+      setIsInitialized(true); // we have data now!
+    };
   };
 
   return {
@@ -169,14 +218,12 @@ export default function useToken({ contract }) {
       frTokenBalance,
       frzTotalSupply,
       frzBalance,
+      wrappedTokenBalance,
     },
 
     // these store the last error (if any)
     errors: {
-      frTokenTotalSupplyError,
-      frTokenBalanceError,
-      frzTotalSupplyError,
-      frzBalanceError,
+      /** TODO storing errors might not be needed if we throw useful errors and use error boundaries around this hook */
     },
 
     methods: {
@@ -196,74 +243,6 @@ export default function useToken({ contract }) {
     },
   };
 }
-
-// these are pulled out as private helper functions purely for code readability
-
-const _frTokenTotalSupply = ({ contract }) => {
-  let {
-    runContractFunction: getFrTokenTotalSupply,
-    error: frTokenTotalSupplyError,
-  } = useWeb3Contract({
-    abi: contract.frToken.abi,
-    contractAddress: contract.frToken.address,
-    functionName: "totalSupply",
-  });
-  return { getFrTokenTotalSupply, frTokenTotalSupplyError };
-};
-
-const _frTokenBalance = ({ contract, account }) => {
-  const { runContractFunction: getFrTokenBalance, error: frTokenBalanceError } =
-    useWeb3Contract({
-      abi: contract.frToken.abi,
-      contractAddress: contract.frToken.address,
-      functionName: "balanceOf",
-      params: {
-        account: account,
-      },
-    });
-  return { getFrTokenBalance, frTokenBalanceError };
-};
-const _frzTotalSupply = ({ contract }) => {
-  const { runContractFunction: getFrzTotalSupply, error: frzTotalSupplyError } =
-    useWeb3Contract({
-      abi: contract.FRZ.abi,
-      contractAddress: contract.FRZ.address,
-      functionName: "totalSupply",
-    });
-  return { getFrzTotalSupply, frzTotalSupplyError };
-};
-/*const _frzAllowance = ({ contract, account }) => {
-  const { runContractFunction: getFrzAllowance, error: frzAllowanceError } =
-    useWeb3Contract({
-      abi: contract.FRZ.abi,
-      contractAddress: contract.FRZ.address,
-      functionName: "allowance",
-      params: {
-        owner: account,
-        spender: contract.TrueFreezeGovernor.address,
-      },
-    });
-  return { getFrzAllowance, frzAllowanceError };
-};*/
-const _frzBalance = ({ contract, account }) => {
-  const { runContractFunction: getFrzBalance, error: frzBalanceError } =
-    useWeb3Contract({
-      abi: contract.FRZ.abi,
-      contractAddress: contract.FRZ.address,
-      functionName: "balanceOf",
-      params: {
-        account: account,
-      },
-    });
-  return { getFrzBalance, frzBalanceError };
-};
-/*const _wrappedTokenAllowance = ({ contract, account }) => {
-  // TODO
-  return {
-    getWrappedTokenAllowance: async () => null,
-    getWrappedTokenAllowanceError: "todo",
-  };
-};*/
 
 const isTokenAllowed = (allowance) => {
   if (typeof allowance !== "string" || allowance.length <= 0 || !allowance) {

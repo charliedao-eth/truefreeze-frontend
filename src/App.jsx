@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useMemo, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import {
   BrowserRouter as Router,
@@ -10,6 +10,7 @@ import contractsByChain, {
   supportedTestnetChainIds,
   supportedProductionChainIds,
 } from "contracts/contractInfo";
+import useToken from "hooks/useToken";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import Claim from "components/Claim/Claim";
@@ -27,7 +28,6 @@ import logoSVG from "./assets/truefreezelogo.svg";
 import gradientBgBlue from "./assets/gradientbgblue.png";
 import gradientBgGreen from "./assets/gradientbggreen.png";
 import gradientBgRed from "./assets/gradientbgred.png";
-import { NotFoundError } from "@cloudflare/kv-asset-handler";
 
 ConfigProvider.config({
   theme: {
@@ -84,6 +84,7 @@ const styles = {
 
 const App = ({ IS_PRODUCTION_MODE = true }) => {
   const [connectionTimeout, setConnectionTimeout] = useState();
+  const [isTokenDataInitialized, setIsTokenDataInitialized] = useState();
 
   const {
     isWeb3Enabled,
@@ -101,7 +102,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUnauthenticated, isWeb3Enabled]); // TODO disable for initial page load (only trigger on route change, so that we don't hit people with a MM permission popup without their consent first)
 
-  const contract = contractsByChain[chainId];
+  const contract = useMemo(() => contractsByChain[chainId], [chainId]);
+  const tokens = useToken({ contract });
+
   const supportedChainIds = IS_PRODUCTION_MODE
     ? supportedProductionChainIds
     : supportedTestnetChainIds;
@@ -133,6 +136,19 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
       message.destroy(key);
     }
   }, [chainId, contract, isUnauthenticated]);
+
+  useEffect(() => {
+    if(isTokenDataInitialized) {
+      return;
+    }
+
+    (async () => {
+      if(isWeb3Enabled && !isUnauthenticated && contract) {
+        await tokens.methods.refreshTokenData();
+        setIsTokenDataInitialized(true);
+      }
+    })();
+  }, [isWeb3Enabled, isUnauthenticated, contract])
 
   // TODO check dev-mode (isProductionMode in ../index.js) and display a warning banner at the top of the screen
 
@@ -217,47 +233,47 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   return (
     <ConfigProvider>
-      <PrefetchImages />
-      <Layout
-        style={{ height: "100vh", overflow: "auto" }}
-        className="truefreeze gradient-bg"
-      >
-        <Router>
-          <Switch>
-            <Route exact path="/landing">
-              <WrapWithLayout useAppHeader={false}>
-                <Landing />
-              </WrapWithLayout>
-            </Route>
-            <Route exact path="/claim">
-              <WrapWithLayout useAppHeader={false}>
-                <Claim contract={contract} />
-              </WrapWithLayout>
-            </Route>
-            <Route exact path="/lock">
-              <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
-                <Lock contract={contract} />
-              </WrapWithLayout>
-            </Route>
-            <Route exact path="/myfreezers">
-              <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
-                <MyFreezers contract={contract} />
-              </WrapWithLayout>
-            </Route>
-            <Route exact path="/stakeandburn">
-              <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
-                <StakeAndBurn contract={contract} />
-              </WrapWithLayout>
-            </Route>
-            <Route path="/app">
-              <Redirect to="/lock" />
-            </Route>
-            <Route path="/">
-              <Redirect to="/landing" />
-            </Route>
-          </Switch>
-        </Router>
-      </Layout>
+        <PrefetchImages />
+        <Layout
+          style={{ height: "100vh", overflow: "auto" }}
+          className="truefreeze gradient-bg"
+        >
+          <Router>
+            <Switch>
+              <Route exact path="/landing">
+                <WrapWithLayout useAppHeader={false}>
+                  <Landing />
+                </WrapWithLayout>
+              </Route>
+              <Route exact path="/claim">
+                <WrapWithLayout useAppHeader={false}>
+                  <Claim contract={contract} />
+                </WrapWithLayout>
+              </Route>
+              <Route exact path="/lock">
+                <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
+                  <Lock tokens={tokens} contract={contract} />
+                </WrapWithLayout>
+              </Route>
+              <Route exact path="/myfreezers">
+                <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
+                  <MyFreezers tokens={tokens} contract={contract} />
+                </WrapWithLayout>
+              </Route>
+              <Route exact path="/stakeandburn">
+                <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
+                  <StakeAndBurn tokens={tokens} contract={contract} />
+                </WrapWithLayout>
+              </Route>
+              <Route path="/app">
+                <Redirect to="/lock" />
+              </Route>
+              <Route path="/">
+                <Redirect to="/landing" />
+              </Route>
+            </Switch>
+          </Router>
+        </Layout>
     </ConfigProvider>
   );
 };

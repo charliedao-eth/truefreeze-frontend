@@ -2,7 +2,6 @@ import { useState, useEffect, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import { Button, Tabs } from "antd";
 import CustomNumberInput from "./CustomNumberInput";
-import useToken from "hooks/useToken";
 import burnIcon from "../../assets/burnicon.svg";
 import lockIcon from "../../assets/lockicon.svg";
 import frethIcon from "../../assets/frethicon.svg";
@@ -14,12 +13,11 @@ import PageToolbar from "./PageToolbar";
 const { TabPane } = Tabs;
 
 function StakeAndBurn(props) {
-  const { contract } = props;
+  const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods, tokenData } = useToken({ contract });
+  const { isInitialized, methods } = tokens;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } =
     methods;
-  const { frTokenBalance, frzBalance } = tokenData;
   const [isTransacting, setIsTransacting] = useState(false);
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
@@ -317,7 +315,7 @@ function StakeAndBurn(props) {
 
   return (
     <div className="appPageContent stakeandburn">
-      <PageToolbar contract={contract} />
+      <PageToolbar tokens={tokens} />
       <Tabs defaultActiveKey="burn" centered onChange={changeBg}>
         <TabPane tab="BURN" key="burn">
           <Burn />
