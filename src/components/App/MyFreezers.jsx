@@ -38,8 +38,7 @@ function MyFreezers(props) {
     } catch (err) {
       console.error(err);
       message.error({
-        content:
-          "Token approvals failed. Cannot unlock freezer. Press to see error logs.",
+        content: "Token approvals failed. Cannot unlock freezer. Press to see error logs.",
         duration: 4,
         onClick: () => alert(JSON.stringify(err)),
       });
@@ -61,19 +60,11 @@ function MyFreezers(props) {
       const freezerTransaction = await Moralis.executeFunction(options);
       return freezerTransaction.wait(); // in case you want to listen for blockchain confirmation
     } catch (err) {
-      console.error(
-        `Failed to unlock freezer: ${
-          freezerNFT && freezerNFT.token_id
-        }. ${err}`,
-      );
+      console.error(`Failed to unlock freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
       message.error({
         content: "Freezer unlocking failed. Press to see error logs.",
         duration: 4,
-        onClick: () =>
-          alert(
-            `freezer ${freezerNFT?.token_id} unlock failed: ` +
-              JSON.stringify(err),
-          ),
+        onClick: () => alert(`freezer ${freezerNFT?.token_id} unlock failed: ` + JSON.stringify(err)),
       });
       return "error";
     }
@@ -99,11 +90,7 @@ function MyFreezers(props) {
       progressAmount = freezerTransaction.toString();
       progressAmount = Number(progressAmount).toFixed(1);
     } catch (err) {
-      console.error(
-        `Failed to fetch unlock progress for freezer: ${
-          freezerNFT && freezerNFT.token_id
-        }. ${err}`,
-      );
+      console.error(`Failed to fetch unlock progress for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
     }
 
     return progressAmount;

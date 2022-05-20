@@ -34,11 +34,7 @@ function Lock(props) {
       throw new Error("Freezer lock amount is invalid. Cannot lock: " + amount);
     }
     if (!durationInDays || durationInDays < 1) {
-      throw new Error(
-        "Freezer lock duration is invalid. Cannot lock for: " +
-          durationInDays +
-          " days",
-      );
+      throw new Error("Freezer lock duration is invalid. Cannot lock for: " + durationInDays + " days");
     }
 
     try {
@@ -90,27 +86,18 @@ function Lock(props) {
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
-          <CustomNumberInput
-            onAmountChange={(val) => setAmountLocked(parseFloat(val))}
-            value={amountLocked}
-            label="AMOUNT"
-          />
+          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val))} value={amountLocked} label="AMOUNT" />
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
-              <Select
-                className="flex-half"
-                value={timeLocked}
-                style={{ width: 120 }}
-                onChange={setTimeLocked}
-              >
+              <Select className="flex-half" value={timeLocked} style={{ width: 120 }} onChange={setTimeLocked}>
                 {new Array(24).fill(1).map((_val, index) => (
-                  <Option value={index + 1} key={`lock-amt-month-${index + 1}`}>{index + 1}</Option>
+                  <Option value={index + 1} key={`lock-amt-month-${index + 1}`}>
+                    {index + 1}
+                  </Option>
                 ))}
               </Select>
-              <span className="white-text flex-half align-left p-l-1">
-                MONTHS
-              </span>
+              <span className="white-text flex-half align-left p-l-1">MONTHS</span>
             </div>
           </div>
           <div>

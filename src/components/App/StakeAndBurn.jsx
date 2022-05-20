@@ -16,8 +16,7 @@ function StakeAndBurn(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods } = tokens;
-  const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } =
-    methods;
+  const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
@@ -26,12 +25,7 @@ function StakeAndBurn(props) {
     return <div className="appPageContent" />;
   }
 
-  const genericAmountTransaction = async ({
-    contractName,
-    functionName,
-    approvals = [],
-    amount,
-  }) => {
+  const genericAmountTransaction = async ({ contractName, functionName, approvals = [], amount }) => {
     amount = Moralis.Units.Token(amount);
     if (!amount) {
       throw new Error(`${amount} is not a valid amount.`);
@@ -45,18 +39,12 @@ function StakeAndBurn(props) {
     });
   };
 
-  const genericTransaction = async ({
-    contractName,
-    functionName,
-    approvals = [],
-    params,
-  }) => {
+  const genericTransaction = async ({ contractName, functionName, approvals = [], params }) => {
     setIsTransacting(true);
     try {
       await Promise.all(
         approvals.map(
-          (approvalFunction) =>
-            approvalFunction({ spender: contract[contractName].address }), // spender is assumed to be the contract we're interacting with
+          (approvalFunction) => approvalFunction({ spender: contract[contractName].address }), // spender is assumed to be the contract we're interacting with
         ),
       );
       let options = {
@@ -104,33 +92,21 @@ function StakeAndBurn(props) {
 
   const burnButton = ({ amount: burnAmount }) => {
     return (
-      <Button
-        className="uhoh"
-        loading={isTransacting}
-        onClick={() => burnFrToken(burnAmount)}
-      >
+      <Button className="uhoh" loading={isTransacting} onClick={() => burnFrToken(burnAmount)}>
         BURN frToken
       </Button>
     );
   };
   const stakeButton = ({ amount: stakeAmount }) => {
     return (
-      <Button
-        type="primary"
-        loading={isTransacting}
-        onClick={() => stakeFrz(stakeAmount)}
-      >
+      <Button type="primary" loading={isTransacting} onClick={() => stakeFrz(stakeAmount)}>
         STAKE FRZ
       </Button>
     );
   };
   const unstakeButton = ({ amount: unstakeAmount }) => {
     return (
-      <Button
-        type="primary"
-        loading={isTransacting}
-        onClick={() => withdrawFrz(unstakeAmount)}
-      >
+      <Button type="primary" loading={isTransacting} onClick={() => withdrawFrz(unstakeAmount)}>
         UNSTAKE FRZ
       </Button>
     );
@@ -142,10 +118,7 @@ function StakeAndBurn(props) {
         <div className="text-align-center white-text">
           <div>Burn frETH to earn FRZ. Burnt frETH is gone forever.</div>
           <div>In exchange, you earn a flow of FRZ.</div>
-          <div>
-            Staked FRZ will earn you a portion of early withdrawal fees paid by
-            other users.
-          </div>
+          <div>Staked FRZ will earn you a portion of early withdrawal fees paid by other users.</div>
         </div>
         <div className="flex justify-center m-t-2">
           <section className="translucent-card flex-half m-r-2">
@@ -192,9 +165,7 @@ function StakeAndBurn(props) {
       <div>
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>
-            By staking your FRZ, you will earn a portion of penalties paid by
-            other users. These penalties are paid in frETH and WETH and can be
-            claimed on the 'CLAIM' tab.
+            By staking your FRZ, you will earn a portion of penalties paid by other users. These penalties are paid in frETH and WETH and can be claimed on the 'CLAIM' tab.
           </div>
         </div>
         <div className="flex justify-center m-t-2">
@@ -242,10 +213,7 @@ function StakeAndBurn(props) {
     return (
       <Fragment>
         <div className="text-align-center white-text p-r-2 p-l-2">
-          <div>
-            Claim the fees you've earned from staking your FRZ. Claim each token
-            individually or all at once.
-          </div>
+          <div>Claim the fees you've earned from staking your FRZ. Claim each token individually or all at once.</div>
         </div>
         <div className="flex justify-center claim-tab m-t-2">
           <div className="transparent-card wide taller flex flex-column center">
@@ -280,11 +248,7 @@ function StakeAndBurn(props) {
                 </div>
               </div>
             </div>
-            <Button
-              className="cool width-200 m-t-1"
-              loading={isTransacting}
-              onClick={claimAllRewards}
-            >
+            <Button className="cool width-200 m-t-1" loading={isTransacting} onClick={claimAllRewards}>
               CLAIM ALL
             </Button>
           </div>
@@ -294,20 +258,12 @@ function StakeAndBurn(props) {
   }
 
   function changeBg(selectedTabKey) {
-    document
-      .querySelector(".gradient-bg")
-      ?.classList.remove(
-        "gradient-bg-red",
-        "gradient-bg-green",
-        "gradient-bg-blue",
-      );
+    document.querySelector(".gradient-bg")?.classList.remove("gradient-bg-red", "gradient-bg-green", "gradient-bg-blue");
 
     if (selectedTabKey === "burn") {
       document.querySelector(".gradient-bg")?.classList.add("gradient-bg-red");
     } else if (selectedTabKey === "rewards") {
-      document
-        .querySelector(".gradient-bg")
-        ?.classList.add("gradient-bg-green");
+      document.querySelector(".gradient-bg")?.classList.add("gradient-bg-green");
     } else {
       document.querySelector(".gradient-bg")?.classList.add("gradient-bg-blue");
     }
@@ -331,20 +287,12 @@ function StakeAndBurn(props) {
   );
 }
 
-function CurrencyAmountAction({
-  defaultValue = "0",
-  label = "",
-  ActionButton,
-}) {
+function CurrencyAmountAction({ defaultValue = "0", label = "", ActionButton }) {
   const [amount, setAmount] = useState(defaultValue);
 
   return (
     <Fragment>
-      <CustomNumberInput
-        value={amount}
-        label={label}
-        onAmountChange={setAmount}
-      />
+      <CustomNumberInput value={amount} label={label} onAmountChange={setAmount} />
       <ActionButton amount={amount} />
     </Fragment>
   );

@@ -231,14 +231,11 @@ export const networkConfigs = {
   // TODO FTM and aribtrum configs, polygon and avax testnet configs
 };
 
-export const getNativeByChain = (chain) =>
-  networkConfigs[chain]?.currencySymbol || "NATIVE";
+export const getNativeByChain = (chain) => networkConfigs[chain]?.currencySymbol || "NATIVE";
 
 export const getChainById = (chain) => networkConfigs[chain]?.chainId || null;
 
 export const getExplorer = (chain) => networkConfigs[chain]?.blockExplorerUrl;
 
-export const getWrappedNative = (chain) =>
-  networkConfigs[chain]?.wrapped || null;
-export const getWrappedABI = (chain) =>
-  networkConfigs[chain]?.wrappedABI || null;
+export const getWrappedNative = (chain) => networkConfigs[chain]?.wrapped || null;
+export const getWrappedABI = (chain) => networkConfigs[chain]?.wrappedABI || null;

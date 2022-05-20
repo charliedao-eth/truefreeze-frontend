@@ -121,11 +121,7 @@ function Chains({ supportedChainIds }) {
   return (
     <div>
       <Dropdown overlay={menu} trigger={["click"]}>
-        <Button
-          key={selected?.key}
-          icon={selected?.icon}
-          style={{ ...styles.button, ...styles.item }}
-        >
+        <Button key={selected?.key} icon={selected?.icon} style={{ ...styles.button, ...styles.item }}>
           <span style={{ marginLeft: "5px" }}>{selected?.value}</span>
           <DownOutlined />
         </Button>
@@ -138,9 +134,7 @@ function filterToSupportedChains(menuItems, supportedChainIds) {
   if (!supportedChainIds || supportedChainIds?.length === 0) {
     return menuItems;
   }
-  return menuItems.filter((menuItem) =>
-    supportedChainIds.includes(menuItem.key),
-  );
+  return menuItems.filter((menuItem) => supportedChainIds.includes(menuItem.key));
 }
 
 export default Chains;

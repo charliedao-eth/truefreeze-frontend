@@ -7,10 +7,7 @@ export default function PageToolbar(props) {
   const { data: balance, nativeToken } = useNativeBalance();
 
   const nativeAmounts = {
-    balance:
-      balance?.balance && balance.balance !== "0"
-        ? parseFloat(Moralis.Units.FromWei(balance.balance))?.toFixed(2)
-        : null,
+    balance: balance?.balance && balance.balance !== "0" ? parseFloat(Moralis.Units.FromWei(balance.balance))?.toFixed(2) : null,
     symbol: nativeToken?.symbol || null,
   };
 
@@ -21,9 +18,7 @@ export default function PageToolbar(props) {
           <div>
             <b>WALLET</b>
           </div>
-          <div>
-            0x...{account?.substring(account?.length - 4, account?.length)}
-          </div>
+          <div>0x...{account?.substring(account?.length - 4, account?.length)}</div>
         </div>
         <div>
           <div>
@@ -35,9 +30,7 @@ export default function PageToolbar(props) {
           <div>
             <b>WRAPPED{/** TODO fetch symbol */}</b>
           </div>
-          <div>
-            {wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(2) : "--"}
-          </div>
+          <div>{wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(2) : "--"}</div>
         </div>
       </div>
       {props.children}
@@ -46,9 +39,7 @@ export default function PageToolbar(props) {
           <div>
             <b>frETH</b>
           </div>
-          <div>
-            {frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}
-          </div>
+          <div>{frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}</div>
         </div>
         <div className="frz-holdings">
           <div>

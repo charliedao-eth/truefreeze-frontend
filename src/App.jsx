@@ -1,15 +1,7 @@
 import { useState, useEffect, useMemo, Fragment } from "react";
 import { useMoralis } from "react-moralis";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
-import contractsByChain, {
-  supportedTestnetChainIds,
-  supportedProductionChainIds,
-} from "contracts/contractInfo";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import contractsByChain, { supportedTestnetChainIds, supportedProductionChainIds } from "contracts/contractInfo";
 import useToken from "hooks/useToken";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
@@ -86,13 +78,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   const [connectionTimeout, setConnectionTimeout] = useState();
   const [isTokenDataInitialized, setIsTokenDataInitialized] = useState();
 
-  const {
-    isWeb3Enabled,
-    enableWeb3,
-    isWeb3EnableLoading,
-    chainId,
-    isUnauthenticated,
-  } = useMoralis();
+  const { isWeb3Enabled, enableWeb3, isWeb3EnableLoading, chainId, isUnauthenticated } = useMoralis();
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
@@ -105,9 +91,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   const contract = useMemo(() => contractsByChain[chainId], [chainId]);
   const tokens = useToken({ contract });
 
-  const supportedChainIds = IS_PRODUCTION_MODE
-    ? supportedProductionChainIds
-    : supportedTestnetChainIds;
+  const supportedChainIds = IS_PRODUCTION_MODE ? supportedProductionChainIds : supportedTestnetChainIds;
 
   useEffect(() => {
     const key = "cannot-connect";
@@ -119,8 +103,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
               key,
               content: (
                 <span>
-                  Click 'Connect wallet' or switch to a supported chain to get
-                  started. <CloseOutlined style={{ color: "#333333" }} />{" "}
+                  Click 'Connect wallet' or switch to a supported chain to get started. <CloseOutlined style={{ color: "#333333" }} />{" "}
                 </span>
               ),
               duration: 10000,
@@ -138,33 +121,26 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   }, [chainId, contract, isUnauthenticated]);
 
   useEffect(() => {
-    if(isTokenDataInitialized) {
+    if (isTokenDataInitialized) {
       return;
     }
 
     (async () => {
-      if(isWeb3Enabled && !isUnauthenticated && contract) {
+      if (isWeb3Enabled && !isUnauthenticated && contract) {
         await tokens.methods.refreshTokenData();
         setIsTokenDataInitialized(true);
       }
     })();
-  }, [isWeb3Enabled, isUnauthenticated, contract])
+  }, [isWeb3Enabled, isUnauthenticated, contract]);
 
   // TODO check dev-mode (isProductionMode in ../index.js) and display a warning banner at the top of the screen
 
   const WrapWithLayout = (props) => {
     return (
       <Fragment>
-        {props.useAppHeader ? (
-          <AppHeader selectedNav={props.selectedNav} />
-        ) : (
-          <GenericHeader />
-        )}
+        {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
         <div style={styles.content}>{props.children}</div>
-        <Footer
-          className="slow-show"
-          style={{ textAlign: "center", background: "none" }}
-        >
+        <Footer className="slow-show" style={{ textAlign: "center", background: "none" }}>
           <Text style={{ display: "block" }}>footer info todo</Text>
         </Footer>
       </Fragment>
@@ -175,11 +151,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     return (
       <Header style={styles.header}>
         <Logo />
-        <Menu
-          mode="horizontal"
-          selectedKeys={props.selectedNav}
-          style={styles.navbar}
-        >
+        <Menu mode="horizontal" selectedKeys={props.selectedNav} style={styles.navbar}>
           <Menu.Item key="lock">
             <a href="/lock">Lock</a>
           </Menu.Item>
@@ -211,15 +183,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   const DisconnectedWallet = () => (
     <ConfigProvider>
-      <Layout
-        style={{ height: "100vh", overflow: "auto" }}
-        className="truefreeze gradient-bg disconnected-wallet"
-      >
+      <Layout style={{ height: "100vh", overflow: "auto" }} className="truefreeze gradient-bg disconnected-wallet">
         <WrapWithLayout useAppHeader={false}>
-          <div
-            className="skeleton-wrapper"
-            styles={{ marginTop: "100px", width: "50%" }}
-          >
+          <div className="skeleton-wrapper" styles={{ marginTop: "100px", width: "50%" }}>
             <Skeleton />
           </div>
         </WrapWithLayout>
@@ -233,47 +199,44 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   return (
     <ConfigProvider>
-        <PrefetchImages />
-        <Layout
-          style={{ height: "100vh", overflow: "auto" }}
-          className="truefreeze gradient-bg"
-        >
-          <Router>
-            <Switch>
-              <Route exact path="/landing">
-                <WrapWithLayout useAppHeader={false}>
-                  <Landing />
-                </WrapWithLayout>
-              </Route>
-              <Route exact path="/claim">
-                <WrapWithLayout useAppHeader={false}>
-                  <Claim contract={contract} />
-                </WrapWithLayout>
-              </Route>
-              <Route exact path="/lock">
-                <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
-                  <Lock tokens={tokens} contract={contract} />
-                </WrapWithLayout>
-              </Route>
-              <Route exact path="/myfreezers">
-                <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
-                  <MyFreezers tokens={tokens} contract={contract} />
-                </WrapWithLayout>
-              </Route>
-              <Route exact path="/stakeandburn">
-                <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
-                  <StakeAndBurn tokens={tokens} contract={contract} />
-                </WrapWithLayout>
-              </Route>
-              <Route path="/app">
-                <Redirect to="/lock" />
-              </Route>
-              <Route path="/">
-                <Redirect to="/landing" />
-              </Route>
-            </Switch>
-          </Router>
-        </Layout>
+      <PrefetchImages />
+      <Layout style={{ height: "100vh", overflow: "auto" }} className="truefreeze gradient-bg">
+        <Router>
+          <Switch>
+            <Route exact path="/landing">
+              <WrapWithLayout useAppHeader={false}>
+                <Landing />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/claim">
+              <WrapWithLayout useAppHeader={false}>
+                <Claim contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/lock">
+              <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>
+                <Lock tokens={tokens} contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/myfreezers">
+              <WrapWithLayout useAppHeader={true} selectedNav={"myfreezers"}>
+                <MyFreezers tokens={tokens} contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route exact path="/stakeandburn">
+              <WrapWithLayout useAppHeader={true} selectedNav={"stakeandburn"}>
+                <StakeAndBurn tokens={tokens} contract={contract} />
+              </WrapWithLayout>
+            </Route>
+            <Route path="/app">
+              <Redirect to="/lock" />
+            </Route>
+            <Route path="/">
+              <Redirect to="/landing" />
+            </Route>
+          </Switch>
+        </Router>
+      </Layout>
     </ConfigProvider>
   );
 };

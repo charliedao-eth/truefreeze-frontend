@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
-import {
-  Button,
-  Card,
-  Image,
-  Tooltip,
-  Modal,
-  Input,
-  Skeleton,
-  message,
-} from "antd";
+import { Button, Card, Image, Tooltip, Modal, Input, Skeleton, message } from "antd";
 import { FileSearchOutlined, SendOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
@@ -28,12 +19,7 @@ const styles = {
   },
 };
 
-function NFTBalance({
-  filterByContractAddress = "",
-  fetchProgress,
-  unlockFreezer,
-  className = "",
-}) {
+function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer, className = "" }) {
   filterByContractAddress = filterByContractAddress?.toLowerCase();
 
   const { data: NFTBalances } = useNFTBalances();
@@ -51,11 +37,7 @@ function NFTBalance({
   useEffect(() => {
     if (NFTBalances?.result && NFTBalances.result) {
       const freezerResults = NFTBalances.result
-        .filter((nft) =>
-          !filterByContractAddress
-            ? true
-            : nft.token_address.toLowerCase() === filterByContractAddress,
-        )
+        .filter((nft) => (!filterByContractAddress ? true : nft.token_address.toLowerCase() === filterByContractAddress))
         .map((nft) => verifyMetadata(nft));
       setFreezers([...freezerResults]);
     }
@@ -64,18 +46,13 @@ function NFTBalance({
   useEffect(() => {
     if (freezers && freezers.length > 0) {
       (async () => {
-        const progressAmounts = await Promise.allSettled(
-          freezers.map(fetchProgress),
-        );
-        const progressByTokenId = progressAmounts.reduce(
-          (mapping, progressAmount, index) => {
-            const freezer = freezers[index];
-            const tokenId = freezer.token_id.toString();
-            mapping[tokenId] = progressAmount;
-            return mapping;
-          },
-          {},
-        );
+        const progressAmounts = await Promise.allSettled(freezers.map(fetchProgress));
+        const progressByTokenId = progressAmounts.reduce((mapping, progressAmount, index) => {
+          const freezer = freezers[index];
+          const tokenId = freezer.token_id.toString();
+          mapping[tokenId] = progressAmount;
+          return mapping;
+        }, {});
         setUnlockProgress(progressByTokenId);
       })();
     }
@@ -146,14 +123,7 @@ function NFTBalance({
         hoverable
         actions={[
           <Tooltip title="View On Blockexplorer">
-            <FileSearchOutlined
-              onClick={() =>
-                window.open(
-                  `${getExplorer(chainId)}address/${nft.token_address}`,
-                  "_blank",
-                )
-              }
-            />
+            <FileSearchOutlined onClick={() => window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank")} />
           </Tooltip>,
           <Tooltip title="Transfer NFT">
             <SendOutlined onClick={() => handleTransferClick(nft)} />
@@ -170,28 +140,15 @@ function NFTBalance({
           />
         }
         key={keyname}
-        className={
-          window.localStorage.getItem(`freezer_${nft.token_id}`) === "unlocked"
-            ? "hide-nft"
-            : ""
-        }
+        className={window.localStorage.getItem(`freezer_${nft.token_id}`) === "unlocked" ? "hide-nft" : ""}
       >
         {!nft ? null : (
-          <Button
-            className="redeem-freezer"
-            title={(progressAmount || "--") + "% progress"}
-            onClick={() => startUnlock(nft)}
-            disabled={isUnlocking[nft.token_id]}
-          >
+          <Button className="redeem-freezer" title={(progressAmount || "--") + "% progress"} onClick={() => startUnlock(nft)} disabled={isUnlocking[nft.token_id]}>
             <span className="redeem-text">
               <span>{isUnlocking[nft.token_id] ? "REDEEMING" : "REDEEM"}</span>
             </span>
             {progressAmount ? (
-              <span
-                style={{ width: Math.min(+progressAmount, 101) + "%" }}
-                className="progress-gradient"
-                title={progressAmount + "% progress"}
-              >
+              <span style={{ width: Math.min(+progressAmount, 101) + "%" }} className="progress-gradient" title={progressAmount + "% progress"}>
                 &nbsp;
               </span>
             ) : null}
@@ -206,17 +163,12 @@ function NFTBalance({
       return null;
     }
 
-    const renderedNFTs = freezers.map((nft, index) =>
-      renderNFT(nft, "freezer-" + index),
-    );
+    const renderedNFTs = freezers.map((nft, index) => renderNFT(nft, "freezer-" + index));
     return renderedNFTs;
   };
 
   return (
-    <div
-      className={className}
-      style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}
-    >
+    <div className={className} style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <div style={styles.NFTs}>
         <Skeleton loading={!freezers}>{renderNFTs(freezers)}</Skeleton>
       </div>
@@ -229,12 +181,7 @@ function NFTBalance({
         okText="Send"
       >
         <AddressInput autoFocus placeholder="Receiver" onChange={setReceiver} />
-        {nftToSend && nftToSend.contract_type === "erc1155" && (
-          <Input
-            placeholder="amount to send"
-            onChange={(e) => handleChange(e)}
-          />
-        )}
+        {nftToSend && nftToSend.contract_type === "erc1155" && <Input placeholder="amount to send" onChange={(e) => handleChange(e)} />}
       </Modal>
     </div>
   );

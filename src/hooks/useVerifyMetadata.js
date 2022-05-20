@@ -42,23 +42,12 @@ export const useVerifyMetadata = () => {
       .then((metadata) => {
         if (!metadata) {
           //Log
-          console.error(
-            "useVerifyMetadata.getMetadata() No Metadata found on URI:",
-            { URI: NFT.token_uri, NFT },
-          );
+          console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", { URI: NFT.token_uri, NFT });
         }
         //Handle Setbacks
-        else if (
-          metadata?.detail &&
-          metadata.detail.includes("Request was throttled")
-        ) {
+        else if (metadata?.detail && metadata.detail.includes("Request was throttled")) {
           //Log
-          console.warn(
-            "useVerifyMetadata.getMetadata() Bad Result for:" +
-              NFT.token_uri +
-              "  Will retry later",
-            { results, metadata },
-          );
+          console.warn("useVerifyMetadata.getMetadata() Bad Result for:" + NFT.token_uri + "  Will retry later", { results, metadata });
           //Retry That Again after 1s
           setTimeout(function () {
             getMetadata(NFT);
@@ -69,10 +58,7 @@ export const useVerifyMetadata = () => {
           //Set
           setMetadata(NFT, metadata);
           //Log
-          console.log(
-            "getMetadata() Late-load for NFT Metadata " + NFT.token_uri,
-            { metadata },
-          );
+          console.log("getMetadata() Late-load for NFT Metadata " + NFT.token_uri, { metadata });
         } //Valid Result
       })
       .catch((err) => {
@@ -95,8 +81,7 @@ export const useVerifyMetadata = () => {
     //Set Image
     if (metadata?.image) NFT.image = resolveLink(metadata.image);
     //Set to State
-    if (metadata && !results[NFT.token_uri])
-      setResults({ ...results, [NFT.token_uri]: NFT });
+    if (metadata && !results[NFT.token_uri]) setResults({ ...results, [NFT.token_uri]: NFT });
   } //setMetadata()
 
   return { verifyMetadata };

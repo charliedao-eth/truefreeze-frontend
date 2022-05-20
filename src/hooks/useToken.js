@@ -3,11 +3,7 @@ import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { getWrappedNative, getWrappedABI } from "helpers/networks";
 
 export default function useToken({ contract }) {
-  const {
-    account,
-    chainId,
-    Moralis,
-  } = useMoralis();
+  const { account, chainId, Moralis } = useMoralis();
   const Web3Api = useMoralisWeb3Api();
 
   const [isInitialized, setIsInitialized] = useState(false);
@@ -48,7 +44,7 @@ export default function useToken({ contract }) {
     };
     const response = await Web3Api.account.getTokenBalances(options); // note, this api can fetch all ERC-20s at once, but we're not using that in anticipation of switching to web 3 provider + ether.js refactor
     return response.filter((tokenBalance) => tokenBalance.token_address.toLowerCase() === tokenAddress).map((tokenBalance) => tokenBalance.balance); // grab just the balance from the one we want
-  }
+  };
   const _frTokenTotalSupply = async ({ contract }) => {
     const options = {
       contractAddress: contract.frToken.address,
@@ -64,34 +60,34 @@ export default function useToken({ contract }) {
       abi: contract.frToken.abi,
       params: {
         account: account,
-      }
+      },
     };
     return await Moralis.executeFunction(options);
   };
   const _frzTotalSupply = async ({ contract }) => {
-      const options = {
-        abi: contract.FRZ.abi,
-        contractAddress: contract.FRZ.address,
-        functionName: "totalSupply",
-      };
-      return await Moralis.executeFunction(options);
+    const options = {
+      abi: contract.FRZ.abi,
+      contractAddress: contract.FRZ.address,
+      functionName: "totalSupply",
+    };
+    return await Moralis.executeFunction(options);
   };
   const _frzBalance = async ({ contract, account }) => {
-      const options = {
-        abi: contract.FRZ.abi,
-        contractAddress: contract.FRZ.address,
-        functionName: "balanceOf",
-        params: {
-          account: account,
-        }
-      };
-      return await Moralis.executeFunction(options);
+    const options = {
+      abi: contract.FRZ.abi,
+      contractAddress: contract.FRZ.address,
+      functionName: "balanceOf",
+      params: {
+        account: account,
+      },
+    };
+    return await Moralis.executeFunction(options);
   };
 
-  const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress })
+  const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
   const getFrTokenTotalSupply = async () => _frTokenTotalSupply({ contract, account });
-  const getFrTokenBalance = async () => _frTokenBalance({ contract, account, });
-  const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account, });
+  const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
+  const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account });
   const getFrzBalance = async () => _frzBalance({ contract, account });
 
   const genericIsTokenAllowed = async ({ spender, tokenAddress }) => {
@@ -201,13 +197,11 @@ export default function useToken({ contract }) {
     });
     const results = await Promise.allSettled(fetches); // wait until all fetches complete or error out
 
-    fetchAndSetFns.forEach(([, setFn], index) =>
-      setFn(convertUnits(results[index].value)),
-    ); // set the hook state for each reults
+    fetchAndSetFns.forEach(([, setFn], index) => setFn(convertUnits(results[index].value))); // set the hook state for each reults
 
-    if(!isInitialized) {
+    if (!isInitialized) {
       setIsInitialized(true); // we have data now!
-    };
+    }
   };
 
   return {

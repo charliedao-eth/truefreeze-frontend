@@ -82,9 +82,7 @@ function Claim(props) {
 
   const renderNoClaim = () => <h2>No claim found for your address.</h2>;
 
-  const renderAlreadyClaimed = () => (
-    <h2>This address has already claimed {`${userClaimData?.amount} `}FRZ</h2>
-  );
+  const renderAlreadyClaimed = () => <h2>This address has already claimed {`${userClaimData?.amount} `}FRZ</h2>;
 
   if (!userClaimData) {
     return renderNoClaim();
@@ -94,10 +92,7 @@ function Claim(props) {
 
   return (
     <div>
-      <h2>
-        Good news. This address has {`${userClaimData?.amount} `}FRZ available
-        to claim!
-      </h2>
+      <h2>Good news. This address has {`${userClaimData?.amount} `}FRZ available to claim!</h2>
       <Button type="primary" size="large" loading={isClaiming} onClick={claim}>
         Claim
       </Button>
@@ -109,9 +104,7 @@ function getUserInClaimList(address) {
   if (!address) {
     return undefined;
   }
-  return users.find(
-    (item) => item.address.toLowerCase() === address.toString().toLowerCase(),
-  );
+  return users.find((item) => item.address.toLowerCase() === address.toString().toLowerCase());
 }
 
 export default Claim;
