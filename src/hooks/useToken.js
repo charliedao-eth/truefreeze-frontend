@@ -144,20 +144,19 @@ export default function useToken({ contract }) {
   };
 
   const _genericGetTokenReward = async ({ contract, account, rewardTokenAddress }) => {
-
     let nastyMoralisNamelessArrayParamsBugFix = (originalAbi, functionName) => {
-      const abiFunctionArr = originalAbi.filter(x => x.name === functionName);
+      const abiFunctionArr = originalAbi.filter((x) => x.name === functionName);
       if (abiFunctionArr.length <= 0) {
-        throw new Error("Could not patch moralis bug. Couldn't find function: " + functionName)
+        throw new Error("Could not patch moralis bug. Couldn't find function: " + functionName);
       }
       abiFunctionArr.forEach((fn, index) => {
         for (let i = 0; i < fn.inputs.length; i += 1) {
-          fn.inputs[i].name = (i+""); // use a little movie magic to change the function name to "0", or "1", etc. 
+          fn.inputs[i].name = i + ""; // use a little movie magic to change the function name to "0", or "1", etc.
           // sneaks the params in correctly here: https://github.com/MoralisWeb3/Moralis-JS-SDK/blob/9eb6f1bfb41eb4acb4445e7991a2b1c096bfef0b/src/MoralisWeb3.js#L769
         }
       });
-      console.log(originalAbi.filter(x => x.name === functionName));
-    }
+      console.log(originalAbi.filter((x) => x.name === functionName));
+    };
     nastyMoralisNamelessArrayParamsBugFix(contract.abi, "rewards"); // disgusting mutation :(
 
     const options = {
@@ -179,7 +178,11 @@ export default function useToken({ contract }) {
     const frTokenReward = await _genericGetTokenReward({ contract: contract.frTokenStaking, account, rewardTokenAddress: contract.frToken.address });
     const frzReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: contract.FRZ.address });
     const frzWrappedReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: wrappedTokenMetadata.tokenAddress });
-    const [frTokenSymbol, frzSymbol, wrappedSymbol] = await _getTokenMetadata([contract.frToken, contract.FRZ, { address: wrappedTokenMetadata.tokenAddress, abi: wrappedTokenMetadata.abi }]);
+    const [frTokenSymbol, frzSymbol, wrappedSymbol] = await _getTokenMetadata([
+      contract.frToken,
+      contract.FRZ,
+      { address: wrappedTokenMetadata.tokenAddress, abi: wrappedTokenMetadata.abi },
+    ]);
     return [
       {
         amount: frTokenReward,
@@ -216,11 +219,11 @@ export default function useToken({ contract }) {
         "amount": "4206900000000000000",
       }
     ];*/
-  }
+  };
   /**
-   * 
+   *
    * @returns A map of contract addresses to metadata objects. i.e. {
-   *  "0xc778417E063141139Fce010982780140Aa0cD5Ab": { 
+   *  "0xc778417E063141139Fce010982780140Aa0cD5Ab": {
    *    symbol: "WETH",
    *   },
    *  "0x1afc2...": {
@@ -244,11 +247,11 @@ export default function useToken({ contract }) {
         console.error(err);
         return null;
       }
-    })
+    });
 
     const symbols = await Promise.allSettled(symbolsTransactions);
     return symbols.map((symbol) => symbol?.value || symbol);
-  }
+  };
 
   const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
   const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
@@ -375,7 +378,7 @@ export default function useToken({ contract }) {
 
     fetchAndSetFns.forEach(([, setFn], index) => setFn(convertUnits(results[index].value))); // set the hook state for each reults
 
-    rewardTokenResults = !rewardTokenResults ? [] : rewardTokenResults.map((rewardTokenResult) => ({ ...rewardTokenResult, "amount": convertUnits(rewardTokenResult.amount) }));
+    rewardTokenResults = !rewardTokenResults ? [] : rewardTokenResults.map((rewardTokenResult) => ({ ...rewardTokenResult, amount: convertUnits(rewardTokenResult.amount) }));
     setRewardTokens(rewardTokenResults); // [] indicates failure or no data
 
     if (!isInitialized) {

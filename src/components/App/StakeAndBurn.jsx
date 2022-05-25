@@ -218,12 +218,17 @@ function StakeAndBurn(props) {
       <Fragment>
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>Claim the fees you've earned from staking your FRZ. Claim each token individually or all at once.</div>
-          { /* TODO move this lower and dynamically render */
-            rewardTokens ? rewardTokens?.map((rewardToken, index) => (
-              <div key={"reward-token-" + (rewardToken.symbol || index)}>
-               {rewardToken.symbol} {rewardToken.amount}
-              </div>
-            )) : <Loading3QuartersOutlined />
+          {
+            /* TODO move this lower and dynamically render */
+            rewardTokens ? (
+              rewardTokens?.map((rewardToken, index) => (
+                <div key={"reward-token-" + (rewardToken.symbol || index)}>
+                  {rewardToken.symbol} {rewardToken.amount}
+                </div>
+              ))
+            ) : (
+              <Loading3QuartersOutlined />
+            )
           }
         </div>
         <div className="flex justify-center claim-tab m-t-2">
