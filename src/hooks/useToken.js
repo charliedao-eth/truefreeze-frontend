@@ -15,12 +15,12 @@ export default function useToken({ contract }) {
   const [frTokenBurnt, setFrTokenBurnt] = useState("");
   const [frTokenTotalBurnt, setFrTokenTotalBurnt] = useState("");
   const frzFlowShare = (() => {
-    if(frTokenBurnt && frTokenTotalBurnt) {
+    if (frTokenBurnt && frTokenTotalBurnt) {
       try {
         const yourBurn = parseFloat(frTokenBurnt);
         const totalBurn = parseFloat(frTokenTotalBurnt) || 0.0000000000001; // prevent divide by zero
         const percentShare = (yourBurn / totalBurn) * 100;
-        
+
         return percentShare >= 0 ? percentShare.toFixed(4) : "";
       } catch (err) {
         console.error("Error. Could not calculate FRZ flow share: ");
@@ -126,7 +126,6 @@ export default function useToken({ contract }) {
     };
     return await Moralis.executeFunction(options);
   };
-  
 
   const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
   const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
@@ -135,7 +134,7 @@ export default function useToken({ contract }) {
   const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account });
   const getFrTokenBurnt = async () => _frTokenBurnt({ contract, account });
   const getFrTokenTotalBurnt = async () => _frTokenTotalBurnt({ contract, account });
-  
+
   const genericIsTokenAllowed = async ({ spender, tokenAddress }) => {
     const options = {
       chain: chainId,

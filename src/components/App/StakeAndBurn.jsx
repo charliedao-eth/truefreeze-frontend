@@ -16,7 +16,7 @@ function StakeAndBurn(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
-  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare} = tokenData;
+  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
