@@ -15,7 +15,8 @@ const { TabPane } = Tabs;
 function StakeAndBurn(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = tokens;
+  const { isInitialized, methods, tokenData } = tokens;
+  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare} = tokenData;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
@@ -136,24 +137,24 @@ function StakeAndBurn(props) {
           <section className="transparent-card flex-half">
             <div>
               <div>
-                <span className="font-35 notReady">9999.99</span>
+                <span className="font-35">{frTokenBurnt ? parseFloat(frTokenBurnt)?.toFixed(2) : "--"}</span>
+                <span className="p-l-1">frETH</span>
+              </div>
+              <div>Your Burnt</div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35">{frTokenTotalBurnt ? parseFloat(frTokenTotalBurnt)?.toFixed(2) : "--"}</span>
                 <span className="p-l-1">frETH</span>
               </div>
               <div>Total Burnt</div>
             </div>
             <div>
               <div>
-                <span className="font-35 notReady">99.99</span>
-                <span className="p-l-1">frETH</span>
+                <span className="font-35">{frzFlowShare ? frzFlowShare + "%" : "--"}</span>
+                <span className="p-l-1"></span>
               </div>
               <div>FRZ Flow Share</div>
-            </div>
-            <div>
-              <div>
-                <span className="font-35 notReady">99.99</span>
-                <span className="p-l-1">frETH</span>
-              </div>
-              <div>Your Burnt</div>
             </div>
           </section>
         </div>

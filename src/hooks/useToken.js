@@ -12,25 +12,30 @@ export default function useToken({ contract }) {
   const [frzTotalSupply, setFrzTotalSupply] = useState("");
   const [frzBalance, setFrzBalance] = useState("");
   const [wrappedTokenBalance, setWrappedTokenBalance] = useState("");
-
-  /*
-  wrappedTokenBalance
-
-  frTokenBurnt
-  frTokenTotalBurnt
-  frzFlowShare
-  
-  frzStaked
-  frzTotalStaked
-  
-  frTokenTotalPenalities
-  wrappedTokenTotalPenalities
-
-  frTokenRewards
-  frzRewards
-  wrappedTokenRewards
-
-  */
+  const [frTokenBurnt, setFrTokenBurnt] = useState("");
+  const [frTokenTotalBurnt, setFrTokenTotalBurnt] = useState("");
+  const frzFlowShare = (() => {
+    if(frTokenBurnt && frTokenTotalBurnt) {
+      try {
+        const yourBurn = parseFloat(frTokenBurnt);
+        const totalBurn = parseFloat(frTokenTotalBurnt) || 0.0000000000001; // prevent divide by zero
+        const percentShare = (yourBurn / totalBurn) * 100;
+        
+        return percentShare >= 0 ? percentShare.toFixed(4) : "";
+      } catch (err) {
+        console.error("Error. Could not calculate FRZ flow share: ");
+        console.error(err);
+      }
+    }
+    return "";
+  })();
+  const [frzStaked, setFrzStaked] = useState("");
+  const [frzTotalStaked, setFrzTotalStaked] = useState("");
+  const [frTokenTotalPenalities, setFrTokenTotalPenalities] = useState("");
+  const [wrappedTokenTotalPenalities, setWrappedTokenTotalPenalities] = useState("");
+  const [frTokenRewards, setFrTokenRewards] = useState("");
+  const [frzRewards, setFrzRewards] = useState("");
+  const [wrappedTokenRewards, setWrappedTokenRewards] = useState("");
 
   // TODO use FRZ and frToken contract getters to fetch token metadata, then use that metadata to add our custom tokens to their wallet token list like so:
   // https://docs.metamask.io/guide/registering-your-token.html
@@ -84,12 +89,53 @@ export default function useToken({ contract }) {
     return await Moralis.executeFunction(options);
   };
 
-  const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
-  const getFrTokenTotalSupply = async () => _frTokenTotalSupply({ contract, account });
-  const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
-  const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account });
-  const getFrzBalance = async () => _frzBalance({ contract, account });
+  /*
+  DONE wrappedTokenBalance
 
+  frTokenBurnt
+  frTokenTotalBurnt
+  frzFlowShare
+  
+  frzStaked
+  frzTotalStaked
+  
+  frTokenTotalPenalities
+  wrappedTokenTotalPenalities
+
+  frTokenRewards
+  frzRewards
+  wrappedTokenRewards
+
+  */
+  const _frTokenBurnt = async ({ contract, account }) => {
+    const options = {
+      contractAddress: contract.frTokenStaking.address,
+      functionName: "balanceOf",
+      abi: contract.frTokenStaking.abi,
+      params: {
+        account: account,
+      },
+    };
+    return await Moralis.executeFunction(options);
+  };
+  const _frTokenTotalBurnt = async ({ contract }) => {
+    const options = {
+      contractAddress: contract.frTokenStaking.address,
+      functionName: "totalSupply",
+      abi: contract.frTokenStaking.abi,
+    };
+    return await Moralis.executeFunction(options);
+  };
+  
+
+  const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
+  const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
+  const getFrTokenTotalSupply = async () => _frTokenTotalSupply({ contract, account });
+  const getFrzBalance = async () => _frzBalance({ contract, account });
+  const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account });
+  const getFrTokenBurnt = async () => _frTokenBurnt({ contract, account });
+  const getFrTokenTotalBurnt = async () => _frTokenTotalBurnt({ contract, account });
+  
   const genericIsTokenAllowed = async ({ spender, tokenAddress }) => {
     const options = {
       chain: chainId,
@@ -180,6 +226,8 @@ export default function useToken({ contract }) {
       [getFrzTotalSupply, setFrzTotalSupply],
       [getFrzBalance, setFrzBalance],
       [getWrappedTokenBalance, setWrappedTokenBalance],
+      [getFrTokenBurnt, setFrTokenBurnt],
+      [getFrTokenTotalBurnt, setFrTokenTotalBurnt],
     ];
     const handleFetchError = (err) => {
       console.error(err);
@@ -213,6 +261,9 @@ export default function useToken({ contract }) {
       frzTotalSupply,
       frzBalance,
       wrappedTokenBalance,
+      frTokenBurnt,
+      frTokenTotalBurnt,
+      frzFlowShare,
     },
 
     // these store the last error (if any)
