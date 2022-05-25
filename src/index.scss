@@ -412,6 +412,15 @@ select {
     border: 1px solid #FFFFFF;
     text-align: center;
   }
+  .translucent-card, .transparent-card {
+    &.two-value-card {
+      justify-content: center;
+
+      > div + div {
+        margin-top: 48px;
+      }
+    }
+  }
   .ant-menu-title-content {
     font-size: 18px;
   }

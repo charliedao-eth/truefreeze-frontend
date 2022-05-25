@@ -31,11 +31,11 @@ export default function useToken({ contract }) {
   })();
   const [frzStaked, setFrzStaked] = useState("");
   const [frzTotalStaked, setFrzTotalStaked] = useState("");
-  const [frTokenTotalPenalities, setFrTokenTotalPenalities] = useState("");
-  const [wrappedTokenTotalPenalities, setWrappedTokenTotalPenalities] = useState("");
-  const [frTokenRewards, setFrTokenRewards] = useState("");
-  const [frzRewards, setFrzRewards] = useState("");
-  const [wrappedTokenRewards, setWrappedTokenRewards] = useState("");
+  // TODO \/ this data is not simple to retrieve. do it later
+  // const [frTokenTotalPenalities, setFrTokenTotalPenalities] = useState("");
+  // const [wrappedTokenTotalPenalities, setWrappedTokenTotalPenalities] = useState("");
+  const [rewardTokens, setRewardTokens] = useState(null);
+  const [tokenMetadata, setTokenMetadata] = useState(null);
 
   // TODO use FRZ and frToken contract getters to fetch token metadata, then use that metadata to add our custom tokens to their wallet token list like so:
   // https://docs.metamask.io/guide/registering-your-token.html
@@ -102,10 +102,6 @@ export default function useToken({ contract }) {
   frTokenTotalPenalities
   wrappedTokenTotalPenalities
 
-  frTokenRewards
-  frzRewards
-  wrappedTokenRewards
-
   */
   const _frTokenBurnt = async ({ contract, account }) => {
     const options = {
@@ -127,6 +123,133 @@ export default function useToken({ contract }) {
     return await Moralis.executeFunction(options);
   };
 
+  const _frzStaked = async ({ contract, account }) => {
+    const options = {
+      contractAddress: contract.MultiRewards.address,
+      functionName: "balanceOf",
+      abi: contract.MultiRewards.abi,
+      params: {
+        account: account,
+      },
+    };
+    return await Moralis.executeFunction(options);
+  };
+  const _frzTotalStaked = async ({ contract }) => {
+    const options = {
+      contractAddress: contract.MultiRewards.address,
+      functionName: "totalSupply",
+      abi: contract.MultiRewards.abi,
+    };
+    return await Moralis.executeFunction(options);
+  };
+
+  const _genericGetTokenReward = async ({ contract, account, rewardTokenAddress }) => {
+
+    let nastyMoralisNamelessArrayParamsBugFix = (originalAbi, functionName) => {
+      const abiFunctionArr = originalAbi.filter(x => x.name === functionName);
+      if (abiFunctionArr.length <= 0) {
+        throw new Error("Could not patch moralis bug. Couldn't find function: " + functionName)
+      }
+      abiFunctionArr.forEach((fn, index) => {
+        for (let i = 0; i < fn.inputs.length; i += 1) {
+          fn.inputs[i].name = (i+""); // use a little movie magic to change the function name to "0", or "1", etc. 
+          // sneaks the params in correctly here: https://github.com/MoralisWeb3/Moralis-JS-SDK/blob/9eb6f1bfb41eb4acb4445e7991a2b1c096bfef0b/src/MoralisWeb3.js#L769
+        }
+      });
+      console.log(originalAbi.filter(x => x.name === functionName));
+    }
+    nastyMoralisNamelessArrayParamsBugFix(contract.abi, "rewards"); // disgusting mutation :(
+
+    const options = {
+      contractAddress: contract.address,
+      functionName: "rewards",
+      abi: contract.abi,
+      params: [account, rewardTokenAddress],
+    };
+    try {
+      const result = await Moralis.executeFunction(options);
+      return result.toString();
+    } catch (err) {
+      console.error("Failed to fetch reward token: " + rewardTokenAddress);
+      console.error(err);
+      return null;
+    }
+  };
+  const _getRewardTokens = async ({ contract, account }) => {
+    const frTokenReward = await _genericGetTokenReward({ contract: contract.frTokenStaking, account, rewardTokenAddress: contract.frToken.address });
+    const frzReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: contract.FRZ.address });
+    const frzWrappedReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: wrappedTokenMetadata.tokenAddress });
+    const [frTokenSymbol, frzSymbol, wrappedSymbol] = await _getTokenMetadata([contract.frToken, contract.FRZ, { address: wrappedTokenMetadata.tokenAddress, abi: wrappedTokenMetadata.abi }]);
+    return [
+      {
+        amount: frTokenReward,
+        symbol: frTokenSymbol,
+      },
+      {
+        amount: frzReward,
+        symbol: frzSymbol,
+      },
+      {
+        amount: frzWrappedReward,
+        symbol: wrappedSymbol,
+      },
+    ];
+    /**
+     * rewardTokenAddresses = [contract1.rewardTokens(0), contract2.rewardTokens(1), contract2.rewardTokens(1)] 
+     * rewards(account, rewardTokenAddress[0]) // these are the amounts
+     * rewards(account, rewardTokenAddress[1])
+     * rewards(account, rewardTokenAddress[2])
+     * 
+     * fetch the symbol using erc20contract.symbol()
+     *
+     [
+      {
+        "symbol": "frEth",
+        "amount": "3000000000000000000",
+      },
+      {
+        "symbol": "FRZ",
+        "amount": "1337000000000000000",
+      },
+      {
+        "symbol": "weth",
+        "amount": "4206900000000000000",
+      }
+    ];*/
+  }
+  /**
+   * 
+   * @returns A map of contract addresses to metadata objects. i.e. {
+   *  "0xc778417E063141139Fce010982780140Aa0cD5Ab": { 
+   *    symbol: "WETH",
+   *   },
+   *  "0x1afc2...": {
+   *    symbol: "STUF"
+   *   },
+   *   ...
+   * }
+   */
+  const _getTokenMetadata = async (contracts) => {
+    // Do we even need anything other than the symbol field?
+    const symbolsTransactions = contracts.map(async (contract) => {
+      const options = {
+        contractAddress: contract.address,
+        functionName: "symbol",
+        abi: contract.abi,
+      };
+      try {
+        return await Moralis.executeFunction(options);
+      } catch (err) {
+        console.error("Failed to fetch token metadata for: " + contract?.address);
+        console.error(err);
+        return null;
+      }
+    })
+
+    const symbols = await Promise.allSettled(symbolsTransactions);
+    return symbols.map((symbol) => symbol?.value || symbol);
+  }
+
   const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
   const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
   const getFrTokenTotalSupply = async () => _frTokenTotalSupply({ contract, account });
@@ -134,6 +257,9 @@ export default function useToken({ contract }) {
   const getFrzTotalSupply = async () => _frzTotalSupply({ contract, account });
   const getFrTokenBurnt = async () => _frTokenBurnt({ contract, account });
   const getFrTokenTotalBurnt = async () => _frTokenTotalBurnt({ contract, account });
+  const getFrzStaked = async () => _frzStaked({ contract, account });
+  const getFrzTotalStaked = async () => _frzTotalStaked({ contract, account });
+  const getRewardTokens = async () => _getRewardTokens({ contract, account });
 
   const genericIsTokenAllowed = async ({ spender, tokenAddress }) => {
     const options = {
@@ -227,6 +353,8 @@ export default function useToken({ contract }) {
       [getWrappedTokenBalance, setWrappedTokenBalance],
       [getFrTokenBurnt, setFrTokenBurnt],
       [getFrTokenTotalBurnt, setFrTokenTotalBurnt],
+      [getFrzStaked, setFrzStaked],
+      [getFrzTotalStaked, setFrzTotalStaked],
     ];
     const handleFetchError = (err) => {
       console.error(err);
@@ -243,8 +371,12 @@ export default function useToken({ contract }) {
         .catch(handleFetchError); // errors return null as well
     });
     const results = await Promise.allSettled(fetches); // wait until all fetches complete or error out
+    let rewardTokenResults = await getRewardTokens(); // this one is non-standard
 
     fetchAndSetFns.forEach(([, setFn], index) => setFn(convertUnits(results[index].value))); // set the hook state for each reults
+
+    rewardTokenResults = !rewardTokenResults ? [] : rewardTokenResults.map((rewardTokenResult) => ({ ...rewardTokenResult, "amount": convertUnits(rewardTokenResult.amount) }));
+    setRewardTokens(rewardTokenResults); // [] indicates failure or no data
 
     if (!isInitialized) {
       setIsInitialized(true); // we have data now!
@@ -263,6 +395,9 @@ export default function useToken({ contract }) {
       frTokenBurnt,
       frTokenTotalBurnt,
       frzFlowShare,
+      frzStaked,
+      frzTotalStaked,
+      rewardTokens,
     },
 
     // these store the last error (if any)

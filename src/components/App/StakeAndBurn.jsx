@@ -9,6 +9,7 @@ import frzIcon from "../../assets/frzicon.svg";
 import ethIcon from "../../assets/ethicon.svg";
 import circleIcon from "../../assets/circleicon.svg";
 import PageToolbar from "./PageToolbar";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 const { TabPane } = Tabs;
 
@@ -16,7 +17,7 @@ function StakeAndBurn(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
-  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare } = tokenData;
+  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, rewardTokens } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
   const [isTransacting, setIsTransacting] = useState(false);
 
@@ -177,21 +178,22 @@ function StakeAndBurn(props) {
             <h3 className="card-title m-t-1">UNSTAKE</h3>
             <CurrencyAmountAction label="AMOUNT" ActionButton={unstakeButton} />
           </section>
-          <section className="transparent-card taller flex-half">
+          <section className="transparent-card taller flex-half two-value-card">
             <div>
               <div>
-                <span className="font-35 notReady">99</span>
+                <span className="font-35">{frzStaked ? parseFloat(frzStaked)?.toFixed(2) : "--"}</span>
                 <span className="p-l-1">FRZ</span>
               </div>
               <div>Your Staked</div>
             </div>
             <div>
               <div>
-                <span className="font-35 notReady">9,999</span>
+                <span className="font-35">{frzTotalStaked ? parseFloat(frzTotalStaked)?.toFixed(2) : "--"}</span>
                 <span className="p-l-1">FRZ</span>
               </div>
               <div>Total Staked</div>
             </div>
+            {/* penalty data is not simple to retrieve at this time
             <div>
               <div>
                 <span className="font-35 notReady">1,232</span>
@@ -205,6 +207,7 @@ function StakeAndBurn(props) {
               </div>
               <div>WETH Penalties Paid</div>
             </div>
+            */}
           </section>
         </div>
       </div>
@@ -215,6 +218,13 @@ function StakeAndBurn(props) {
       <Fragment>
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>Claim the fees you've earned from staking your FRZ. Claim each token individually or all at once.</div>
+          { /* TODO move this lower and dynamically render */
+            rewardTokens ? rewardTokens?.map((rewardToken, index) => (
+              <div key={"reward-token-" + (rewardToken.symbol || index)}>
+               {rewardToken.symbol} {rewardToken.amount}
+              </div>
+            )) : <Loading3QuartersOutlined />
+          }
         </div>
         <div className="flex justify-center claim-tab m-t-2">
           <div className="transparent-card wide taller flex flex-column center">
