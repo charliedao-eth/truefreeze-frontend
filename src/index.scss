@@ -1,4 +1,5 @@
-@import './vars';
+@import "./vars";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat");
 
 *,
 *::before,
@@ -29,7 +30,7 @@ dd {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   min-height: 100vh;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
@@ -100,7 +101,6 @@ select {
   overflow: auto;
 }
 
-
 @keyframes slow-show {
   from {
     opacity: 0;
@@ -143,13 +143,13 @@ select {
     background: transparent;
     border: none;
     width: 100%;
-    
+
     input {
       height: 78px;
       border: 1px solid #557282;
       border-radius: 10px;
-      background: #4C4D4F;
-      color: #BDBEC6;
+      background: #4c4d4f;
+      color: #bdbec6;
       font-size: 35px;
       padding: 0px 8px 16px 8px;
     }
@@ -160,7 +160,7 @@ select {
       text-align: center;
       width: 100%;
 
-      .ant-tabs-tab+.ant-tabs-tab {
+      .ant-tabs-tab + .ant-tabs-tab {
         margin: 0;
       }
     }
@@ -168,30 +168,32 @@ select {
       border: 1px solid white;
       border-radius: 28px;
     }
-    
-    .ant-tabs-bottom>.ant-tabs-nav .ant-tabs-ink-bar, .ant-tabs-bottom>div>.ant-tabs-nav .ant-tabs-ink-bar, .ant-tabs-top>.ant-tabs-nav .ant-tabs-ink-bar, .ant-tabs-top>div>.ant-tabs-nav .ant-tabs-ink-bar {
-      background: #FFFFFF;
+
+    .ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
+      background: #ffffff;
       border-radius: 28px;
       height: 100%;
       z-index: -1;
     }
     .ant-tabs-tab-btn {
       box-sizing: border-box;
-      color: #FFFFFF;
+      color: #ffffff;
       padding: 0 2em;
-      transition: all .3s;
+      transition: all 0.3s;
     }
     .ant-tabs-tab.ant-tabs-tab-active {
       > .ant-tabs-tab-btn {
         color: #000000;
       }
     }
-
   }
 }
 
 .page-toolbar {
-  border-bottom: 1px solid #FFFFFF;
+  border-bottom: 1px solid #ffffff;
   display: flex;
   font-size: 18px;
   flex-wrap: nowrap;
@@ -208,7 +210,7 @@ select {
   }
 
   &:hover:after {
-    content: 'This feature is under development.';
+    content: "This feature is under development.";
     display: block;
     position: absolute;
     background: black;
@@ -285,6 +287,12 @@ select {
 .p-1 {
   padding: 1em;
 }
+.p-2 {
+  padding: 2em;
+}
+.p-4 {
+  padding: 4em;
+}
 .p-b-1 {
   padding-bottom: 1em;
 }
@@ -309,20 +317,23 @@ select {
 }
 
 .white-text {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .text-align-center {
   text-align: center;
+}
+.text-align-right {
+  text-align: right;
 }
 
 // general TF app styles
 
 .translucent-card {
-  background: rgba(255,255,255,0.09);
+  background: rgba(255, 255, 255, 0.09);
   border-radius: 20px;
-  box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow:  0px 3px 8px -2px rgba(0, 0, 0, 0.5);
-  color: #FFFFFF;
+  box-shadow: 0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 3px 8px -2px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   height: 340px;
@@ -355,7 +366,7 @@ select {
   }
 
   .card-title {
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 21px;
   }
   .choke-label {
@@ -363,14 +374,15 @@ select {
   }
 
   .card-icon {
-    color: #FFFFFF;
-    fill: #FFFFFF;
+    color: #ffffff;
+    fill: #ffffff;
     height: 38px;
     position: absolute;
     right: 24px;
     top: 8px;
 
-    &.eth-icon { // the viewbox isn't square. just manually bumping pixels to align inside circle per icon
+    &.eth-icon {
+      // the viewbox isn't square. just manually bumping pixels to align inside circle per icon
       height: 32px;
       right: 25px;
       top: 11px;
@@ -380,7 +392,8 @@ select {
 
 .truefreeze {
   &.disconnected-wallet {
-    .skeleton-wrapper, .page-skeleton-wrapper {
+    .skeleton-wrapper,
+    .page-skeleton-wrapper {
       margin-top: 100px;
       width: 50%;
     }
@@ -389,30 +402,35 @@ select {
   .uhoh.ant-btn {
     background-color: $uhoh;
     border-color: $uhoh;
-    color: #EEEEEE;
+    color: #eeeeee;
 
-    &:hover, &:focus, &:active {
-      color: #FFFFFF;
+    &:hover,
+    &:focus,
+    &:active {
+      color: #ffffff;
       background: lighten($uhoh, 5%);
     }
   }
   .cool.ant-btn {
     background-color: $cool;
     border-color: $cool;
-    color: #EEEEEE;
+    color: #eeeeee;
 
-    &:hover, &:focus, &:active {
-      color: #FFFFFF;
+    &:hover,
+    &:focus,
+    &:active {
+      color: #ffffff;
       background: lighten($cool, 5%);
     }
   }
   .transparent-card {
     @extend .translucent-card;
     background: none;
-    border: 1px solid #FFFFFF;
+    border: 1px solid #ffffff;
     text-align: center;
   }
-  .translucent-card, .transparent-card {
+  .translucent-card,
+  .transparent-card {
     &.two-value-card {
       justify-content: center;
 
@@ -425,10 +443,9 @@ select {
     font-size: 18px;
   }
   .page-toolbar .wallet-info > div {
-      margin-right: 1em;
+    margin-right: 1em;
   }
 }
-
 
 // specific page styles
 
@@ -445,7 +462,7 @@ select {
     background-color: #426788;
     border-radius: 6px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #ffffff;
     cursor: pointer;
     height: 36px;
     font-size: 13px;
@@ -455,8 +472,8 @@ select {
     width: 100%;
 
     &[disabled] {
-      background-color: #CCC;
-      color: #EEE;
+      background-color: #ccc;
+      color: #eee;
       cursor: not-allowed;
       filter: saturate(0.1);
     }
@@ -474,11 +491,11 @@ select {
       width: 100%;
       z-index: 3;
     }
-    
+
     > .progress-gradient {
-      background: linear-gradient(#00E6B5, #FF6EF1);
+      background: linear-gradient(#00e6b5, #ff6ef1);
       border-radius: 6px;
-      color: #FFFFFF;
+      color: #ffffff;
       cursor: pointer;
       display: block;
       height: 34px;
@@ -518,5 +535,46 @@ select {
       right: 200px;
       text-align: right;
     }
+  }
+}
+
+.nftTemplate {
+  .background {
+    fill: url('#linear-gradient');
+  }
+  .snowflake-logo {
+    fill: #fff;
+  }
+  .logo-text {
+    fill: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 25px;
+  }
+  .amount-text {
+    fill: #d8b98d;
+    font-family: Montserrat, sans-serif;
+    font-size: 55px;
+  }
+  .date-text {
+    fill: #d8b98d;
+    font-family: Montserrat, sans-serif;
+    font-size: 30px;
+  }
+  .date-label {
+    fill: #8dbdd8;
+    font-family: Montserrat, sans-serif;
+    font-size: 20px;
+  }
+  .gradient-box {
+    fill: none;
+    stroke-miterlimit: 10;
+    stroke-width: 3px;
+    stroke: url('#linear-gradient');
+  }
+  .gradient-border {
+    fill: none;
+    stroke-miterlimit: 10;
+    stroke-width: 1px;
+    stroke: #bdbec5;
   }
 }

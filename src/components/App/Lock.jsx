@@ -5,6 +5,7 @@ import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
+import NftTemplate from "./NftTemplate";
 
 const { Option } = Select;
 
@@ -63,9 +64,10 @@ function Lock(props) {
         content: `You successfully locked ${amountLocked} ${nativeTokenSymbol} for ${timeLocked} months.`,
       });
 
-      return freezerConfirmation;
+      setIsLocking(false);
     } catch (err) {
       // TODO user error messaging
+      setIsLocking(false);
       console.error("Freezer locking request failed. ");
       console.error(err);
       message.error({
@@ -73,8 +75,6 @@ function Lock(props) {
         duration: 4,
         onClick: () => alert(JSON.stringify(err)),
       });
-    } finally {
-      setIsLocking(false);
     }
   };
 
@@ -114,7 +114,37 @@ function Lock(props) {
             type="primary"
             size="large"
             className="full-width"
-            onClick={() => lockWrappedToken(amountLocked, timeLocked)}
+            onClick={() => Modal.confirm({ 
+              centered: true, 
+              width: 900,
+              icon: null,
+              cancelText: "GO BACK",
+              okText: "CONFIRM LOCK",
+              onOk: () => lockWrappedToken(amountLocked, timeLocked),
+              content: (
+                <div className="flex">
+                  <div className="flex-half p-4">
+                    <h1>Confirm Choice</h1>
+                    <p>
+                      Please confirm the following information is correct before locking your freezer. Upon confirmation, the adjacent NFT will be minted to your wallet along with the number of {tokenMetadata?.frToken?.symbol} specified in the previous step. 
+                    </p>
+                    <p>
+                    You can redeem the NFT to withdraw your {nativeTokenSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty. 
+                    </p>
+                  </div>
+                  <div className="flex-half p-l-2">
+                    {
+                    NftTemplate({
+                      lockDate: new Date(Date.now()),
+                      lockDuration: timeLocked + " months", 
+                      wrappedSymbol: tokenMetadata?.wrappedToken?.symbol,
+                      wrappedAmount: amountLocked?.toFixed(3)
+                    })
+                    }
+                  </div>
+                </div>
+              )
+            })}
             disabled={isLocking || !isInitialized || !amountLocked}
             loading={isLocking}
           >
