@@ -96,15 +96,13 @@ function MyFreezers(props) {
     return progressAmount;
   };
 
-  // TODO change frETH to frASSET dynamic name
-
   return (
     <div className="appPageContent myfreezers">
       <PageToolbar tokens={tokens}>
-        <div className="sorting inline-flex space-between center notReady">
+        {/*TODO <div className="sorting inline-flex space-between center notReady">
           <span className="m-r-1">TIME</span>
           <span>ETH</span>
-        </div>
+        </div>*/}
       </PageToolbar>
       <NFTBalance
         filterByContractAddress={contract.nonFungiblePositionManager.address}

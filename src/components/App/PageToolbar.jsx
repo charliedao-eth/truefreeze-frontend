@@ -3,7 +3,7 @@ import { useMoralis, useNativeBalance } from "react-moralis";
 export default function PageToolbar(props) {
   const { tokens } = props;
   const { account, Moralis } = useMoralis();
-  const { frTokenBalance, frzBalance, wrappedTokenBalance } = tokens.tokenData;
+  const { frTokenBalance, frzBalance, wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
   const { data: balance, nativeToken } = useNativeBalance();
 
   const nativeAmounts = {
@@ -28,7 +28,7 @@ export default function PageToolbar(props) {
         </div>
         <div>
           <div>
-            <b>WRAPPED{/** TODO fetch symbol */}</b>
+            <b>{tokenMetadata?.wrappedToken?.symbol || "WRAPPED"}</b>
           </div>
           <div>{wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(2) : "--"}</div>
         </div>
@@ -37,13 +37,13 @@ export default function PageToolbar(props) {
       <div className="curriencies inline-flex flex-align--right">
         <div className="frToken-holdings m-r-1">
           <div>
-            <b>frETH</b>
+            <b>{tokenMetadata?.frToken?.symbol || "--"}</b>
           </div>
           <div>{frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}</div>
         </div>
         <div className="frz-holdings">
           <div>
-            <b>FRZ</b>
+            <b><b>{tokenMetadata?.FRZ?.symbol || "FRZ"}</b></b>
           </div>
           <div>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : "--"}</div>
         </div>

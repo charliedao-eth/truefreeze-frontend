@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useNativeBalance } from "react-moralis";
 import { Button, Select, Modal, message } from "antd";
 import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
@@ -17,11 +17,14 @@ const { Option } = Select;
 function Lock(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = tokens;
+  const { isInitialized, methods, tokenData } = tokens;
   const { checkThenAllowWrapped } = methods;
+  const { tokenMetadata } = tokenData;
   const [isLocking, setIsLocking] = useState(false);
   const [amountLocked, setAmountLocked] = useState(1);
   const [timeLocked, setTimeLocked] = useState(3);
+  const { nativeToken } = useNativeBalance();
+  const nativeTokenSymbol = nativeToken?.symbol || null;
 
   const lockWrappedToken = async (amount, durationInMonths) => {
     setIsLocking(true);
@@ -57,7 +60,7 @@ function Lock(props) {
       const freezerConfirmation = await freezerTransaction.wait();
       console.log(freezerConfirmation);
       Modal.success({
-        content: `You successfully locked ${amountLocked} ETH for ${timeLocked} months.`,
+        content: `You successfully locked ${amountLocked} ${nativeTokenSymbol} for ${timeLocked} months.`,
       });
 
       return freezerConfirmation;
@@ -104,7 +107,7 @@ function Lock(props) {
             <div className="choke-label">EARN</div>
             <div>
               <span className="font-35 notReady">99.99</span>
-              <span className="p-l-1">frETH</span>
+              <span className="p-l-1">{tokenMetadata?.frToken?.symbol || "frToken"}</span>
             </div>
           </div>
           <Button
@@ -115,7 +118,7 @@ function Lock(props) {
             disabled={isLocking || !isInitialized || !amountLocked}
             loading={isLocking}
           >
-            Lock {amountLocked?.toPrecision(4)} ETH
+            Lock {amountLocked?.toPrecision(4)} {nativeTokenSymbol}
           </Button>
         </section>
         <section className="lock-chart flex-half notReady">
