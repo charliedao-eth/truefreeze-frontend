@@ -220,20 +220,13 @@ export default function useToken({ contract }) {
     return symbols.map((symbol) => symbol?.value || symbol);
   };
 
-  const getTokenMetadata = async (tokenContracts = [
-    contract.frToken,
-    contract.FRZ,
-    { address: wrappedTokenMetadata.tokenAddress, abi: wrappedTokenMetadata.abi },
-  ]) => {
-    
+  const getTokenMetadata = async (tokenContracts = [contract.frToken, contract.FRZ, { address: wrappedTokenMetadata.tokenAddress, abi: wrappedTokenMetadata.abi }]) => {
     const symbols = await _getTokenMetadata(tokenContracts);
-  
-    return symbols.map((symbol) => (
-      {
-        symbol,
-      }
-    ));
-  }
+
+    return symbols.map((symbol) => ({
+      symbol,
+    }));
+  };
 
   const getWrappedTokenBalance = async () => _getWrappedTokenBalance({ tokenAddress: wrappedTokenMetadata.tokenAddress });
   const getFrTokenBalance = async () => _frTokenBalance({ contract, account });
@@ -361,13 +354,12 @@ export default function useToken({ contract }) {
 
     fetchAndSetFns.forEach(([, setFn], index) => setFn(convertUnits(results[index].value))); // set the hook state for each reults
 
-
     rewardTokenResults = !rewardTokenResults ? [] : rewardTokenResults.map((rewardTokenResult) => ({ ...rewardTokenResult, amount: convertUnits(rewardTokenResult.amount) }));
     // NOTE: this next line will break if we ever care about more than 3 tokens:
     tokenMetadataResults = {
       frToken: tokenMetadataResults?.[0],
       FRZ: tokenMetadataResults?.[1],
-      wrappedToken : tokenMetadataResults?.[2],
+      wrappedToken: tokenMetadataResults?.[2],
     };
     setRewardTokens(rewardTokenResults); // [] indicates failure or no data
     setTokenMetadata(tokenMetadataResults || null);

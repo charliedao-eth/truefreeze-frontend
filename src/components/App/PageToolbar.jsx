@@ -43,7 +43,9 @@ export default function PageToolbar(props) {
         </div>
         <div className="frz-holdings">
           <div>
-            <b><b>{tokenMetadata?.FRZ?.symbol || "FRZ"}</b></b>
+            <b>
+              <b>{tokenMetadata?.FRZ?.symbol || "FRZ"}</b>
+            </b>
           </div>
           <div>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : "--"}</div>
         </div>

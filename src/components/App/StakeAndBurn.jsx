@@ -121,7 +121,9 @@ function StakeAndBurn(props) {
     return (
       <div>
         <div className="text-align-center white-text">
-          <div>Burn {frTokenSymbol} to earn {frzSymbol}. Burnt {frTokenSymbol} is gone forever.</div>
+          <div>
+            Burn {frTokenSymbol} to earn {frzSymbol}. Burnt {frTokenSymbol} is gone forever.
+          </div>
           <div>In exchange, you earn a flow of {frzSymbol}.</div>
           <div>Staked {frzSymbol} will earn you a portion of early withdrawal fees paid by other users.</div>
         </div>
@@ -170,7 +172,8 @@ function StakeAndBurn(props) {
       <div>
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>
-            By staking your {frzSymbol}, you will earn a portion of penalties paid by other users. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be claimed on the 'CLAIM' tab.
+            By staking your {frzSymbol}, you will earn a portion of penalties paid by other users. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be
+            claimed on the 'CLAIM' tab.
           </div>
         </div>
         <div className="flex justify-center m-t-2">
