@@ -128,12 +128,12 @@ function MyFreezers(props) {
       unlockCost = {
         amount: Moralis.Units.FromWei(costTransaction),
         symbol: tokenMetadata?.frToken?.symbol,
-        displayAmount: parseFloat(Moralis.Units.FromWei(costTransaction))?.toFixed(4)
+        displayAmount: parseFloat(Moralis.Units.FromWei(costTransaction))?.toFixed(4),
       };
       unlockFee = {
         amount: Moralis.Units.FromWei(feeTransaction),
         symbol: tokenMetadata?.wrappedToken?.symbol,
-        displayAmount: parseFloat(Moralis.Units.FromWei(feeTransaction))?.toFixed(4)
+        displayAmount: parseFloat(Moralis.Units.FromWei(feeTransaction))?.toFixed(4),
       };
     } catch (err) {
       console.error(`Failed to fetch unlock costs and fees for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
@@ -141,7 +141,7 @@ function MyFreezers(props) {
 
     // [cost in frToken, fee in wrapped token]
     return [unlockCost, unlockFee];
-  }
+  };
 
   return (
     <div className="appPageContent myfreezers">

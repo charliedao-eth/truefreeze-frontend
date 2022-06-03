@@ -96,7 +96,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   useEffect(() => {
     const key = "cannot-connect";
-    
+
     if ((!contract || isUnauthenticated) && shouldConnectWallet) {
       setConnectionTimeout(
         setTimeout(
@@ -262,7 +262,7 @@ export const routeRequiresWalletConnection = (routeUrl) => {
   routeUrl = typeof routeUrl === "string" ? routeUrl : window.location.href; // use the current url if nothing passed in
   const noWalletRoutes = ["", "landing"];
   const route = routeUrl?.split("/")?.pop();
-  return !(noWalletRoutes.includes(route));
-}
+  return !noWalletRoutes.includes(route);
+};
 
 export default App;
