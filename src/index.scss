@@ -578,3 +578,47 @@ select {
     stroke: #bdbec5;
   }
 }
+
+.landing-page {
+  color: #FFFFFF;
+  font-family: Montserrat, sans-serif;
+  max-width: 1000px;
+  text-align: center;
+  padding-top: max(20vh, 100px);
+
+  .white-button {
+    color: white;
+    border: 1px solid white;
+    border-radius: 30px;
+    display: inline-block;
+    margin-top: 1.5em;
+    padding: 0.5em 1em;
+  }
+
+  .landing-title {
+    color: white;
+    font-size: 40px;
+  }
+  .landing-subtitle {
+    color: white;
+    font-size: 30px;
+  }
+  .landing-image {
+    max-width: 100%;
+  }
+}
+
+.claim-page {
+  color: white;
+  padding-top: max(10vh, 100px);
+  max-width: 600px;
+  text-align: center;
+
+  .claim-subtitle {
+    color: white;
+    margin-top: 1em;
+  }
+  .claim-button {
+    margin-top: 1em;
+  }
+}

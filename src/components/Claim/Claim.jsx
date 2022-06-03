@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Button, Skeleton } from "antd";
 import { users } from "../../contracts/merkle";
+import claimImage from "../../assets/claim_image.png";
 
 /**
  * The dapp post-authetication home page
@@ -18,7 +19,9 @@ function Claim(props) {
 
   useEffect(() => {
     (async () => {
-      if (contract && account && userClaimData) {
+      if (userClaimData === false) {
+        setAlreadyClaimed(true);
+      } else if (contract && account && userClaimData) {
         const claimResult = await checkIfClaimed();
         console.log("Account freeze already claimed:");
         console.log(claimResult);
@@ -27,10 +30,10 @@ function Claim(props) {
     })();
   }, [account]);
 
-  if (!contract || (!props.address && (!account || !isAuthenticated))) {
+  if (alreadyClaimed === null || !contract || !account || !isAuthenticated) {
     return (
       <div className="appPageContent">
-        <div className="page-skeleton-wrapper">
+        <div className="page-skeleton-wrapper slow-show">
           <Skeleton />;
         </div>
       </div>
@@ -80,9 +83,17 @@ function Claim(props) {
     }
   }
 
-  const renderNoClaim = () => <h2>No claim found for your address.</h2>;
+  const renderNoClaim = () => (
+    <div className="claim-page">
+      <h2 className="claim-subtitle">No claim found for your address.</h2>
+    </div>
+  );
 
-  const renderAlreadyClaimed = () => <h2>This address has already claimed {`${userClaimData?.amount} `}FRZ</h2>;
+  const renderAlreadyClaimed = () => (
+    <div className="claim-page">
+      <h2 className="claim-subtitle">This address has already claimed {`${userClaimData?.amount} `}FRZ</h2>
+    </div>
+  );
 
   if (!userClaimData) {
     return renderNoClaim();
@@ -91,20 +102,26 @@ function Claim(props) {
   }
 
   return (
-    <div>
-      <h2>Good news. This address has {`${userClaimData?.amount} `}FRZ available to claim!</h2>
-      <Button type="primary" size="large" loading={isClaiming} onClick={claim}>
+    <div className="claim-page">
+      <img className="claim-image" src={claimImage} />
+      <h2 className="claim-subtitle">This address has {`${userClaimData?.amount} `}FRZ available to claim!</h2>
+      <Button className="claim-button" type="primary" size="large" loading={isClaiming} onClick={claim}>
         Claim
       </Button>
     </div>
   );
 }
 
+/**
+ * 
+ * @param {String} address 
+ * @returns null for error or bad inputs. false if the user is not in the claim list. Object otherwise.
+ */
 function getUserInClaimList(address) {
   if (!address) {
-    return undefined;
+    return null;
   }
-  return users.find((item) => item.address.toLowerCase() === address.toString().toLowerCase());
+  return users.find((item) => item.address.toLowerCase() === address.toString().toLowerCase()) || false; // distinguish a false return from null (false means it aint there)
 }
 
 export default Claim;
