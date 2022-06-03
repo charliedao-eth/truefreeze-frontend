@@ -106,8 +106,8 @@ function Lock(props) {
           <div>
             <div className="choke-label">EARN</div>
             <div>
-              <span className="font-35 notReady">99.99</span>
-              <span className="p-l-1">{tokenMetadata?.frToken?.symbol || "frToken"}</span>
+              <span className="font-35">{amountLocked?.toFixed(3) / 1}</span>
+              <span className="p-l-1">{tokenMetadata?.frToken?.symbol ? (tokenMetadata?.frToken?.symbol + " NOW") : ""}</span>
             </div>
           </div>
           <Button
@@ -147,15 +147,44 @@ function Lock(props) {
             disabled={isLocking || !isInitialized || !amountLocked}
             loading={isLocking}
           >
-            Lock {amountLocked?.toPrecision(4)} {nativeTokenSymbol}
+            Lock {amountLocked?.toPrecision(4) / 1} {nativeTokenSymbol}
           </Button>
         </section>
-        <section className="lock-chart flex-half notReady">
-          <img className="img-placeholder" src={chartplaceholder} />
+        <section className="lock-chart flex-half">
+          <img className="img-placeholder notReady" src={chartplaceholder} />
+          
+            { 
+            amountLocked > 0 && (
+              <div>
+                Unlock costs:
+                <div>0 days: {costToWithdraw(amountLocked, timeLocked, 0)} {tokenMetadata?.frToken?.symbol}</div>
+                <div>5 days: {costToWithdraw(amountLocked, timeLocked, 5)} {tokenMetadata?.frToken?.symbol}</div>
+                <div>10 days: {costToWithdraw(amountLocked, timeLocked, 10)} {tokenMetadata?.frToken?.symbol}</div>
+                <div>20 days: {costToWithdraw(amountLocked, timeLocked, 20)} {tokenMetadata?.frToken?.symbol}</div>
+              </div>
+            )}
         </section>
       </div>
     </div>
   );
+}
+
+export function costToWithdraw(amountLocked, lockDurationInDays, timeSinceLockInDays){ 
+
+  const progress = timeSinceLockInDays / lockDurationInDays; 
+  if(progress >= 1){ 
+    return 0;
+  }
+     
+  if(progress < 0.67){ 
+    return(
+     amountLocked + (0.2 * amountLocked * ( 1 - progress / 0.67))
+    );
+  } else {
+    return ( 
+      amountLocked * (1 -  ((progress - 0.67) / 0.33 ))
+    );
+  }
 }
 
 export default Lock;

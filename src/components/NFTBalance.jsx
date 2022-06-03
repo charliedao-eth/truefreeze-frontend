@@ -92,11 +92,11 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, fetchUnlockCo
             <h1>Are you sure?</h1>
             <p>Please confirm that you wish to redeem the following token. If there is an early withdrawal penalty it will be highlighted below.</p>
             <div className="font-20 m-t-1">
-              <b>UNLOCK PENTALTY:</b>
+              <b>Early withdrawal fee:</b>
               <div>{frTokenCost !== null ? `${frTokenCost?.displayAmount} ${frTokenCost?.symbol}` : "Data error"}</div>
             </div>
             <div className="font-20 m-t-1">
-              <b>PROTOCOL FEE:</b>
+              <b>{wrappedTokenFees?.symbol} penalty:</b>
               <div>{wrappedTokenFees !== null ? `${wrappedTokenFees?.displayAmount} ${wrappedTokenFees?.symbol}` : "Data error"}</div>
             </div>
           </div>
