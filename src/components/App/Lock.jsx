@@ -114,37 +114,36 @@ function Lock(props) {
             type="primary"
             size="large"
             className="full-width"
-            onClick={() => Modal.confirm({ 
-              centered: true, 
-              width: 900,
-              icon: null,
-              cancelText: "GO BACK",
-              okText: "CONFIRM LOCK",
-              onOk: () => lockWrappedToken(amountLocked, timeLocked),
-              content: (
-                <div className="flex">
-                  <div className="flex-half p-4">
-                    <h1>Confirm Choice</h1>
-                    <p>
-                      Please confirm the following information is correct before locking your freezer. Upon confirmation, the adjacent NFT will be minted to your wallet along with the number of {tokenMetadata?.frToken?.symbol} specified in the previous step. 
-                    </p>
-                    <p>
-                    You can redeem the NFT to withdraw your {nativeTokenSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty. 
-                    </p>
+            onClick={() =>
+              Modal.confirm({
+                centered: true,
+                width: 900,
+                icon: null,
+                cancelText: "GO BACK",
+                okText: "CONFIRM LOCK",
+                onOk: () => lockWrappedToken(amountLocked, timeLocked),
+                content: (
+                  <div className="flex">
+                    <div className="flex-half p-4">
+                      <h1>Confirm Choice</h1>
+                      <p>
+                        Please confirm the following information is correct before locking your freezer. Upon confirmation, the adjacent NFT will be minted to your wallet along
+                        with the number of {tokenMetadata?.frToken?.symbol} specified in the previous step.
+                      </p>
+                      <p>You can redeem the NFT to withdraw your {nativeTokenSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty.</p>
+                    </div>
+                    <div className="flex-half p-l-2">
+                      {NftTemplate({
+                        lockDate: new Date(Date.now()),
+                        lockDuration: timeLocked + " months",
+                        wrappedSymbol: tokenMetadata?.wrappedToken?.symbol,
+                        wrappedAmount: amountLocked?.toFixed(3),
+                      })}
+                    </div>
                   </div>
-                  <div className="flex-half p-l-2">
-                    {
-                    NftTemplate({
-                      lockDate: new Date(Date.now()),
-                      lockDuration: timeLocked + " months", 
-                      wrappedSymbol: tokenMetadata?.wrappedToken?.symbol,
-                      wrappedAmount: amountLocked?.toFixed(3)
-                    })
-                    }
-                  </div>
-                </div>
-              )
-            })}
+                ),
+              })
+            }
             disabled={isLocking || !isInitialized || !amountLocked}
             loading={isLocking}
           >

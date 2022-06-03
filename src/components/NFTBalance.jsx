@@ -98,8 +98,8 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer
       [nft?.token_id]: true,
     }); // tracks multiple freezers unlocking at the same time
 
-    Modal.confirm({ 
-      centered: true, 
+    Modal.confirm({
+      centered: true,
       width: 800,
       icon: null,
       cancelText: "GO BACK",
@@ -128,14 +128,10 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer
         <div className="flex">
           <div className="flex-half p-4">
             <h1>Are you sure?</h1>
-            <p>
-              Please confirm that you wish to redeem the following token. If there is an early withdrawal penalty it will be highlighted below.
-            </p>
+            <p>Please confirm that you wish to redeem the following token. If there is an early withdrawal penalty it will be highlighted below.</p>
             <div className="font-35 m-t-1">
               FEE:&nbsp;
-              <span className="notReady">
-                0 frETH
-              </span>
+              <span className="notReady">0 frETH</span>
             </div>
           </div>
           <div className="flex-half p-l-2 text-align-right">
@@ -147,8 +143,8 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer
             />
           </div>
         </div>
-      )
-    })
+      ),
+    });
   };
 
   // TODO useEffect to fetch getProgress, getUnlockCost

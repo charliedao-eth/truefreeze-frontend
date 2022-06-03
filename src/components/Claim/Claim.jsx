@@ -113,8 +113,8 @@ function Claim(props) {
 }
 
 /**
- * 
- * @param {String} address 
+ *
+ * @param {String} address
  * @returns null for error or bad inputs. false if the user is not in the claim list. Object otherwise.
  */
 function getUserInClaimList(address) {
