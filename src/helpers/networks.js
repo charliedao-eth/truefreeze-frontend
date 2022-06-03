@@ -4,19 +4,23 @@ export const networkConfigs = {
   "0x1": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://etherscan.io/",
+    chainName: "ethereum",
     wrapped: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
   },
   "0x3": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://ropsten.etherscan.io/",
+    chainName: "ropsten",
   },
   "0x2a": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://kovan.etherscan.io/",
+    chainName: "kovan",
   },
   "0x4": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://rinkeby.etherscan.io/",
+    chainName: "rinkeby",
     wrapped: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
     wrappedABI: {
       abi: [
@@ -179,16 +183,17 @@ export const networkConfigs = {
   "0x5": {
     currencySymbol: "ETH",
     blockExplorerUrl: "https://goerli.etherscan.io/",
+    chainName: "goerli",
   },
   "0x539": {
-    chainName: "Local Chain",
+    chainName: "local",
     currencyName: "ETH",
     currencySymbol: "ETH",
     rpcUrl: "http://127.0.0.1:7545",
   },
   "0xa86a": {
     chainId: 43114,
-    chainName: "Avalanche Mainnet",
+    chainName: "avalanche",
     currencyName: "AVAX",
     currencySymbol: "AVAX",
     rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
@@ -196,7 +201,7 @@ export const networkConfigs = {
   },
   "0x38": {
     chainId: 56,
-    chainName: "Smart Chain",
+    chainName: "bnb",
     currencyName: "BNB",
     currencySymbol: "BNB",
     rpcUrl: "https://bsc-dataseed.binance.org/",
@@ -205,7 +210,7 @@ export const networkConfigs = {
   },
   "0x61": {
     chainId: 97,
-    chainName: "Smart Chain - Testnet",
+    chainName: "bnbtestnet",
     currencyName: "BNB",
     currencySymbol: "BNB",
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545/",
@@ -213,7 +218,7 @@ export const networkConfigs = {
   },
   "0x89": {
     chainId: 137,
-    chainName: "Polygon Mainnet",
+    chainName: "polygon",
     currencyName: "MATIC",
     currencySymbol: "MATIC",
     rpcUrl: "https://rpc-mainnet.maticvigil.com/",
@@ -222,7 +227,7 @@ export const networkConfigs = {
   },
   "0x13881": {
     chainId: 80001,
-    chainName: "Mumbai",
+    chainName: "mumbai",
     currencyName: "MATIC",
     currencySymbol: "MATIC",
     rpcUrl: "https://rpc-mumbai.matic.today/",
@@ -236,6 +241,7 @@ export const getNativeByChain = (chain) => networkConfigs[chain]?.currencySymbol
 export const getChainById = (chain) => networkConfigs[chain]?.chainId || null;
 
 export const getExplorer = (chain) => networkConfigs[chain]?.blockExplorerUrl;
+export const getChainName = (chain) => networkConfigs[chain]?.chainName || null;
 
 export const getWrappedNative = (chain) => networkConfigs[chain]?.wrapped || null;
 export const getWrappedABI = (chain) => networkConfigs[chain]?.wrappedABI || null;
