@@ -12,7 +12,8 @@ import PageToolbar from "./PageToolbar";
 function MyFreezers(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = tokens;
+  const { isInitialized, methods, tokenData } = tokens;
+  const { tokenMetadata } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
   if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
@@ -95,6 +96,52 @@ function MyFreezers(props) {
 
     return progressAmount;
   };
+  const fetchUnlockCostAndFees = async (freezerNFT) => {
+    if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
+      console.error("Missing freezer tokenId. Cannot fetch unlock costs.");
+      return [null, null];
+    }
+
+    const unlockCostOptions = {
+      contractAddress: contract.TrueFreezeGovernor.address,
+      functionName: "getUnlockCost",
+      abi: contract.TrueFreezeGovernor.abi,
+      params: {
+        _tokenId: freezerNFT.token_id,
+      },
+    };
+    const unlockFeeOptions = {
+      contractAddress: contract.TrueFreezeGovernor.address,
+      functionName: "getWAssetFees",
+      abi: contract.TrueFreezeGovernor.abi,
+      params: {
+        _tokenId: freezerNFT.token_id,
+      },
+    };
+
+    let unlockCost = null;
+    let unlockFee = null;
+
+    try {
+      const costTransaction = await Moralis.executeFunction(unlockCostOptions);
+      const feeTransaction = await Moralis.executeFunction(unlockFeeOptions);
+      unlockCost = {
+        amount: Moralis.Units.FromWei(costTransaction),
+        symbol: tokenMetadata?.frToken?.symbol,
+        displayAmount: parseFloat(Moralis.Units.FromWei(costTransaction))?.toFixed(4)
+      };
+      unlockFee = {
+        amount: Moralis.Units.FromWei(feeTransaction),
+        symbol: tokenMetadata?.wrappedToken?.symbol,
+        displayAmount: parseFloat(Moralis.Units.FromWei(feeTransaction))?.toFixed(4)
+      };
+    } catch (err) {
+      console.error(`Failed to fetch unlock costs and fees for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
+    }
+
+    // [cost in frToken, fee in wrapped token]
+    return [unlockCost, unlockFee];
+  }
 
   return (
     <div className="appPageContent myfreezers">
@@ -108,6 +155,7 @@ function MyFreezers(props) {
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}
         fetchProgress={fetchProgress}
+        fetchUnlockCostAndFees={fetchUnlockCostAndFees}
         className="page-scroll-container"
       />
     </div>

@@ -79,10 +79,11 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   const [isTokenDataInitialized, setIsTokenDataInitialized] = useState();
 
   const { isWeb3Enabled, enableWeb3, isWeb3EnableLoading, chainId, isUnauthenticated } = useMoralis();
+  const shouldConnectWallet = routeRequiresWalletConnection();
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
-    if (!isWeb3Enabled && !isWeb3EnableLoading) {
+    if (!isWeb3Enabled && !isWeb3EnableLoading && shouldConnectWallet) {
       enableWeb3({ provider: connectorId });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +96,8 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   useEffect(() => {
     const key = "cannot-connect";
-    if (!contract || isUnauthenticated) {
+    
+    if ((!contract || isUnauthenticated) && shouldConnectWallet) {
       setConnectionTimeout(
         setTimeout(
           () =>
@@ -121,7 +123,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   }, [chainId, contract, isUnauthenticated]);
 
   useEffect(() => {
-    if (isTokenDataInitialized) {
+    if (isTokenDataInitialized || !shouldConnectWallet) {
       return;
     }
 
@@ -193,7 +195,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     </ConfigProvider>
   );
 
-  if (!contract || isUnauthenticated) {
+  if ((!contract || isUnauthenticated) && shouldConnectWallet) {
     return <DisconnectedWallet />;
   }
 
@@ -251,9 +253,16 @@ export const PrefetchImages = () => (
 );
 
 export const Logo = () => (
-  <div style={{ display: "flex", flex: "1" }}>
+  <a href="/" style={{ display: "flex", flex: "1" }}>
     <img src={logoSVG} />
-  </div>
+  </a>
 );
+
+export const routeRequiresWalletConnection = (routeUrl) => {
+  routeUrl = typeof routeUrl === "string" ? routeUrl : window.location.href; // use the current url if nothing passed in
+  const noWalletRoutes = ["", "landing"];
+  const route = routeUrl?.split("/")?.pop();
+  return !(noWalletRoutes.includes(route));
+}
 
 export default App;

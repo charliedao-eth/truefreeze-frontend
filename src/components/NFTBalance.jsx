@@ -19,7 +19,7 @@ const styles = {
   },
 };
 
-function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer, className = "" }) {
+function NFTBalance({ filterByContractAddress = "", fetchProgress, fetchUnlockCostAndFees, unlockFreezer, className = "" }) {
   filterByContractAddress = filterByContractAddress?.toLowerCase();
 
   const { data: NFTBalances } = useNFTBalances();
@@ -98,6 +98,8 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer
       [nft?.token_id]: true,
     }); // tracks multiple freezers unlocking at the same time
 
+    const [frTokenCost, wrappedTokenFees] = await fetchUnlockCostAndFees(nft);
+
     Modal.confirm({
       centered: true,
       width: 800,
@@ -129,9 +131,13 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, unlockFreezer
           <div className="flex-half p-4">
             <h1>Are you sure?</h1>
             <p>Please confirm that you wish to redeem the following token. If there is an early withdrawal penalty it will be highlighted below.</p>
-            <div className="font-35 m-t-1">
-              FEE:&nbsp;
-              <span className="notReady">0 frETH</span>
+            <div className="font-20 m-t-1">
+              <b>UNLOCK PENTALTY:</b>
+              <div>{frTokenCost !== null ? `${frTokenCost?.displayAmount} ${frTokenCost?.symbol}` : "Data error" }</div>
+            </div>
+            <div className="font-20 m-t-1">
+              <b>PROTOCOL FEE:</b>
+              <div>{wrappedTokenFees !== null ? `${wrappedTokenFees?.displayAmount} ${wrappedTokenFees?.symbol}` : "Data error" }</div>
             </div>
           </div>
           <div className="flex-half p-l-2 text-align-right">
