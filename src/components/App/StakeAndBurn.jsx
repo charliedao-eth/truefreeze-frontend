@@ -89,14 +89,16 @@ function StakeAndBurn(props) {
       functionName: "withdraw",
       amount,
     });
-  const claimFRZStakeRewards = async () => await genericTransaction({
-    contractName: "MultiRewards",
-    functionName: "getReward",
-  });
-  const claimFrTokenBurnRewards = async () => await genericTransaction({
-    contractName: "frTokenStaking",
-    functionName: "getReward",
-  });
+  const claimFRZStakeRewards = async () =>
+    await genericTransaction({
+      contractName: "MultiRewards",
+      functionName: "getReward",
+    });
+  const claimFrTokenBurnRewards = async () =>
+    await genericTransaction({
+      contractName: "frTokenStaking",
+      functionName: "getReward",
+    });
   const claimAllRewards = async () => {
     const transactions = [claimFRZStakeRewards(), claimFrTokenBurnRewards()];
     return await Promise.allSettled(transactions);
@@ -248,7 +250,9 @@ function StakeAndBurn(props) {
     return (
       <div className="claim-tab text-align-center">
         <div className="white-text p-r-2 p-l-2">
-          <div>Claim the fees you've earned from staking your {frzSymbol} or burning your {frTokenSymbol}. Claim separately or all at once.</div>
+          <div>
+            Claim the fees you've earned from staking your {frzSymbol} or burning your {frTokenSymbol}. Claim separately or all at once.
+          </div>
         </div>
         <div className="flex justify-center text-align-center m-t-2">
           <div className="transparent-card flex flex-row center">
