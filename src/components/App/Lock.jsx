@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useMoralis, useNativeBalance } from "react-moralis";
-import { Button, Select, Modal, message } from "antd";
+import { Button, Modal, message, InputNumber } from "antd";
 import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
 
-const { Option } = Select;
+// Lock limits on UI
+const CONTRACT_MIN_DAYS = 1;
+const CONTRACT_MAX_DAYS = 1100;
 
 /**
  * The dapp post-authetication home page
@@ -24,22 +26,22 @@ function Lock(props) {
   const [isLocking, setIsLocking] = useState(false);
   const [amountLocked, setAmountLocked] = useState(1);
   const [timeLocked, setTimeLocked] = useState(3);
-  const { nativeToken } = useNativeBalance();
+  const { data: balance, nativeToken } = useNativeBalance();
+  const nativeBalance = (balance?.balance && balance.balance !== "0") ? parseFloat(Moralis.Units.FromWei(balance.balance)) : 0;
   const nativeTokenSymbol = nativeToken?.symbol || null;
 
-  const lockWrappedToken = async (amount, durationInMonths) => {
+  const lockWrappedToken = async (amount, durationInDays) => {
+    if(nativeBalance <= amount) {
+      message.error({
+        content: `Not enough ${nativeTokenSymbol}. Your balance is ${nativeBalance?.toFixed(2)/1}`,
+        duration: 6,
+      });
+      return;
+    }
+
     setIsLocking(true);
 
     amount = Moralis.Units.ETH(amount);
-    const durationInDays = durationInMonths * 30; // can't think of a better approximation! close enough?
-
-    // TODO proper UI input validation. Also pull these values right from the smart contract or embed in the local contract data
-    if (!amount || amount.length <= 0) {
-      throw new Error("Freezer lock amount is invalid. Cannot lock: " + amount);
-    }
-    if (!durationInDays || durationInDays < 1) {
-      throw new Error("Freezer lock duration is invalid. Cannot lock for: " + durationInDays + " days");
-    }
 
     try {
       await checkThenAllowWrapped({
@@ -61,7 +63,7 @@ function Lock(props) {
       const freezerConfirmation = await freezerTransaction.wait();
       console.log(freezerConfirmation);
       Modal.success({
-        content: `You successfully locked ${amountLocked} ${nativeTokenSymbol} for ${timeLocked} months.`,
+        content: `You successfully locked ${amountLocked} ${nativeTokenSymbol} for ${timeLocked} days.`,
       });
 
       setIsLocking(false);
@@ -93,21 +95,15 @@ function Lock(props) {
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
-              <Select className="flex-half" value={timeLocked} style={{ width: 120 }} onChange={setTimeLocked}>
-                {new Array(24).fill(1).map((_val, index) => (
-                  <Option value={index + 1} key={`lock-amt-month-${index + 1}`}>
-                    {index + 1}
-                  </Option>
-                ))}
-              </Select>
-              <span className="white-text flex-half align-left p-l-1">MONTHS</span>
+              <InputNumber className="small-input days-input" size="small" min={CONTRACT_MIN_DAYS} max={CONTRACT_MAX_DAYS} defaultValue={timeLocked} onChange={setTimeLocked} />
+              <span className="white-text flex-half align-left p-l-1">DAYS</span>
             </div>
           </div>
           <div>
             <div className="choke-label">EARN</div>
             <div>
-              <span className="font-35">{amountLocked?.toFixed(3) / 1}</span>
-              <span className="p-l-1">{tokenMetadata?.frToken?.symbol ? tokenMetadata?.frToken?.symbol + " NOW" : ""}</span>
+              <span className="font-35">{amountLocked > 0 ? (ethToFrEthEarned(amountLocked, timeLocked)?.toFixed(3) / 1) : "--"}</span>
+              <span className="p-l-1">{tokenMetadata?.frToken?.symbol || ""}</span>
             </div>
           </div>
           <Button
@@ -135,7 +131,7 @@ function Lock(props) {
                     <div className="flex-half p-l-2">
                       {NftTemplate({
                         lockDate: new Date(Date.now()),
-                        lockDuration: timeLocked + " months",
+                        lockDuration: timeLocked + " days",
                         wrappedSymbol: tokenMetadata?.wrappedToken?.symbol,
                         wrappedAmount: amountLocked?.toFixed(3),
                       })}
@@ -187,6 +183,10 @@ export function costToWithdraw(amountLocked, lockDurationInDays, timeSinceLockIn
   } else {
     return amountLocked * (1 - (progress - 0.67) / 0.33);
   }
+}
+
+export function ethToFrEthEarned(nativeInEth, daysLocked) {
+  return (nativeInEth * daysLocked) / 365;
 }
 
 export default Lock;

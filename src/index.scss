@@ -153,6 +153,13 @@ select {
       font-size: 35px;
       padding: 0px 8px 16px 8px;
     }
+
+    &.small-input {
+      input {
+        height: 50px;
+        padding: 8px;
+      }
+    }
   }
   .stakeandburn {
     .ant-tabs-nav-list {
@@ -200,6 +207,21 @@ select {
   justify-content: space-between;
 }
 
+.ant-layout-footer.footer {
+  background: none;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  .tf-logo {
+    max-width: 200px;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
 .notReady {
   filter: blur(4px);
   position: relative;
@@ -221,6 +243,9 @@ select {
   }
 }
 
+.nowrap {
+  white-space: nowrap;
+}
 .font-14 {
   font-size: 14px;
 }
@@ -511,6 +536,9 @@ select {
 }
 
 .lock-page {
+  .days-input {
+    max-width: 130px;
+  }
   .lock-chart {
     max-width: 305px;
   }

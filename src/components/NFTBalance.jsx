@@ -59,6 +59,12 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, fetchUnlockCo
     }); // tracks multiple freezers unlocking at the same time
 
     const [frTokenCost, wrappedTokenFees] = await fetchUnlockCostAndFees(nft);
+    if (frTokenCost === null || wrappedTokenFees === null) {
+      message.warn({
+        content: "Caution: Could not fetch unlock cost preview. Unlocking is not reversible.",
+        duration: 8,
+      })
+    }
 
     Modal.confirm({
       centered: true,

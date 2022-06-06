@@ -142,8 +142,8 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
       <Fragment>
         {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
         <div style={styles.content}>{props.children}</div>
-        <Footer className="slow-show" style={{ textAlign: "center", background: "none" }}>
-          <Text style={{ display: "block" }}>footer info todo</Text>
+        <Footer className="footer slow-show">
+          <Logo />
         </Footer>
       </Fragment>
     );
@@ -253,7 +253,7 @@ export const PrefetchImages = () => (
 );
 
 export const Logo = () => (
-  <a href="/" style={{ display: "flex", flex: "1" }}>
+  <a href="/" className="tf-logo">
     <img src={logoSVG} />
   </a>
 );

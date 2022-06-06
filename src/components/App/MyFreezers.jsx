@@ -26,7 +26,25 @@ function MyFreezers(props) {
 
     if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
       console.error("Missing freezer token_id. Cannot unlock.");
-      return 0.0;
+      return "error";
+    }
+
+    const [frTokenCost, wrappedTokenFees] = await fetchUnlockCostAndFees(freezerNFT); // TODO we fetch this twice. could store it instead. ah, whatever.
+    if(frTokenCost && wrappedTokenFees) {
+      if (Number(frTokenCost.amount) > Number(tokenData?.frTokenBalance)) {
+        message.error({
+          content: `You don't have enough ${frTokenCost?.symbol} to cover penalties.`,
+          duration: 5,
+        })
+        return "error";
+      }
+      if (Number(wrappedTokenFees.amount) > Number(tokenData?.wrappedTokenBalance)) {
+        message.error({
+          content: `You don't have enough ${wrappedTokenFees?.symbol} to cover penalties.`,
+          duration: 5,
+        })
+        return "error";
+      }
     }
 
     try {
@@ -128,12 +146,12 @@ function MyFreezers(props) {
       unlockCost = {
         amount: Moralis.Units.FromWei(costTransaction),
         symbol: tokenMetadata?.frToken?.symbol,
-        displayAmount: parseFloat(Moralis.Units.FromWei(costTransaction))?.toFixed(4),
+        displayAmount: parseFloat(Moralis.Units.FromWei(costTransaction))?.toFixed(8)/1,
       };
       unlockFee = {
         amount: Moralis.Units.FromWei(feeTransaction),
         symbol: tokenMetadata?.wrappedToken?.symbol,
-        displayAmount: parseFloat(Moralis.Units.FromWei(feeTransaction))?.toFixed(4),
+        displayAmount: parseFloat(Moralis.Units.FromWei(feeTransaction))?.toFixed(8)/1,
       };
     } catch (err) {
       console.error(`Failed to fetch unlock costs and fees for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);

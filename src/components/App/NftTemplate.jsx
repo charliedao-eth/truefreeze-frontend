@@ -14,42 +14,42 @@ export default function NftTemplate({
     /* eslint-disable */
     <svg className="nftTemplate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
       <linearGradient id="linear-gradient" x1="0" y1="500" x2="250" y2="100" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#bdbec5" />
-        <stop offset="0.5" stop-color="#547181" />
-        <stop offset="1" stop-color="#4b4c4e" />
+        <stop offset="0" stopColor="#bdbec5" />
+        <stop offset="0.5" stopColor="#547181" />
+        <stop offset="1" stopColor="#4b4c4e" />
       </linearGradient>
       <rect className="background" width="400" height="500" rx="20" />
       <g transform="translate(0,50)">
         <g>
           <linearGradient y1="50" x2="350" y2="50" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#bdbec5" />
-            <stop offset="1" stop-color="#4b4c4e" />
+            <stop offset="0" stopColor="#bdbec5" />
+            <stop offset="1" stopColor="#4b4c4e" />
           </linearGradient>
           <rect className="gradient-border" x="50" y="10" width="300" height="100" rx="20" transform="translate(0,0)" />
-          <text text-anchor="end" className="amount-text" x="345" y="70">
+          <text textAnchor="end" className="amount-text" x="345" y="70">
             {wrappedAmount}
           </text>
-          <text text-anchor="middle" className="date-label" x="200" y="100">
+          <text textAnchor="middle" className="date-label" x="200" y="100">
             {wrappedSymbol}
           </text>
         </g>
         <g>
           <linearGradient y1="50" x2="350" y2="50" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#bdbec5" />
-            <stop offset="1" stop-color="#4b4c4e" />
+            <stop offset="0" stopColor="#bdbec5" />
+            <stop offset="1" stopColor="#4b4c4e" />
           </linearGradient>
           <rect className="gradient-border" x="75" y="120" width="250" height="90" rx="20" transform="translate(0,0)" />
-          <text text-anchor="middle" className="date-text" x="200" y="165">
+          <text textAnchor="middle" className="date-text" x="200" y="165">
             {lockDuration}
           </text>
-          <text text-anchor="middle" className="date-label" x="200" y="200">
+          <text textAnchor="middle" className="date-label" x="200" y="200">
             Lock Duration
           </text>
           <rect className="gradient-border" x="75" y="220" width="250" height="90" rx="20" transform="translate(0,0)" />
-          <text text-anchor="middle" className="date-text" x="200" y="265">
+          <text textAnchor="middle" className="date-text" x="200" y="265">
             {lockDateString}
           </text>
-          <text text-anchor="middle" className="date-label" x="200" y="300">
+          <text textAnchor="middle" className="date-label" x="200" y="300">
             Lock Date{" "}
           </text>
         </g>

@@ -98,7 +98,7 @@ function StakeAndBurn(props) {
   const burnButton = ({ amount: burnAmount }) => {
     return (
       <Button className="uhoh" loading={isTransacting} onClick={() => burnFrToken(burnAmount)}>
-        BURN frToken
+        BURN {frTokenSymbol}
       </Button>
     );
   };
@@ -122,7 +122,7 @@ function StakeAndBurn(props) {
       <div>
         <div className="text-align-center white-text">
           <div>
-            Burn {frTokenSymbol} to earn {frzSymbol}. Burnt {frTokenSymbol} is gone forever.
+            Burn {frTokenSymbol} to earn {frzSymbol}. <b>Burnt {frTokenSymbol} is gone forever.</b>
           </div>
           <div>In exchange, you earn a flow of {frzSymbol}.</div>
           <div>Staked {frzSymbol} will earn you a portion of early withdrawal fees paid by other users.</div>
@@ -135,8 +135,8 @@ function StakeAndBurn(props) {
             <div>
               <div className="choke-label">EARN</div>
               <div>
-                <span className="font-35 notReady">99.99</span>
-                <span className="p-l-1">{frTokenSymbol}</span>
+                <span className="font-35">{frzSymbol}</span>
+                <span>&nbsp;flow forever</span>
               </div>
             </div>
           </section>
@@ -173,7 +173,7 @@ function StakeAndBurn(props) {
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>
             By staking your {frzSymbol}, you will earn a portion of penalties paid by other users. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be
-            claimed on the 'CLAIM' tab.
+            claimed on the 'REWARDS' tab.
           </div>
         </div>
         <div className="flex justify-center m-t-2">
@@ -220,52 +220,58 @@ function StakeAndBurn(props) {
     );
   }
   function ClaimRewards() {
+    function formatRewardAmount(lookupSymbol) {
+      // TODO rewardTokens really should be a map, not an array, so we can avoid lookups like this
+      if(!rewardTokens) {
+        return <Loading3QuartersOutlined />;
+      }
+
+      const rewardAmount = Number(rewardTokens?.find((token) => token.symbol === lookupSymbol)?.amount);
+      if (rewardAmount !== 0 && !rewardAmount) {
+        return "ERROR"
+      }
+      if(rewardAmount > 0 && rewardAmount < 0.0001) {
+        return rewardAmount?.toExponential(1);
+      }
+
+      const formattedAmount = rewardAmount?.toFixed(3) / 1;
+      return formattedAmount;
+    }
+
     return (
       <Fragment>
         <div className="text-align-center white-text p-r-2 p-l-2">
           <div>Claim the fees you've earned from staking your {frzSymbol}. Claim each token individually or all at once.</div>
-          {
-            /* TODO move this lower and dynamically render */
-            rewardTokens ? (
-              rewardTokens?.map((rewardToken, index) => (
-                <div key={"reward-token-" + (rewardToken.symbol || index)}>
-                  {rewardToken.symbol} {rewardToken.amount}
-                </div>
-              ))
-            ) : (
-              <Loading3QuartersOutlined />
-            )
-          }
         </div>
         <div className="flex justify-center claim-tab m-t-2">
           <div className="transparent-card wide taller flex flex-column center">
             <div className="claim-row">
               <div className="transparent-card small">
-                <div className="claim-currency font-35">{frTokenSymbol}</div>
+                <div className="claim-currency font-35 nowrap">{frTokenSymbol}</div>
                 <img src={frethIcon} className="card-icon" />
                 <div>
-                  <span className="font-35 notReady">35</span>
+                  <span className="font-35 nowrap">{formatRewardAmount(frTokenSymbol)}</span>
                   <span className="p-l-1">{frTokenSymbol}</span>
                 </div>
               </div>
             </div>
             <div className="claim-row">
               <div className="transparent-card small">
-                <div className="claim-currency font-35">{frzSymbol}</div>
+                <div className="claim-currency font-35 nowrap">{frzSymbol}</div>
                 <img src={frzIcon} className="card-icon" />
                 <div>
-                  <span className="font-35 notReady">22</span>
+                  <span className="font-35 nowrap">{formatRewardAmount(frzSymbol)}</span>
                   <span className="p-l-1">{frzSymbol}</span>
                 </div>
               </div>
             </div>
             <div className="claim-row">
               <div className="transparent-card small">
-                <div className="claim-currency font-35">{wrappedSymbol}</div>
+                <div className="claim-currency font-35 nowrap">{wrappedSymbol}</div>
                 <img src={ethIcon} className="card-icon eth-icon" />
                 <img src={circleIcon} className="card-icon" />
                 <div>
-                  <span className="font-35 notReady">35</span>
+                  <span className="font-35 nowrap">{formatRewardAmount(wrappedSymbol)}</span>
                   <span className="p-l-1">{wrappedSymbol}</span>
                 </div>
               </div>

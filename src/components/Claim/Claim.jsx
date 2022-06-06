@@ -91,7 +91,7 @@ function Claim(props) {
 
   const renderAlreadyClaimed = () => (
     <div className="claim-page">
-      <h2 className="claim-subtitle">This address has already claimed {`${userClaimData?.amount} `}FRZ</h2>
+      <h2 className="claim-subtitle">This address has already claimed {`${userClaimData?.amount && displayFormatAmount(userClaimData.amount)} `}FRZ</h2>
     </div>
   );
 
@@ -101,10 +101,14 @@ function Claim(props) {
     return renderAlreadyClaimed();
   }
 
+  function displayFormatAmount(tokenAmountInWei) {
+    return (Number(Moralis.Units.FromWei(tokenAmountInWei))?.toFixed(2) / 1) || "--";
+  }
+
   return (
     <div className="claim-page">
       <img className="claim-image" src={claimImage} />
-      <h2 className="claim-subtitle">This address has {`${userClaimData?.amount} `}FRZ available to claim!</h2>
+      <h2 className="claim-subtitle">This address has {`${userClaimData?.amount && displayFormatAmount(userClaimData.amount)} `}FRZ available to claim!</h2>
       <Button className="claim-button" type="primary" size="large" loading={isClaiming} onClick={claim}>
         Claim
       </Button>
