@@ -89,11 +89,18 @@ function StakeAndBurn(props) {
       functionName: "withdraw",
       amount,
     });
-  const claimAllRewards = async () =>
-    await genericTransaction({
-      contractName: "MultiRewards",
-      functionName: "getReward",
-    });
+  const claimFRZStakeRewards = async () => await genericTransaction({
+    contractName: "MultiRewards",
+    functionName: "getReward",
+  });
+  const claimFrTokenBurnRewards = async () => await genericTransaction({
+    contractName: "frTokenStaking",
+    functionName: "getReward",
+  });
+  const claimAllRewards = async () => {
+    const transactions = [claimFRZStakeRewards(), claimFrTokenBurnRewards()];
+    return await Promise.allSettled(transactions);
+  };
 
   const burnButton = ({ amount: burnAmount }) => {
     return (
@@ -239,12 +246,12 @@ function StakeAndBurn(props) {
     }
 
     return (
-      <Fragment>
-        <div className="text-align-center white-text p-r-2 p-l-2">
-          <div>Claim the fees you've earned from staking your {frzSymbol}. Claim each token individually or all at once.</div>
+      <div className="claim-tab text-align-center">
+        <div className="white-text p-r-2 p-l-2">
+          <div>Claim the fees you've earned from staking your {frzSymbol} or burning your {frTokenSymbol}. Claim separately or all at once.</div>
         </div>
-        <div className="flex justify-center claim-tab m-t-2">
-          <div className="transparent-card wide taller flex flex-column center">
+        <div className="flex justify-center text-align-center m-t-2">
+          <div className="transparent-card flex flex-row center">
             <div className="claim-row">
               <div className="transparent-card small">
                 <div className="claim-currency font-35 nowrap">{frTokenSymbol}</div>
@@ -254,19 +261,7 @@ function StakeAndBurn(props) {
                   <span className="p-l-1">{frTokenSymbol}</span>
                 </div>
               </div>
-            </div>
-            <div className="claim-row">
-              <div className="transparent-card small">
-                <div className="claim-currency font-35 nowrap">{frzSymbol}</div>
-                <img src={frzIcon} className="card-icon" />
-                <div>
-                  <span className="font-35 nowrap">{formatRewardAmount(frzSymbol)}</span>
-                  <span className="p-l-1">{frzSymbol}</span>
-                </div>
-              </div>
-            </div>
-            <div className="claim-row">
-              <div className="transparent-card small">
+              <div className="transparent-card small m-t-1">
                 <div className="claim-currency font-35 nowrap">{wrappedSymbol}</div>
                 <img src={ethIcon} className="card-icon eth-icon" />
                 <img src={circleIcon} className="card-icon" />
@@ -276,12 +271,30 @@ function StakeAndBurn(props) {
                 </div>
               </div>
             </div>
-            <Button className="cool width-200 m-t-1" loading={isTransacting} onClick={claimAllRewards}>
-              CLAIM ALL
+            <Button className="width-200 claim-button" loading={isTransacting} onClick={claimFRZStakeRewards}>
+              CLAIM {frTokenSymbol} and {wrappedSymbol}
+            </Button>
+          </div>
+          <div className="transparent-card flex flex-row center margin-left-140">
+            <div className="claim-row m-t-2 border-top">
+              <div className="transparent-card small">
+                <div className="claim-currency font-35 nowrap">{frzSymbol}</div>
+                <img src={frzIcon} className="card-icon" />
+                <div>
+                  <span className="font-35 nowrap">{formatRewardAmount(frzSymbol)}</span>
+                  <span className="p-l-1">{frzSymbol}</span>
+                </div>
+              </div>
+            </div>
+            <Button className="width-200 m-t-1 claim-button" loading={isTransacting} onClick={claimFrTokenBurnRewards}>
+              CLAIM {frzSymbol}
             </Button>
           </div>
         </div>
-      </Fragment>
+        <Button className="cool m-t-1 claim-all-button" loading={isTransacting} onClick={claimAllRewards}>
+          CLAIM ALL
+        </Button>
+      </div>
     );
   }
 
