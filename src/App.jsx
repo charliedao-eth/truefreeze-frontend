@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import {ErrorBoundary} from 'react-error-boundary';
+import { ErrorBoundary } from "react-error-boundary";
 import contractsByChain, { supportedTestnetChainIds, supportedProductionChainIds } from "contracts/contractInfo";
 import useToken from "hooks/useToken";
 import Account from "components/Account/Account";
@@ -197,15 +197,19 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     </ConfigProvider>
   );
 
-  function ErrorFallback({error, resetErrorBoundary}) {
+  function ErrorFallback({ error, resetErrorBoundary }) {
     return (
-      <div role="alert" style={{...styles.content, flexDirection: 'column', gap: '15px', maxWidth: "800px", marginLeft: "auto", marginRight: "auto"}} className="bg-white">
+      <div role="alert" style={{ ...styles.content, flexDirection: "column", gap: "15px", maxWidth: "800px", marginLeft: "auto", marginRight: "auto" }} className="bg-white">
         <h1 className="uhoh">ERROR</h1>
         <p className="uhoh">Something went wrong:</p>
-        <pre className="p-2">{error.name} {error.message}</pre>
-        <Button type="primary" onClick={resetErrorBoundary}>Click to refresh the app.</Button>
+        <pre className="p-2">
+          {error.name} {error.message}
+        </pre>
+        <Button type="primary" onClick={resetErrorBoundary}>
+          Click to refresh the app.
+        </Button>
       </div>
-    )
+    );
   }
 
   if ((!contract || isUnauthenticated) && shouldConnectWallet) {
