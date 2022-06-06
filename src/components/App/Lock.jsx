@@ -27,13 +27,13 @@ function Lock(props) {
   const [amountLocked, setAmountLocked] = useState(1);
   const [timeLocked, setTimeLocked] = useState(3);
   const { data: balance, nativeToken } = useNativeBalance();
-  const nativeBalance = (balance?.balance && balance.balance !== "0") ? parseFloat(Moralis.Units.FromWei(balance.balance)) : 0;
+  const nativeBalance = balance?.balance && balance.balance !== "0" ? parseFloat(Moralis.Units.FromWei(balance.balance)) : 0;
   const nativeTokenSymbol = nativeToken?.symbol || null;
 
   const lockWrappedToken = async (amount, durationInDays) => {
-    if(nativeBalance <= amount) {
+    if (nativeBalance <= amount) {
       message.error({
-        content: `Not enough ${nativeTokenSymbol}. Your balance is ${nativeBalance?.toFixed(2)/1}`,
+        content: `Not enough ${nativeTokenSymbol}. Your balance is ${nativeBalance?.toFixed(2) / 1}`,
         duration: 6,
       });
       return;
@@ -102,7 +102,7 @@ function Lock(props) {
           <div>
             <div className="choke-label">EARN</div>
             <div>
-              <span className="font-35">{amountLocked > 0 ? (ethToFrEthEarned(amountLocked, timeLocked)?.toFixed(3) / 1) : "--"}</span>
+              <span className="font-35">{amountLocked > 0 ? ethToFrEthEarned(amountLocked, timeLocked)?.toFixed(3) / 1 : "--"}</span>
               <span className="p-l-1">{tokenMetadata?.frToken?.symbol || ""}</span>
             </div>
           </div>

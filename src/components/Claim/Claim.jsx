@@ -102,7 +102,7 @@ function Claim(props) {
   }
 
   function displayFormatAmount(tokenAmountInWei) {
-    return (Number(Moralis.Units.FromWei(tokenAmountInWei))?.toFixed(2) / 1) || "--";
+    return Number(Moralis.Units.FromWei(tokenAmountInWei))?.toFixed(2) / 1 || "--";
   }
 
   return (

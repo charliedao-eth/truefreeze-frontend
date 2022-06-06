@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, Fragment } from "react";
 import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {ErrorBoundary} from 'react-error-boundary';
 import contractsByChain, { supportedTestnetChainIds, supportedProductionChainIds } from "contracts/contractInfo";
 import useToken from "hooks/useToken";
 import Account from "components/Account/Account";
@@ -11,10 +12,9 @@ import Lock from "components/App/Lock";
 import MyFreezers from "components/App/MyFreezers";
 import StakeAndBurn from "components/App/StakeAndBurn";
 
-import { Layout, Menu, ConfigProvider, message, Skeleton } from "antd";
+import { Layout, Menu, ConfigProvider, message, Skeleton, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "antd/dist/antd.variable.min.css";
-import Text from "antd/lib/typography/Text";
 const { Header, Footer } = Layout;
 import logoSVG from "./assets/truefreezelogo.svg";
 import gradientBgBlue from "./assets/gradientbgblue.png";
@@ -139,13 +139,15 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   const WrapWithLayout = (props) => {
     return (
-      <Fragment>
-        {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
-        <div style={styles.content}>{props.children}</div>
-        <Footer className="footer slow-show">
-          <Logo />
-        </Footer>
-      </Fragment>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => window.location.reload()}>
+        <Fragment>
+          {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
+          <div style={styles.content}>{props.children}</div>
+          <Footer className="footer slow-show">
+            <Logo />
+          </Footer>
+        </Fragment>
+      </ErrorBoundary>
     );
   };
 
@@ -194,6 +196,17 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
       </Layout>
     </ConfigProvider>
   );
+
+  function ErrorFallback({error, resetErrorBoundary}) {
+    return (
+      <div role="alert" style={{...styles.content, flexDirection: 'column', gap: '15px', maxWidth: "800px", marginLeft: "auto", marginRight: "auto"}} className="bg-white">
+        <h1 className="uhoh">ERROR</h1>
+        <p className="uhoh">Something went wrong:</p>
+        <pre className="p-2">{error.name} {error.message}</pre>
+        <Button type="primary" onClick={resetErrorBoundary}>Click to refresh the app.</Button>
+      </div>
+    )
+  }
 
   if ((!contract || isUnauthenticated) && shouldConnectWallet) {
     return <DisconnectedWallet />;

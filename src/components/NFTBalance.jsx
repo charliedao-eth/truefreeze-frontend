@@ -63,7 +63,7 @@ function NFTBalance({ filterByContractAddress = "", fetchProgress, fetchUnlockCo
       message.warn({
         content: "Caution: Could not fetch unlock cost preview. Unlocking is not reversible.",
         duration: 8,
-      })
+      });
     }
 
     Modal.confirm({

@@ -222,15 +222,15 @@ function StakeAndBurn(props) {
   function ClaimRewards() {
     function formatRewardAmount(lookupSymbol) {
       // TODO rewardTokens really should be a map, not an array, so we can avoid lookups like this
-      if(!rewardTokens) {
+      if (!rewardTokens) {
         return <Loading3QuartersOutlined />;
       }
 
       const rewardAmount = Number(rewardTokens?.find((token) => token.symbol === lookupSymbol)?.amount);
       if (rewardAmount !== 0 && !rewardAmount) {
-        return "ERROR"
+        return "ERROR";
       }
-      if(rewardAmount > 0 && rewardAmount < 0.0001) {
+      if (rewardAmount > 0 && rewardAmount < 0.0001) {
         return rewardAmount?.toExponential(1);
       }
 

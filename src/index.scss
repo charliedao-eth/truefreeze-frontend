@@ -341,8 +341,14 @@ select {
   width: 200px;
 }
 
+.bg-white {
+  background-color: #FFFFFF;
+}
 .white-text {
   color: #ffffff;
+}
+.uhoh {
+  color: $uhoh;
 }
 .text-align-center {
   text-align: center;
