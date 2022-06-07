@@ -5,9 +5,8 @@ import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
-import LineChart from 'react-linechart';
-import 'react-linechart/dist/styles.css';
-
+import LineChart from "react-linechart";
+import "react-linechart/dist/styles.css";
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -149,7 +148,7 @@ function Lock(props) {
           </Button>
         </section>
         <section className="lock-chart flex-half">
-          <LockChart frTokenSymbol={tokenMetadata?.frToken?.symbol} daysLocked={timeLocked} frTokenAmount={ethToFrEthEarned(amountLocked, timeLocked)}/>
+          <LockChart frTokenSymbol={tokenMetadata?.frToken?.symbol} daysLocked={timeLocked} frTokenAmount={ethToFrEthEarned(amountLocked, timeLocked)} />
         </section>
       </div>
     </div>
@@ -161,16 +160,15 @@ function getFrEthGain({ frTokenAmount, daysLocked, unlockDay }) {
   const MIN_RETURN = -0.2 * frTokenAmount;
   const MAX_RETURN = frTokenAmount;
 
-
   const isProfitable = unlockDay >= BREAK_EVEN;
   if (isProfitable) {
     return MAX_RETURN * ((unlockDay - BREAK_EVEN) / (daysLocked - BREAK_EVEN));
   } else {
-    return MIN_RETURN + (unlockDay / BREAK_EVEN) * (-1 *  MIN_RETURN);
+    return MIN_RETURN + (unlockDay / BREAK_EVEN) * (-1 * MIN_RETURN);
   }
 }
 
-function LockChart({frTokenAmount, daysLocked, frTokenSymbol="frToken"}) {
+function LockChart({ frTokenAmount, daysLocked, frTokenSymbol = "frToken" }) {
   // this thing is redrawing A LOT
 
   /*
@@ -194,23 +192,32 @@ function LockChart({frTokenAmount, daysLocked, frTokenSymbol="frToken"}) {
 
   const breakEvenDay = Math.floor(daysLocked * 0.67);
   // todo force to integer
-  const lossPoints = new Array(breakEvenDay + 1).fill(0).map((_val, index) => index).map((unlockDay) => {
-    return {
+  const lossPoints = new Array(breakEvenDay + 1)
+    .fill(0)
+    .map((_val, index) => index)
+    .map((unlockDay) => {
+      return {
         x: unlockDay,
-        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay, })
-    };
-  });
-  const profitPoints = new Array((daysLocked - breakEvenDay) + 1).fill(0).map((_val, index) => breakEvenDay + index).map((unlockDay) => {
-    return {
+        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay }),
+      };
+    });
+  const profitPoints = new Array(daysLocked - breakEvenDay + 1)
+    .fill(0)
+    .map((_val, index) => breakEvenDay + index)
+    .map((unlockDay) => {
+      return {
         x: unlockDay,
-        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay, })
-    };
-  });
+        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay }),
+      };
+    });
 
   const data = [
     {
       color: "rgba(255,255,255,0.1)",
-      points: [ { x: 0, y: 0 }, { x: daysLocked, y: 0 } ]
+      points: [
+        { x: 0, y: 0 },
+        { x: daysLocked, y: 0 },
+      ],
     },
     {
       color: "red",
@@ -220,11 +227,11 @@ function LockChart({frTokenAmount, daysLocked, frTokenSymbol="frToken"}) {
       color: "steelblue",
       points: profitPoints,
     },
-  ]
-  
+  ];
+
   return (
     <div>
-      <LineChart 
+      <LineChart
         width={400}
         height={300}
         data={data}
@@ -236,13 +243,13 @@ function LockChart({frTokenAmount, daysLocked, frTokenSymbol="frToken"}) {
         yLabel={frTokenSymbol + " gains"}
         hideXAxis={false}
         hideYAxis={false}
-        onPointHover={({x, y}) => {
+        onPointHover={({ x, y }) => {
           if (Math.abs(y) <= 0.001) {
             return "Break-even (0 " + frTokenSymbol + ")";
           }
           return `Unlock in ${x} days: ${y?.toFixed(2)} ${frTokenSymbol}`;
         }}
-      />	
+      />
     </div>
   );
 }
