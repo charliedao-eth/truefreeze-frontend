@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useMoralis, useNativeBalance } from "react-moralis";
 import { Button, Modal, message, InputNumber } from "antd";
-import chartplaceholder from "../../assets/chartplaceholder.png";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
+import LineChart from 'react-linechart';
+import 'react-linechart/dist/styles.css';
+
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -24,8 +26,8 @@ function Lock(props) {
   const { checkThenAllowWrapped } = methods;
   const { tokenMetadata } = tokenData;
   const [isLocking, setIsLocking] = useState(false);
-  const [amountLocked, setAmountLocked] = useState(1);
-  const [timeLocked, setTimeLocked] = useState(3);
+  const [amountLocked, setAmountLocked] = useState(10);
+  const [timeLocked, setTimeLocked] = useState(30);
   const { data: balance, nativeToken } = useNativeBalance();
   const nativeBalance = balance?.balance && balance.balance !== "0" ? parseFloat(Moralis.Units.FromWei(balance.balance)) : 0;
   const nativeTokenSymbol = nativeToken?.symbol || null;
@@ -147,27 +149,100 @@ function Lock(props) {
           </Button>
         </section>
         <section className="lock-chart flex-half">
-          <img className="img-placeholder notReady" src={chartplaceholder} />
-
-          {amountLocked > 0 && (
-            <div>
-              Unlock costs:
-              <div>
-                0 days: {costToWithdraw(amountLocked, timeLocked, 0)} {tokenMetadata?.frToken?.symbol}
-              </div>
-              <div>
-                5 days: {costToWithdraw(amountLocked, timeLocked, 5)} {tokenMetadata?.frToken?.symbol}
-              </div>
-              <div>
-                10 days: {costToWithdraw(amountLocked, timeLocked, 10)} {tokenMetadata?.frToken?.symbol}
-              </div>
-              <div>
-                20 days: {costToWithdraw(amountLocked, timeLocked, 20)} {tokenMetadata?.frToken?.symbol}
-              </div>
-            </div>
-          )}
+          <LockChart frTokenSymbol={tokenMetadata?.frToken?.symbol} daysLocked={timeLocked} frTokenAmount={ethToFrEthEarned(amountLocked, timeLocked)}/>
         </section>
       </div>
+    </div>
+  );
+}
+
+function getFrEthGain({ frTokenAmount, daysLocked, unlockDay }) {
+  const BREAK_EVEN = 0.67 * daysLocked;
+  const MIN_RETURN = -0.2 * frTokenAmount;
+  const MAX_RETURN = frTokenAmount;
+
+
+  const isProfitable = unlockDay >= BREAK_EVEN;
+  if (isProfitable) {
+    return MAX_RETURN * ((unlockDay - BREAK_EVEN) / (daysLocked - BREAK_EVEN));
+  } else {
+    return MIN_RETURN + (unlockDay / BREAK_EVEN) * (-1 *  MIN_RETURN);
+  }
+}
+
+function LockChart({frTokenAmount, daysLocked, frTokenSymbol="frToken"}) {
+  // this thing is redrawing A LOT
+
+  /*
+  const data = [
+    {									
+      color: "red", 
+      points: [{x: 0, y: -0.2 * frTokenAmount}, {x: 0.67 * daysLocked, y: 0}]
+    },
+    {									
+      color: "steelblue", 
+      points: [{x: 0.67 * daysLocked, y: 0}, {x: daysLocked, y: frTokenAmount}]
+    },
+  ];
+  */
+
+  daysLocked = Math.floor(daysLocked);
+
+  if (daysLocked < 1 || frTokenAmount <= 0) {
+    return <div></div>;
+  }
+
+  const breakEvenDay = Math.floor(daysLocked * 0.67);
+  // todo force to integer
+  const lossPoints = new Array(breakEvenDay + 1).fill(0).map((_val, index) => index).map((unlockDay) => {
+    return {
+        x: unlockDay,
+        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay, })
+    };
+  });
+  const profitPoints = new Array((daysLocked - breakEvenDay) + 1).fill(0).map((_val, index) => breakEvenDay + index).map((unlockDay) => {
+    return {
+        x: unlockDay,
+        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay, })
+    };
+  });
+
+  const data = [
+    {
+      color: "rgba(255,255,255,0.1)",
+      points: [ { x: 0, y: 0 }, { x: daysLocked, y: 0 } ]
+    },
+    {
+      color: "red",
+      points: lossPoints,
+    },
+    {
+      color: "steelblue",
+      points: profitPoints,
+    },
+  ]
+  
+  return (
+    <div>
+      <LineChart 
+        width={400}
+        height={300}
+        data={data}
+        xMin={0}
+        xMax={daysLocked}
+        yMin={-0.2 * frTokenAmount}
+        yMax={frTokenAmount}
+        xLabel={"Days until you unlock"}
+        yLabel={frTokenSymbol + " gains"}
+        hideXAxis={false}
+        hideYAxis={false}
+        onPointHover={({x, y}) => {
+          if (Math.abs(y) <= 0.001) {
+            return "Break-even (0 " + frTokenSymbol + ")";
+          }
+          return `Unlock in ${x} days: ${y?.toFixed(2)} ${frTokenSymbol}`;
+        }}
+      />	
     </div>
   );
 }

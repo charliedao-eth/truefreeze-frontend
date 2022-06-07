@@ -553,11 +553,48 @@ select {
     max-width: 130px;
   }
   .lock-chart {
-    max-width: 305px;
+    max-width: 400px;
+    
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+    svg {
+      overflow: visible;
+    }
+
+    g.tick {
+      stroke: #FFFFFF;
+    }
+    .axis path {
+      stroke: #FFFFFF;
+    }
+    text {
+      fill: #FFFFFF;
+      stroke: none;
+    }
+    .tick text {
+      opacity: 0.7;
+    }
   }
   .img-placeholder {
     border-radius: 20px;
     max-width: 100%;
+  }
+  .svg-line-chart-label {
+    font-weight: normal;
+  }
+  .svg-line-chart-point {
+    cursor: pointer;
+    fill: transparent;
+    stroke-width: 0;
+  }
+  .svg-line-chart-tooltip {
+    display: none;
+    transition: none;
+    width: 120px;
+  }
+  .svg-line-chart-tooltip:last-of-type {
+    display: block;
   }
 }
 
