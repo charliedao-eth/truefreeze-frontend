@@ -35,7 +35,8 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md,json,html}\" .prettierrc --config ./.prettierrc",
     "format": "npm run lint:fix && npm run prettier:fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "uploadkv": "bash ./upload.bash"
   },
   "eslintConfig": {
     "extends": [

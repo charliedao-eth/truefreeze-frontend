@@ -24,6 +24,17 @@ async function handleEvent(event) {
       };
     }
 
+    // simple merkle tree lookup API using cloudlare KV https://blog.cloudflare.com/workers-kv-is-ga/
+    if(event.request.url && event.request.url.indexOf("/merklelookup") >= 0) {
+      const queryParams = (new URL(event.request.url)).searchParams;
+      const addressParam = queryParams.get("address")
+      const merkleValue = await MERKLE.get(addressParam);
+      if (!merkleValue) {
+        return new Response('{"error": "Address not found", "missing": true }', { status: 200 })
+      }
+      return new Response(merkleValue, { status: 200 })
+    }
+
     const page = await getAssetFromKV(event, {
       mapRequestToAsset: serveSinglePageApp,
     });

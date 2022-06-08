@@ -229,7 +229,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
             </Route>
             <Route exact path="/claim">
               <WrapWithLayout useAppHeader={false}>
-                <Claim contract={contract} />
+                { isTokenDataInitialized && <Claim contract={contract} /> }
               </WrapWithLayout>
             </Route>
             <Route exact path="/lock">

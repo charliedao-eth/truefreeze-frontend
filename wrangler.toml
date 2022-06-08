@@ -3,6 +3,10 @@ workers_dev = true
 main = "./site-worker.js"
 compatibility_date = "2022-05-06"
 
+kv_namespaces = [
+    { binding = "MERKLE", id = "fee6e14c51b84da0be372abab4f980fa", preview_id = "c214f59b2046423499e3c31969688f96" }
+]
+
 [site]
 bucket = "./build"
 

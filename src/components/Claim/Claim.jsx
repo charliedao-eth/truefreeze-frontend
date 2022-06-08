@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useMoralis } from "react-moralis";
-import { Button, Skeleton } from "antd";
-import { users } from "../../contracts/merkle";
+import { Button, message, Skeleton } from "antd";
 import claimImage from "../../assets/claim_image.png";
 
 /**
@@ -15,18 +14,19 @@ function Claim(props) {
   const { Moralis, account, isAuthenticated } = useMoralis();
   const [alreadyClaimed, setAlreadyClaimed] = useState(null);
   const [isClaiming, setIsClaiming] = useState(false);
-  const userClaimData = getUserInClaimList(account);
+  const [userClaimData, setUserClaimData] = useState(null);
 
   useEffect(() => {
     (async () => {
-      if (userClaimData === false) {
+      const claimResponse = await getUserClaimData(account);
+      setUserClaimData(claimResponse);
+      if(claimResponse === false) {
+        console.log("Account freeze already claimed.");
         setAlreadyClaimed(true);
-      } else if (contract && account && userClaimData) {
-        const claimResult = await checkIfClaimed();
-        console.log("Account freeze already claimed:");
-        console.log(claimResult);
-        setAlreadyClaimed(claimResult);
+        return;
       }
+      const claimResult = await checkIfClaimed(claimResponse);
+      setAlreadyClaimed(claimResult);
     })();
   }, [account]);
 
@@ -40,13 +40,13 @@ function Claim(props) {
     );
   }
 
-  async function checkIfClaimed() {
+  async function checkIfClaimed(claimData) {
     const options = {
       contractAddress: contract.merkleTree.address,
       functionName: "isClaimed",
       abi: contract.merkleTree.abi,
       params: {
-        index: userClaimData?.index,
+        index: claimData?.index,
       },
     };
 
@@ -119,13 +119,27 @@ function Claim(props) {
 /**
  *
  * @param {String} address
- * @returns null for error or bad inputs. false if the user is not in the claim list. Object otherwise.
+ * @returns null for error or bad inputs. false if the user is not in the claim list. Merkle tree object otherwise.
  */
-function getUserInClaimList(address) {
+async function getUserClaimData(address) {
   if (!address) {
     return null;
   }
-  return users.find((item) => item.address.toLowerCase() === address.toString().toLowerCase()) || false; // distinguish a false return from null (false means it aint there)
+
+  try {
+    const claimResponse = await fetch(`/merklelookup?address=${address}`);
+    const claimData = await claimResponse.json();
+    if(claimData?.missing) { // distinguish a false return from null (false means it aint there)
+      return false;
+    }
+    return claimData;
+  } catch (err) {
+    message.error({
+      content: "Error. Failed to retrieve airdrop data: " + err,
+      duration: 8
+    });
+    return null;
+  }
 }
 
 export default Claim;
