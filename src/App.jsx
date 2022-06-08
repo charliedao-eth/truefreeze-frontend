@@ -228,9 +228,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
               </WrapWithLayout>
             </Route>
             <Route exact path="/claim">
-              <WrapWithLayout useAppHeader={false}>
-                { isTokenDataInitialized && <Claim contract={contract} /> }
-              </WrapWithLayout>
+              <WrapWithLayout useAppHeader={false}>{isTokenDataInitialized && <Claim contract={contract} />}</WrapWithLayout>
             </Route>
             <Route exact path="/lock">
               <WrapWithLayout useAppHeader={true} selectedNav={"lock"}>

@@ -20,7 +20,7 @@ function Claim(props) {
     (async () => {
       const claimResponse = await getUserClaimData(account);
       setUserClaimData(claimResponse);
-      if(claimResponse === false) {
+      if (claimResponse === false) {
         console.log("Account freeze already claimed.");
         setAlreadyClaimed(true);
         return;
@@ -129,14 +129,15 @@ async function getUserClaimData(address) {
   try {
     const claimResponse = await fetch(`/merklelookup?address=${address}`);
     const claimData = await claimResponse.json();
-    if(claimData?.missing) { // distinguish a false return from null (false means it aint there)
+    if (claimData?.missing) {
+      // distinguish a false return from null (false means it aint there)
       return false;
     }
     return claimData;
   } catch (err) {
     message.error({
       content: "Error. Failed to retrieve airdrop data: " + err,
-      duration: 8
+      duration: 8,
     });
     return null;
   }
