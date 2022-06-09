@@ -157,11 +157,11 @@ export default function useToken({ contract }) {
       });
       console.log(originalAbi.filter((x) => x.name === functionName));
     };
-    nastyMoralisNamelessArrayParamsBugFix(contract.abi, "rewards"); // disgusting mutation :(
+    nastyMoralisNamelessArrayParamsBugFix(contract.abi, "earned"); // disgusting mutation :(
 
     const options = {
       contractAddress: contract.address,
-      functionName: "rewards",
+      functionName: "earned",
       abi: contract.abi,
       params: [account, rewardTokenAddress],
     };

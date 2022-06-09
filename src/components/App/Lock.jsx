@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMoralis, useNativeBalance } from "react-moralis";
+import { useMoralis } from "react-moralis";
 import { Button, Modal, message, InputNumber } from "antd";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
@@ -7,6 +7,7 @@ import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
 import LineChart from "react-linechart";
 import "react-linechart/dist/styles.css";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -21,20 +22,18 @@ const CONTRACT_MAX_DAYS = 1100;
 function Lock(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods, tokenData } = tokens;
+  const { isInitialized, methods } = tokens;
   const { checkThenAllowWrapped } = methods;
-  const { tokenMetadata } = tokenData;
+  const { wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
   const [isLocking, setIsLocking] = useState(false);
   const [amountLocked, setAmountLocked] = useState(10);
   const [timeLocked, setTimeLocked] = useState(30);
-  const { data: balance, nativeToken } = useNativeBalance();
-  const nativeBalance = balance?.balance && balance.balance !== "0" ? parseFloat(Moralis.Units.FromWei(balance.balance)) : 0;
-  const nativeTokenSymbol = nativeToken?.symbol || null;
+  const wrappedSymbol = tokenMetadata?.wrappedToken?.symbol || "";
 
   const lockWrappedToken = async (amount, durationInDays) => {
-    if (nativeBalance <= amount) {
+    if (parseFloat(wrappedTokenBalance) <= amount) {
       message.error({
-        content: `Not enough ${nativeTokenSymbol}. Your balance is ${nativeBalance?.toFixed(2) / 1}`,
+        content: `Not enough ${wrappedSymbol}. Your balance is ${parseFloat(wrappedTokenBalance)?.toFixed(2) / 1}`,
         duration: 6,
       });
       return;
@@ -64,7 +63,7 @@ function Lock(props) {
       const freezerConfirmation = await freezerTransaction.wait();
       console.log(freezerConfirmation);
       Modal.success({
-        content: `You successfully locked ${amountLocked} ${nativeTokenSymbol} for ${timeLocked} days.`,
+        content: `You successfully locked ${amountLocked} ${wrappedSymbol} for ${timeLocked} days.`,
       });
 
       setIsLocking(false);
@@ -127,7 +126,7 @@ function Lock(props) {
                         Please confirm the following information is correct before locking your freezer. Upon confirmation, the adjacent NFT will be minted to your wallet along
                         with the number of {tokenMetadata?.frToken?.symbol} specified in the previous step.
                       </p>
-                      <p>You can redeem the NFT to withdraw your {nativeTokenSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty.</p>
+                      <p>You can redeem the NFT to withdraw your {wrappedSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty.</p>
                     </div>
                     <div className="flex-half p-l-2">
                       {NftTemplate({
@@ -144,7 +143,7 @@ function Lock(props) {
             disabled={isLocking || !isInitialized || !amountLocked}
             loading={isLocking}
           >
-            Lock {amountLocked?.toPrecision(4) / 1} {nativeTokenSymbol}
+            Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol || <LoadingOutlined />}
           </Button>
         </section>
         <section className="lock-chart flex-half">
@@ -267,8 +266,8 @@ export function costToWithdraw(amountLocked, lockDurationInDays, timeSinceLockIn
   }
 }
 
-export function ethToFrEthEarned(nativeInEth, daysLocked) {
-  return (nativeInEth * daysLocked) / 365;
+export function ethToFrEthEarned(amountInEth, daysLocked) {
+  return (amountInEth * daysLocked) / 365;
 }
 
 export default Lock;
