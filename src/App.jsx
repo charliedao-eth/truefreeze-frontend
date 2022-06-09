@@ -143,12 +143,11 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         <Fragment>
           {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
           <div style={styles.content}>{props.children}</div>
-          { props.useFooter !== false && (
-              <Footer className="footer slow-show">
-                <Logo />
-              </Footer>
-            )
-          }
+          {props.useFooter !== false && (
+            <Footer className="footer slow-show">
+              <Logo />
+            </Footer>
+          )}
         </Fragment>
       </ErrorBoundary>
     );

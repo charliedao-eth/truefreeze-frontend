@@ -28,7 +28,7 @@ function Claim(props) {
       if (claimResponse === null) {
         message.error({
           content: "Error connecting to claim api.",
-          duration: 4
+          duration: 4,
         });
         return;
       }
