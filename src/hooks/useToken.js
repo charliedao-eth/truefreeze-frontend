@@ -149,7 +149,7 @@ export default function useToken({ contract }) {
       if (abiFunctionArr.length <= 0) {
         throw new Error("Could not patch moralis bug. Couldn't find function: " + functionName);
       }
-      abiFunctionArr.forEach((fn, index) => {
+      abiFunctionArr.forEach((fn) => {
         for (let i = 0; i < fn.inputs.length; i += 1) {
           fn.inputs[i].name = i + ""; // use a little movie magic to change the function name to "0", or "1", etc.
           // sneaks the params in correctly here: https://github.com/MoralisWeb3/Moralis-JS-SDK/blob/9eb6f1bfb41eb4acb4445e7991a2b1c096bfef0b/src/MoralisWeb3.js#L769

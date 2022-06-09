@@ -554,7 +554,7 @@ select {
   }
   .lock-chart {
     max-width: 400px;
-    
+
     * {
       font-family: 'Montserrat', sans-serif;
     }
@@ -681,9 +681,14 @@ select {
 .landing-page {
   color: #FFFFFF;
   font-family: Montserrat, sans-serif;
-  max-width: 1000px;
+  margin: 0 auto;
   text-align: center;
-  padding-top: max(20vh, 100px);
+  
+  .page-scroll-container {
+    max-height: calc(100vh - 135px);
+    padding-top: max(20vh, 100px);
+    width: 100vw;
+  }
 
   .white-button {
     color: white;

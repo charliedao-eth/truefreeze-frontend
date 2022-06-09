@@ -43,7 +43,7 @@ const styles = {
     position: "fixed",
     zIndex: 1,
     width: "100%",
-    height: "initial",
+    height: "125px",
     background: "none",
     display: "flex",
     justifyContent: "space-between",
@@ -143,9 +143,12 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         <Fragment>
           {props.useAppHeader ? <AppHeader selectedNav={props.selectedNav} /> : <GenericHeader />}
           <div style={styles.content}>{props.children}</div>
-          <Footer className="footer slow-show">
-            <Logo />
-          </Footer>
+          { props.useFooter !== false && (
+              <Footer className="footer slow-show">
+                <Logo />
+              </Footer>
+            )
+          }
         </Fragment>
       </ErrorBoundary>
     );
@@ -223,7 +226,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         <Router>
           <Switch>
             <Route exact path="/landing">
-              <WrapWithLayout useAppHeader={false}>
+              <WrapWithLayout useAppHeader={false} useFooter={false}>
                 <Landing />
               </WrapWithLayout>
             </Route>

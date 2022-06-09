@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Button, message, Skeleton } from "antd";
 import claimImage from "../../assets/claim_image.png";
@@ -23,6 +23,13 @@ function Claim(props) {
       if (claimResponse === false) {
         console.log("Account freeze already claimed.");
         setAlreadyClaimed(true);
+        return;
+      }
+      if (claimResponse === null) {
+        message.error({
+          content: "Error connecting to claim api.",
+          duration: 4
+        });
         return;
       }
       const claimResult = await checkIfClaimed(claimResponse);

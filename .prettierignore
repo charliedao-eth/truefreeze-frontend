@@ -4,4 +4,5 @@ yarn.lock
 package-lock.json
 Truffle/
 src/contracts/
+src/helpers/networks.js
 src/helpers/svgs.js
