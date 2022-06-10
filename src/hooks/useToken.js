@@ -149,7 +149,7 @@ export default function useToken({ contract }) {
       functionName: "earned",
       abi: contract.abi,
       params: {
-        account, 
+        account,
         _rewardsToken: rewardTokenAddress,
       },
     };
