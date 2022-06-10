@@ -437,6 +437,15 @@ select {
     }
   }
 
+  .white-button {
+    color: white;
+    border: 1px solid white;
+    border-radius: 30px;
+    display: inline-block;
+    margin-top: 1.5em;
+    padding: 0.5em 1em;
+  }
+
   .uhoh.ant-btn {
     background-color: $uhoh;
     border-color: $uhoh;
@@ -678,26 +687,13 @@ select {
   }
 }
 
+
 .landing-page {
   color: #FFFFFF;
   font-family: Montserrat, sans-serif;
   margin: 0 auto;
+  padding-top: max(20vh, 100px);
   text-align: center;
-  
-  .page-scroll-container {
-    max-height: calc(100vh - 135px);
-    padding-top: max(20vh, 100px);
-    width: 100vw;
-  }
-
-  .white-button {
-    color: white;
-    border: 1px solid white;
-    border-radius: 30px;
-    display: inline-block;
-    margin-top: 1.5em;
-    padding: 0.5em 1em;
-  }
 
   .landing-title {
     color: white;
@@ -706,9 +702,6 @@ select {
   .landing-subtitle {
     color: white;
     font-size: 30px;
-  }
-  .landing-image {
-    max-width: 100%;
   }
 }
 

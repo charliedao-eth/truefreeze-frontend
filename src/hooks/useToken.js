@@ -144,26 +144,14 @@ export default function useToken({ contract }) {
   };
 
   const _genericGetTokenReward = async ({ contract, account, rewardTokenAddress }) => {
-    let nastyMoralisNamelessArrayParamsBugFix = (originalAbi, functionName) => {
-      const abiFunctionArr = originalAbi.filter((x) => x.name === functionName);
-      if (abiFunctionArr.length <= 0) {
-        throw new Error("Could not patch moralis bug. Couldn't find function: " + functionName);
-      }
-      abiFunctionArr.forEach((fn) => {
-        for (let i = 0; i < fn.inputs.length; i += 1) {
-          fn.inputs[i].name = i + ""; // use a little movie magic to change the function name to "0", or "1", etc.
-          // sneaks the params in correctly here: https://github.com/MoralisWeb3/Moralis-JS-SDK/blob/9eb6f1bfb41eb4acb4445e7991a2b1c096bfef0b/src/MoralisWeb3.js#L769
-        }
-      });
-      console.log(originalAbi.filter((x) => x.name === functionName));
-    };
-    nastyMoralisNamelessArrayParamsBugFix(contract.abi, "earned"); // disgusting mutation :(
-
     const options = {
       contractAddress: contract.address,
       functionName: "earned",
       abi: contract.abi,
-      params: [account, rewardTokenAddress],
+      params: {
+        account, 
+        _rewardsToken: rewardTokenAddress,
+      },
     };
     try {
       const result = await Moralis.executeFunction(options);
@@ -175,9 +163,9 @@ export default function useToken({ contract }) {
     }
   };
   const _getRewardTokens = async ({ contract, account }) => {
-    const frTokenReward = await _genericGetTokenReward({ contract: contract.frTokenStaking, account, rewardTokenAddress: contract.frToken.address });
-    const frzReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: contract.FRZ.address });
-    const frzWrappedReward = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: wrappedTokenMetadata.tokenAddress });
+    const burnReward = await _genericGetTokenReward({ contract: contract.frTokenStaking, account, rewardTokenAddress: contract.FRZ.address });
+    const stakedRewardInFrToken = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: contract.frToken.address });
+    const stakedRewardInWrapped = await _genericGetTokenReward({ contract: contract.MultiRewards, account, rewardTokenAddress: wrappedTokenMetadata.tokenAddress });
     const [frTokenSymbol, frzSymbol, wrappedSymbol] = await _getTokenMetadata([
       contract.frToken,
       contract.FRZ,
@@ -185,15 +173,15 @@ export default function useToken({ contract }) {
     ]);
     return [
       {
-        amount: frTokenReward,
-        symbol: frTokenSymbol,
-      },
-      {
-        amount: frzReward,
+        amount: burnReward,
         symbol: frzSymbol,
       },
       {
-        amount: frzWrappedReward,
+        amount: stakedRewardInFrToken,
+        symbol: frTokenSymbol,
+      },
+      {
+        amount: stakedRewardInWrapped,
         symbol: wrappedSymbol,
       },
     ];

@@ -145,7 +145,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           <div style={styles.content}>{props.children}</div>
           {props.useFooter !== false && (
             <Footer className="footer slow-show">
-              <Logo />
+              <Logo url="/app" />
             </Footer>
           )}
         </Fragment>
@@ -225,7 +225,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
         <Router>
           <Switch>
             <Route exact path="/landing">
-              <WrapWithLayout useAppHeader={false} useFooter={false}>
+              <WrapWithLayout useAppHeader={false}>
                 <Landing />
               </WrapWithLayout>
             </Route>
@@ -269,8 +269,8 @@ export const PrefetchImages = () => (
   </div>
 );
 
-export const Logo = () => (
-  <a href="/" className="tf-logo">
+export const Logo = (url = "/") => (
+  <a href={url} className="tf-logo">
     <img src={logoSVG} />
   </a>
 );

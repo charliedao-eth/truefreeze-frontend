@@ -239,8 +239,8 @@ function StakeAndBurn(props) {
       if (rewardAmount !== 0 && !rewardAmount) {
         return "ERROR";
       }
-      if (rewardAmount > 0 && rewardAmount < 0.0001) {
-        return rewardAmount?.toExponential(1);
+      if (rewardAmount > 0 && rewardAmount < 0.01) {
+        return "~ 0";
       }
 
       const formattedAmount = rewardAmount?.toFixed(3) / 1;
@@ -262,7 +262,6 @@ function StakeAndBurn(props) {
                 <img src={frethIcon} className="card-icon" />
                 <div>
                   <span className="font-35 nowrap">{formatRewardAmount(frTokenSymbol)}</span>
-                  <span className="p-l-1">{frTokenSymbol}</span>
                 </div>
               </div>
               <div className="transparent-card small m-t-1">
@@ -271,7 +270,6 @@ function StakeAndBurn(props) {
                 <img src={circleIcon} className="card-icon" />
                 <div>
                   <span className="font-35 nowrap">{formatRewardAmount(wrappedSymbol)}</span>
-                  <span className="p-l-1">{wrappedSymbol}</span>
                 </div>
               </div>
             </div>
@@ -286,7 +284,6 @@ function StakeAndBurn(props) {
                 <img src={frzIcon} className="card-icon" />
                 <div>
                   <span className="font-35 nowrap">{formatRewardAmount(frzSymbol)}</span>
-                  <span className="p-l-1">{frzSymbol}</span>
                 </div>
               </div>
             </div>

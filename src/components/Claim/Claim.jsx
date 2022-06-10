@@ -99,6 +99,9 @@ function Claim(props) {
   const renderAlreadyClaimed = () => (
     <div className="claim-page">
       <h2 className="claim-subtitle">This address has claimed {`${userClaimData?.amount && displayFormatAmount(userClaimData.amount)} `}FRZ!</h2>
+      <a href="/app" className="white-button">
+        LAUNCH APP
+      </a>
     </div>
   );
 

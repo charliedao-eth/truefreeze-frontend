@@ -1,15 +1,9 @@
-import { useMoralis, useNativeBalance } from "react-moralis";
+import { useMoralis } from "react-moralis";
 
 export default function PageToolbar(props) {
   const { tokens } = props;
-  const { account, Moralis } = useMoralis();
+  const { account } = useMoralis();
   const { frTokenBalance, frzBalance, wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
-  const { data: balance, nativeToken } = useNativeBalance();
-
-  const nativeAmounts = {
-    balance: balance?.balance && balance.balance !== "0" ? parseFloat(Moralis.Units.FromWei(balance.balance))?.toFixed(2) : null,
-    symbol: nativeToken?.symbol || null,
-  };
 
   return (
     <section className="page-toolbar white-text m-b-1">
@@ -19,12 +13,6 @@ export default function PageToolbar(props) {
             <b>WALLET</b>
           </div>
           <div>0x...{account?.substring(account?.length - 4, account?.length)}</div>
-        </div>
-        <div>
-          <div>
-            <b>{nativeAmounts.symbol}</b>
-          </div>
-          <div>{nativeAmounts.balance}</div>
         </div>
         <div>
           <div>
