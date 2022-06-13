@@ -42,8 +42,8 @@ function NFTBalance({ filterByContractAddress = "", fetchProgressAndImages, fetc
     if (freezers && freezers.length > 0) {
       (async () => {
         const results = (await Promise.allSettled(freezers.map(fetchProgressAndImages)))?.map((promiseResult) => promiseResult?.value);
-        let progressAmounts = results.map(({progressAmount}) => progressAmount);
-        let images = results.reduce((aggregator, {base64ImageString, tokenId}) => {
+        let progressAmounts = results.map(({ progressAmount }) => progressAmount);
+        let images = results.reduce((aggregator, { base64ImageString, tokenId }) => {
           aggregator[tokenId] = base64ImageString;
           return aggregator;
         }, {});

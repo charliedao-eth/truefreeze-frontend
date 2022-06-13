@@ -118,12 +118,12 @@ function MyFreezers(props) {
       progressAmount = freezerProgressTransaction.toString();
       progressAmount = Number(progressAmount).toFixed(1);
       const freezerMetadataTransaction = await Moralis.executeFunction(metadataOptions);
-      base64ImageString = JSON.parse(window.atob((freezerMetadataTransaction?.toString()).split(",")?.[1]))?.image || null; // we're just decoding and ripping apart the metadata in one nasty step. i should be fired for this line
+      base64ImageString = JSON.parse(window.atob(freezerMetadataTransaction?.toString().split(",")?.[1]))?.image || null; // we're just decoding and ripping apart the metadata in one nasty step. i should be fired for this line
     } catch (err) {
       console.error(`Failed to fetch unlock progress for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
     }
 
-    return {progressAmount, base64ImageString, tokenId: freezerNFT.token_id};
+    return { progressAmount, base64ImageString, tokenId: freezerNFT.token_id };
   };
   const fetchUnlockCostAndFees = async (freezerNFT) => {
     if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {

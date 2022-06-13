@@ -95,7 +95,15 @@ function Lock(props) {
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
-              <InputNumber className="small-input days-input" controls={false} size="small" min={CONTRACT_MIN_DAYS} max={CONTRACT_MAX_DAYS} defaultValue={timeLocked} onChange={setTimeLocked} />
+              <InputNumber
+                className="small-input days-input"
+                controls={false}
+                size="small"
+                min={CONTRACT_MIN_DAYS}
+                max={CONTRACT_MAX_DAYS}
+                defaultValue={timeLocked}
+                onChange={setTimeLocked}
+              />
               <span className="white-text flex-half align-left p-l-1">DAYS</span>
             </div>
           </div>
@@ -125,11 +133,10 @@ function Lock(props) {
                       <p>
                         Locking {tokenMetadata?.wrappedToken?.symbol} will pay you {tokenMetadata?.frToken?.symbol} and mint a Certificate of Deposit Freezer NFT.
                       </p>
+                      <p className="m-t-1">Any Freezer NFT can be redeemed for its {tokenMetadata?.wrappedSymbol?.symbol} after the Maturity Date.</p>
                       <p className="m-t-1">
-                        Any Freezer NFT can be redeemed for its {tokenMetadata?.wrappedSymbol?.symbol} after the Maturity Date.
-                      </p>
-                      <p className="m-t-1">
-                        Early withdrawals before their Maturity Date incur variable {tokenMetadata?.frToken?.symbol} fees and a 0.25% {tokenMetadata?.wrappedSymbol?.symbol} penalty. See <a href="/docs">Docs</a> for more details.
+                        Early withdrawals before their Maturity Date incur variable {tokenMetadata?.frToken?.symbol} fees and a 0.25% {tokenMetadata?.wrappedSymbol?.symbol}{" "}
+                        penalty. See <a href="/docs">Docs</a> for more details.
                       </p>
                     </div>
                     <div className="flex-half p-l-2">
@@ -147,23 +154,22 @@ function Lock(props) {
             disabled={isLocking || !isLoaded || !amountLocked}
             loading={isLocking}
           >
-            {
-              isLoaded ? (
-                <React.Fragment>
-                  {
-                  wrappedSymbol ? (
-                    <React.Fragment>Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol}</React.Fragment>
-                  ) :  (
-                    <LoadingOutlined />
-                  )}
-                </React.Fragment>
-              ) : "DISCONNECTED"
-            }
+            {isLoaded ? (
+              <React.Fragment>
+                {wrappedSymbol ? (
+                  <React.Fragment>
+                    Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol}
+                  </React.Fragment>
+                ) : (
+                  <LoadingOutlined />
+                )}
+              </React.Fragment>
+            ) : (
+              "DISCONNECTED"
+            )}
           </Button>
         </section>
-        <section className="lock-chart flex-half">
-          
-        </section>
+        <section className="lock-chart flex-half"></section>
       </div>
     </div>
   );

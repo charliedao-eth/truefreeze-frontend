@@ -181,8 +181,8 @@ function StakeAndBurn(props) {
       <div>
         <div className="font-16 text-align-center white-text p-r-2 p-l-2">
           <div>
-            By staking your {frzSymbol}, you will earn a portion of withdrawal fees. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be
-            claimed on the 'REWARDS' tab.
+            By staking your {frzSymbol}, you will earn a portion of withdrawal fees. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be claimed on the
+            'REWARDS' tab.
           </div>
         </div>
         <div className="flex justify-center m-t-2">

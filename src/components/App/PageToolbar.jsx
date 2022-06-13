@@ -12,7 +12,7 @@ export default function PageToolbar(props) {
           <div>
             <b>WALLET</b>
           </div>
-          <div>{account ? ("0x..." + account?.substring(account?.length - 4, account?.length)) : "--"}</div>
+          <div>{account ? "0x..." + account?.substring(account?.length - 4, account?.length) : "--"}</div>
         </div>
         <div>
           <div>

@@ -4,7 +4,7 @@ export default function NftTemplate({
   wrappedSymbol,
   wrappedAmount,
 }) {
-  const padSingleNum = (numStr) => (numStr + "")?.length === 1 ? "0" + numStr : numStr;
+  const padSingleNum = (numStr) => ((numStr + "")?.length === 1 ? "0" + numStr : numStr);
   const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
   const maturityDate = dateInXDays(parseInt(lockDuration));
