@@ -83,31 +83,29 @@ function Lock(props) {
   };
 
   function renderHelpfulTable() {
-
     const padSingleNum = (numStr) => ((numStr + "")?.length === 1 ? "0" + numStr : numStr);
     const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-  
+
     const lockDate = new Date(); // today
     const breakevenDate = dateInXDays(parseInt(timeLocked) * 0.667);
     const maturityDate = dateInXDays(parseInt(timeLocked));
-  
+
     const lockDay = lockDate.getDate();
     const lockMonth = lockDate.getMonth() + 1; // getMonth() returns month from 0 to 11
     const lockYear = lockDate.getFullYear();
-  
+
     const breakevenDay = breakevenDate.getDate();
     const breakevenMonth = breakevenDate.getMonth() + 1; // getMonth() returns month from 0 to 11
     const breakevenYear = breakevenDate.getFullYear();
-    
+
     const maturityDay = maturityDate.getDate();
     const maturityMonth = maturityDate.getMonth() + 1; // getMonth() returns month from 0 to 11
     const maturityYear = maturityDate.getFullYear();
-  
+
     const lockDateString = `${lockYear}-${padSingleNum(lockMonth)}-${padSingleNum(lockDay)}`;
     const breakevenDateString = `${breakevenYear}-${padSingleNum(breakevenMonth)}-${padSingleNum(breakevenDay)}`;
     const maturityDateString = `${maturityYear}-${padSingleNum(maturityMonth)}-${padSingleNum(maturityDay)}`;
-  
-  
+
     /*
     Date | frETH Fee | WETH Penalty 
     (Today) YYYY-MM-DD | 120 frETH | 0.25% WETH
@@ -136,7 +134,7 @@ function Lock(props) {
         wrappedPenalty: `0 ${wrappedSymbol}`,
       },
     ];
-  
+
     const columns = [
       {
         title: "Date",
@@ -154,8 +152,10 @@ function Lock(props) {
         key: "wrappedPenalty",
       },
     ];
-  
-    return <Table className="preview-table" dataSource={dataSource} columns={columns} bordered={false} expandable={false} pagination={{top: "none", bottom: "none"}} size="small" />;
+
+    return (
+      <Table className="preview-table" dataSource={dataSource} columns={columns} bordered={false} expandable={false} pagination={{ top: "none", bottom: "none" }} size="small" />
+    );
   }
 
   let isLoaded = true;
@@ -235,7 +235,7 @@ function Lock(props) {
           >
             {isLoaded ? (
               <React.Fragment>
-                {wrappedSymbol && typeof amountLocked === "number"  ? (
+                {wrappedSymbol && typeof amountLocked === "number" ? (
                   <React.Fragment>
                     Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol}
                   </React.Fragment>
@@ -249,7 +249,7 @@ function Lock(props) {
           </Button>
         </section>
         <section className="lock-chart flex-half">
-            <ErrorBoundary fallback={<WarningTwoTone />}>{ renderHelpfulTable() }</ErrorBoundary>
+          <ErrorBoundary fallback={<WarningTwoTone />}>{renderHelpfulTable()}</ErrorBoundary>
         </section>
       </div>
     </div>
@@ -272,6 +272,5 @@ export function costToWithdraw(amountLocked, lockDurationInDays, timeSinceLockIn
 export function ethToFrEthEarned(amountInEth, daysLocked) {
   return (amountInEth * daysLocked) / 365;
 }
-
 
 export default Lock;

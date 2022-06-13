@@ -20,11 +20,11 @@ export default function CustomNumberInput({ value, onAmountChange, label = "", .
           onAmountChange("");
         }}
         onBlur={(evt) => {
-          const inputIsEmpty = !(evt?.target?.value) && value === "";
+          const inputIsEmpty = !evt?.target?.value && value === "";
           const revertIsNumber = isValidNumber(revertValue);
-          
-          if(inputIsEmpty) {
-            if(revertIsNumber) {
+
+          if (inputIsEmpty) {
+            if (revertIsNumber) {
               onAmountChange(revertValue);
             } else {
               onAmountChange("1");
@@ -46,4 +46,4 @@ export default function CustomNumberInput({ value, onAmountChange, label = "", .
 const isValidNumber = (val) => {
   const parsedValue = parseFloat(val);
   return typeof parsedValue === "number" && !isNaN(val);
-}
+};
