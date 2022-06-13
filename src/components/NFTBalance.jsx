@@ -137,7 +137,7 @@ function NFTBalance({ filterByContractAddress = "", fetchProgressAndImages, fetc
       <Card
         hoverable
         actions={[
-          <Tooltip title="View On Marketplate">
+          <Tooltip title="View On Marketplace">
             <EyeOutlined onClick={() => window.open(`https://app.nft.org/${getChainName(chainId)}/buy?contractId=${nft.token_address}`, "_blank")} />
           </Tooltip>,
           <Tooltip title="Sell NFT" onClick={() => window.open(`https://app.nft.org/${getChainName(chainId)}/nft/${nft.token_address}/${nft.token_id}`, "_blank")}>

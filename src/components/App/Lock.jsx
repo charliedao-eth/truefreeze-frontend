@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useMoralis } from "react-moralis";
-import { Button, Modal, message, InputNumber } from "antd";
+import { Button, Modal, message, InputNumber, Table } from "antd";
 import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, WarningTwoTone } from "@ant-design/icons";
 import React from "react";
+import { DOCS_URL } from "App";
+import { ErrorBoundary } from "react-error-boundary";
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -21,13 +23,14 @@ const CONTRACT_MAX_DAYS = 1100;
 function Lock(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { isInitialized, methods } = tokens;
+  const { methods } = tokens;
   const { checkThenAllowWrapped } = methods;
   const { wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
   const [isLocking, setIsLocking] = useState(false);
   const [amountLocked, setAmountLocked] = useState(1);
   const [timeLocked, setTimeLocked] = useState(30);
   const wrappedSymbol = tokenMetadata?.wrappedToken?.symbol || "";
+  const frTokenSymbol = tokenMetadata?.frToken?.symbol || "";
 
   const lockWrappedToken = async (amount, durationInDays) => {
     if (parseFloat(wrappedTokenBalance) <= amount) {
@@ -79,6 +82,82 @@ function Lock(props) {
     }
   };
 
+  function renderHelpfulTable() {
+
+    const padSingleNum = (numStr) => ((numStr + "")?.length === 1 ? "0" + numStr : numStr);
+    const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  
+    const lockDate = new Date(); // today
+    const breakevenDate = dateInXDays(parseInt(timeLocked) * 0.667);
+    const maturityDate = dateInXDays(parseInt(timeLocked));
+  
+    const lockDay = lockDate.getDate();
+    const lockMonth = lockDate.getMonth() + 1; // getMonth() returns month from 0 to 11
+    const lockYear = lockDate.getFullYear();
+  
+    const breakevenDay = breakevenDate.getDate();
+    const breakevenMonth = breakevenDate.getMonth() + 1; // getMonth() returns month from 0 to 11
+    const breakevenYear = breakevenDate.getFullYear();
+    
+    const maturityDay = maturityDate.getDate();
+    const maturityMonth = maturityDate.getMonth() + 1; // getMonth() returns month from 0 to 11
+    const maturityYear = maturityDate.getFullYear();
+  
+    const lockDateString = `${lockYear}-${padSingleNum(lockMonth)}-${padSingleNum(lockDay)}`;
+    const breakevenDateString = `${breakevenYear}-${padSingleNum(breakevenMonth)}-${padSingleNum(breakevenDay)}`;
+    const maturityDateString = `${maturityYear}-${padSingleNum(maturityMonth)}-${padSingleNum(maturityDay)}`;
+  
+  
+    /*
+    Date | frETH Fee | WETH Penalty 
+    (Today) YYYY-MM-DD | 120 frETH | 0.25% WETH
+    (2/3rds of way) YYYY-MM-DD | 100 frETH | 0.25% WETH 
+    Maturity Date YYYY-MM-DD | 0 frETH | 0% WETH
+  
+  
+    */
+    const dataSource = [
+      {
+        key: "0",
+        date: `(Today) ${lockDateString}`,
+        frTokenFee: costToWithdraw(amountLocked, timeLocked, 0),
+        wrappedPenalty: `${(0.0025 * amountLocked)?.toFixed(2) / 1} ${wrappedSymbol} (0.25%)`,
+      },
+      {
+        key: "1",
+        date: `(2/3ds of way) ${breakevenDateString}`,
+        frTokenFee: costToWithdraw(amountLocked, timeLocked, timeLocked * 0.67),
+        wrappedPenalty: `${(0.0025 * amountLocked)?.toFixed(2) / 1} ${wrappedSymbol} (0.25%)`,
+      },
+      {
+        key: "2",
+        date: `Maturity date ${maturityDateString}`,
+        frTokenFee: 0,
+        wrappedPenalty: `0 ${wrappedSymbol}`,
+      },
+    ];
+  
+    const columns = [
+      {
+        title: "Date",
+        dataIndex: "date",
+        key: "date",
+      },
+      {
+        title: `${frTokenSymbol} Fee`,
+        dataIndex: "frTokenFee",
+        key: "frTokenFee",
+      },
+      {
+        title: `${wrappedSymbol} Penalty`,
+        dataIndex: "wrappedPenalty",
+        key: "wrappedPenalty",
+      },
+    ];
+  
+    return <Table className="preview-table" dataSource={dataSource} columns={columns} bordered={false} expandable={false} pagination={{top: "none", bottom: "none"}} size="small" />;
+  }
+
   let isLoaded = true;
   if (!props.address && (!account || !isAuthenticated)) {
     isLoaded = false;
@@ -91,7 +170,7 @@ function Lock(props) {
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
-          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val))} value={amountLocked} label="AMOUNT" />
+          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val) || "")} value={amountLocked} label="AMOUNT" />
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
@@ -110,7 +189,7 @@ function Lock(props) {
           <div>
             <div className="choke-label">EARN</div>
             <div>
-              <span className="font-35">{amountLocked > 0 ? ethToFrEthEarned(amountLocked, timeLocked)?.toFixed(3) / 1 : "--"}</span>
+              <span className="font-35">{amountLocked !== "" && amountLocked > 0 ? ethToFrEthEarned(amountLocked, timeLocked)?.toFixed(3) / 1 : "--"}</span>
               <span className="p-l-1">{tokenMetadata?.frToken?.symbol || ""}</span>
             </div>
           </div>
@@ -136,7 +215,7 @@ function Lock(props) {
                       <p className="m-t-1">Any Freezer NFT can be redeemed for its {tokenMetadata?.wrappedSymbol?.symbol} after the Maturity Date.</p>
                       <p className="m-t-1">
                         Early withdrawals before their Maturity Date incur variable {tokenMetadata?.frToken?.symbol} fees and a 0.25% {tokenMetadata?.wrappedSymbol?.symbol}{" "}
-                        penalty. See <a href="/docs">Docs</a> for more details.
+                        penalty. See <a href={DOCS_URL}>Docs</a> for more details.
                       </p>
                     </div>
                     <div className="flex-half p-l-2">
@@ -156,7 +235,7 @@ function Lock(props) {
           >
             {isLoaded ? (
               <React.Fragment>
-                {wrappedSymbol ? (
+                {wrappedSymbol && typeof amountLocked === "number"  ? (
                   <React.Fragment>
                     Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol}
                   </React.Fragment>
@@ -169,7 +248,9 @@ function Lock(props) {
             )}
           </Button>
         </section>
-        <section className="lock-chart flex-half"></section>
+        <section className="lock-chart flex-half">
+            <ErrorBoundary fallback={<WarningTwoTone />}>{ renderHelpfulTable() }</ErrorBoundary>
+        </section>
       </div>
     </div>
   );
@@ -191,5 +272,6 @@ export function costToWithdraw(amountLocked, lockDurationInDays, timeSinceLockIn
 export function ethToFrEthEarned(amountInEth, daysLocked) {
   return (amountInEth * daysLocked) / 365;
 }
+
 
 export default Lock;

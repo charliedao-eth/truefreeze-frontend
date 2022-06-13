@@ -600,48 +600,27 @@ p.m-t-1 {
     max-width: 130px;
   }
   .lock-chart {
-    max-width: 400px;
-
-    * {
-      font-family: 'Montserrat', sans-serif;
-    }
-    svg {
-      overflow: visible;
-    }
-
-    g.tick {
-      stroke: #FFFFFF;
-    }
-    .axis path {
-      stroke: #FFFFFF;
-    }
-    text {
-      fill: #FFFFFF;
-      stroke: none;
-    }
-    .tick text {
-      opacity: 0.7;
-    }
+    display: flex;
+    justify-content: center;
+    padding-top: 70px;
   }
   .img-placeholder {
     border-radius: 20px;
     max-width: 100%;
   }
-  .svg-line-chart-label {
-    font-weight: normal;
-  }
-  .svg-line-chart-point {
-    cursor: pointer;
-    fill: transparent;
-    stroke-width: 0;
-  }
-  .svg-line-chart-tooltip {
+  .ant-pagination {
     display: none;
-    transition: none;
-    width: 120px;
   }
-  .svg-line-chart-tooltip:last-of-type {
-    display: block;
+  .ant-table {
+    background: none;
+    color: white;
+
+    .ant-table-thead>tr>th {
+      background-color: steelblue;
+    }
+    .ant-table-tbody>tr.ant-table-row:hover>td, .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
   }
 }
 

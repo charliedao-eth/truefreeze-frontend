@@ -93,6 +93,9 @@ function Claim(props) {
   const renderNoClaim = () => (
     <div className="claim-page">
       <h2 className="claim-subtitle">No claim found for your address.</h2>
+      <a href="/app" className="white-button">
+        LAUNCH APP
+      </a>
     </div>
   );
 

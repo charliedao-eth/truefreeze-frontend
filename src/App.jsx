@@ -21,6 +21,8 @@ import gradientBgBlue from "./assets/gradientbgblue.png";
 import gradientBgGreen from "./assets/gradientbggreen.png";
 import gradientBgRed from "./assets/gradientbgred.png";
 
+export const DOCS_URL = "https://deepfreezellc.gitbook.io/true-freeze";
+
 ConfigProvider.config({
   theme: {
     primaryColor: "#00E6B5",
@@ -169,9 +171,11 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           </Menu.Item>
         </Menu>
         <div style={styles.headerRight}>
+          <a className="header-item" href={DOCS_URL}>
+            Docs
+          </a>
           <Chains supportedChainIds={supportedChainIds} />
           <Account />
-          {props?.location?.pathname}
         </div>
       </Header>
     );
@@ -181,7 +185,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     <Header style={styles.header}>
       <Logo />
       <div style={styles.headerRight}>
-        <a className="header-item" href="/docs">
+        <a className="header-item" href={DOCS_URL}>
           Docs
         </a>
         <a className="header-item" href="/app">
