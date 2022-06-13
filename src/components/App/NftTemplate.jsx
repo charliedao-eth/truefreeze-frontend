@@ -4,11 +4,21 @@ export default function NftTemplate({
   wrappedSymbol,
   wrappedAmount,
 }) {
-  const day = lockDate.getDate();
-  const month = lockDate.getMonth() + 1; // getMonth() returns month from 0 to 11
-  const year = lockDate.getFullYear();
+  const padSingleNum = (numStr) => (numStr + "")?.length === 1 ? "0" + numStr : numStr;
+  const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
-  const lockDateString = `${year}-${month}-${day}`;
+  const maturityDate = dateInXDays(parseInt(lockDuration));
+
+  const lockDay = lockDate.getDate();
+  const lockMonth = lockDate.getMonth() + 1; // getMonth() returns month from 0 to 11
+  const lockYear = lockDate.getFullYear();
+
+  const maturityDay = maturityDate.getDate();
+  const maturityMonth = maturityDate.getMonth() + 1; // getMonth() returns month from 0 to 11
+  const maturityYear = maturityDate.getFullYear();
+
+  const lockDateString = `${lockYear}-${padSingleNum(lockMonth)}-${padSingleNum(lockDay)}`;
+  const maturityDateString = `${maturityYear}-${padSingleNum(maturityMonth)}-${padSingleNum(maturityDay)}`;
 
   return (
     /* eslint-disable */
@@ -40,7 +50,7 @@ export default function NftTemplate({
           </linearGradient>
           <rect className="gradient-border" x="75" y="120" width="250" height="90" rx="20" transform="translate(0,0)" />
           <text textAnchor="middle" className="date-text" x="200" y="165">
-            {lockDuration}
+            {maturityDateString}
           </text>
           <text textAnchor="middle" className="date-label" x="200" y="200">
             Lock Duration

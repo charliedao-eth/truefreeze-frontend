@@ -5,9 +5,8 @@ import CustomNumberInput from "./CustomNumberInput";
 import lockIcon from "../../assets/lockicon.svg";
 import PageToolbar from "./PageToolbar";
 import NftTemplate from "./NftTemplate";
-import LineChart from "react-linechart";
-import "react-linechart/dist/styles.css";
 import { LoadingOutlined } from "@ant-design/icons";
+import React from "react";
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -26,7 +25,7 @@ function Lock(props) {
   const { checkThenAllowWrapped } = methods;
   const { wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
   const [isLocking, setIsLocking] = useState(false);
-  const [amountLocked, setAmountLocked] = useState(10);
+  const [amountLocked, setAmountLocked] = useState(1);
   const [timeLocked, setTimeLocked] = useState(30);
   const wrappedSymbol = tokenMetadata?.wrappedToken?.symbol || "";
 
@@ -80,8 +79,9 @@ function Lock(props) {
     }
   };
 
+  let isLoaded = true;
   if (!props.address && (!account || !isAuthenticated)) {
-    return <div className="appPageContent" />;
+    isLoaded = false;
   }
 
   return (
@@ -95,7 +95,7 @@ function Lock(props) {
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
-              <InputNumber className="small-input days-input" size="small" min={CONTRACT_MIN_DAYS} max={CONTRACT_MAX_DAYS} defaultValue={timeLocked} onChange={setTimeLocked} />
+              <InputNumber className="small-input days-input" controls={false} size="small" min={CONTRACT_MIN_DAYS} max={CONTRACT_MAX_DAYS} defaultValue={timeLocked} onChange={setTimeLocked} />
               <span className="white-text flex-half align-left p-l-1">DAYS</span>
             </div>
           </div>
@@ -121,12 +121,16 @@ function Lock(props) {
                 content: (
                   <div className="flex">
                     <div className="flex-half p-4">
-                      <h1>Confirm Choice</h1>
+                      <h1>Confirm Lock</h1>
                       <p>
-                        Please confirm the following information is correct before locking your freezer. Upon confirmation, the adjacent NFT will be minted to your wallet along
-                        with the number of {tokenMetadata?.frToken?.symbol} specified in the previous step.
+                        Locking {tokenMetadata?.wrappedToken?.symbol} will pay you {tokenMetadata?.frToken?.symbol} and mint a Certificate of Deposit Freezer NFT.
                       </p>
-                      <p>You can redeem the NFT to withdraw your {wrappedSymbol} from our freezer but be warned - withdrawing before the "Mature" date will incur a penalty.</p>
+                      <p className="m-t-1">
+                        Any Freezer NFT can be redeemed for its {tokenMetadata?.wrappedSymbol?.symbol} after the Maturity Date.
+                      </p>
+                      <p className="m-t-1">
+                        Early withdrawals before their Maturity Date incur variable {tokenMetadata?.frToken?.symbol} fees and a 0.25% {tokenMetadata?.wrappedSymbol?.symbol} penalty. See <a href="/docs">Docs</a> for more details.
+                      </p>
                     </div>
                     <div className="flex-half p-l-2">
                       {NftTemplate({
@@ -140,115 +144,27 @@ function Lock(props) {
                 ),
               })
             }
-            disabled={isLocking || !isInitialized || !amountLocked}
+            disabled={isLocking || !isLoaded || !amountLocked}
             loading={isLocking}
           >
-            Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol || <LoadingOutlined />}
+            {
+              isLoaded ? (
+                <React.Fragment>
+                  {
+                  wrappedSymbol ? (
+                    <React.Fragment>Lock {amountLocked?.toPrecision(4) / 1} {wrappedSymbol}</React.Fragment>
+                  ) :  (
+                    <LoadingOutlined />
+                  )}
+                </React.Fragment>
+              ) : "DISCONNECTED"
+            }
           </Button>
         </section>
         <section className="lock-chart flex-half">
-          <LockChart frTokenSymbol={tokenMetadata?.frToken?.symbol} daysLocked={timeLocked} frTokenAmount={ethToFrEthEarned(amountLocked, timeLocked)} />
+          
         </section>
       </div>
-    </div>
-  );
-}
-
-function getFrEthGain({ frTokenAmount, daysLocked, unlockDay }) {
-  const BREAK_EVEN = 0.67 * daysLocked;
-  const MIN_RETURN = -0.2 * frTokenAmount;
-  const MAX_RETURN = frTokenAmount;
-
-  const isProfitable = unlockDay >= BREAK_EVEN;
-  if (isProfitable) {
-    return MAX_RETURN * ((unlockDay - BREAK_EVEN) / (daysLocked - BREAK_EVEN));
-  } else {
-    return MIN_RETURN + (unlockDay / BREAK_EVEN) * (-1 * MIN_RETURN);
-  }
-}
-
-function LockChart({ frTokenAmount, daysLocked, frTokenSymbol = "frToken" }) {
-  // this thing is redrawing A LOT
-
-  /*
-  const data = [
-    {									
-      color: "red", 
-      points: [{x: 0, y: -0.2 * frTokenAmount}, {x: 0.67 * daysLocked, y: 0}]
-    },
-    {									
-      color: "steelblue", 
-      points: [{x: 0.67 * daysLocked, y: 0}, {x: daysLocked, y: frTokenAmount}]
-    },
-  ];
-  */
-
-  daysLocked = Math.floor(daysLocked);
-
-  if (daysLocked < 1 || frTokenAmount <= 0) {
-    return <div></div>;
-  }
-
-  const breakEvenDay = Math.floor(daysLocked * 0.67);
-  // todo force to integer
-  const lossPoints = new Array(breakEvenDay + 1)
-    .fill(0)
-    .map((_val, index) => index)
-    .map((unlockDay) => {
-      return {
-        x: unlockDay,
-        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay }),
-      };
-    });
-  const profitPoints = new Array(daysLocked - breakEvenDay + 1)
-    .fill(0)
-    .map((_val, index) => breakEvenDay + index)
-    .map((unlockDay) => {
-      return {
-        x: unlockDay,
-        y: getFrEthGain({ frTokenAmount, daysLocked, unlockDay }),
-      };
-    });
-
-  const data = [
-    {
-      color: "rgba(255,255,255,0.1)",
-      points: [
-        { x: 0, y: 0 },
-        { x: daysLocked, y: 0 },
-      ],
-    },
-    {
-      color: "red",
-      points: lossPoints,
-    },
-    {
-      color: "steelblue",
-      points: profitPoints,
-    },
-  ];
-
-  return (
-    <div>
-      <LineChart
-        width={400}
-        height={300}
-        data={data}
-        xMin={0}
-        xMax={daysLocked}
-        yMin={-0.2 * frTokenAmount}
-        yMax={frTokenAmount}
-        xLabel={"Days until you unlock"}
-        yLabel={frTokenSymbol + " gains"}
-        hideXAxis={false}
-        hideYAxis={false}
-        onPointHover={({ x, y }) => {
-          if (Math.abs(y) <= 0.001) {
-            return "Break-even (0 " + frTokenSymbol + ")";
-          }
-          return `Unlock in ${x} days: ${y?.toFixed(2)} ${frTokenSymbol}`;
-        }}
-      />
     </div>
   );
 }

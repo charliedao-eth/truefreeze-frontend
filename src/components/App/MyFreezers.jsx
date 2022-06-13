@@ -88,13 +88,13 @@ function MyFreezers(props) {
       return "error";
     }
   };
-  const fetchProgress = async (freezerNFT) => {
+  const fetchProgressAndImages = async (freezerNFT) => {
     if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
       console.error("Missing freezer tokenId. Cannot fetch unlock progress.");
       return 0.0;
     }
 
-    const options = {
+    const progressOptions = {
       contractAddress: contract.TrueFreezeGovernor.address,
       functionName: "getProgress",
       abi: contract.TrueFreezeGovernor.abi,
@@ -102,17 +102,28 @@ function MyFreezers(props) {
         tokenId: freezerNFT.token_id,
       },
     };
+    const metadataOptions = {
+      contractAddress: contract.nonFungiblePositionManager.address,
+      functionName: "tokenURI",
+      abi: contract.nonFungiblePositionManager.abi,
+      params: {
+        tokenId: freezerNFT.token_id,
+      },
+    };
 
     let progressAmount = 0.0;
+    let base64ImageString = "";
     try {
-      const freezerTransaction = await Moralis.executeFunction(options);
-      progressAmount = freezerTransaction.toString();
+      const freezerProgressTransaction = await Moralis.executeFunction(progressOptions);
+      progressAmount = freezerProgressTransaction.toString();
       progressAmount = Number(progressAmount).toFixed(1);
+      const freezerMetadataTransaction = await Moralis.executeFunction(metadataOptions);
+      base64ImageString = JSON.parse(window.atob((freezerMetadataTransaction?.toString()).split(",")?.[1]))?.image || null; // we're just decoding and ripping apart the metadata in one nasty step. i should be fired for this line
     } catch (err) {
       console.error(`Failed to fetch unlock progress for freezer: ${freezerNFT && freezerNFT.token_id}. ${err}`);
     }
 
-    return progressAmount;
+    return {progressAmount, base64ImageString, tokenId: freezerNFT.token_id};
   };
   const fetchUnlockCostAndFees = async (freezerNFT) => {
     if (!freezerNFT || (!freezerNFT.token_id && freezerNFT.token_id !== 0)) {
@@ -172,7 +183,7 @@ function MyFreezers(props) {
       <NFTBalance
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}
-        fetchProgress={fetchProgress}
+        fetchProgressAndImages={fetchProgressAndImages}
         fetchUnlockCostAndFees={fetchUnlockCostAndFees}
         className="page-scroll-container"
       />

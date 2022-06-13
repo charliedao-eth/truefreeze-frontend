@@ -181,7 +181,8 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     <Header style={styles.header}>
       <Logo />
       <div style={styles.headerRight}>
-        <a href="/app">Launch</a>
+        <a className="header-item" href="/docs">Docs</a>
+        <a className="header-item" href="/app">Launch</a>
         <Account />
       </div>
     </Header>
@@ -215,7 +216,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   }
 
   if ((!contract || isUnauthenticated) && shouldConnectWallet) {
-    return <DisconnectedWallet />;
+    if (!(window?.location?.href?.indexOf('/app') < 0 || window?.location?.href?.indexOf('/lock') < 0)) { // don't show this on the lock page
+      return <DisconnectedWallet />;
+    }
   }
 
   return (
@@ -269,7 +272,7 @@ export const PrefetchImages = () => (
   </div>
 );
 
-export const Logo = (url = "/") => (
+export const Logo = ({url = "/"}) => (
   <a href={url} className="tf-logo">
     <img src={logoSVG} />
   </a>

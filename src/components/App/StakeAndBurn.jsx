@@ -17,7 +17,7 @@ function StakeAndBurn(props) {
   const { contract, tokens } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
-  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, rewardTokens, tokenMetadata } = tokenData;
+  const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, frzStakedShare, rewardTokens, tokenMetadata } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
   const frTokenSymbol = tokenMetadata?.frToken?.symbol || "frToken";
   const frzSymbol = tokenMetadata?.FRZ?.symbol || "{frzSymbol}";
@@ -129,12 +129,12 @@ function StakeAndBurn(props) {
   function Burn() {
     return (
       <div>
-        <div className="text-align-center white-text">
+        <div className="font-16 text-align-center white-text">
           <div>
             Burn {frTokenSymbol} to earn {frzSymbol}. <b>Burnt {frTokenSymbol} is gone forever.</b>
           </div>
           <div>In exchange, you earn a flow of {frzSymbol}.</div>
-          <div>Staked {frzSymbol} will earn you a portion of early withdrawal fees paid by other users.</div>
+          <div>Staked {frzSymbol} will earn you a portion of early withdrawal fees.</div>
         </div>
         <div className="flex justify-center m-t-2">
           <section className="translucent-card flex-half m-r-2">
@@ -145,7 +145,7 @@ function StakeAndBurn(props) {
               <div className="choke-label">EARN</div>
               <div>
                 <span className="font-35">{frzSymbol}</span>
-                <span>&nbsp;flow forever</span>
+                <span>&nbsp;forever</span>
               </div>
             </div>
           </section>
@@ -179,9 +179,9 @@ function StakeAndBurn(props) {
   function Stake() {
     return (
       <div>
-        <div className="text-align-center white-text p-r-2 p-l-2">
+        <div className="font-16 text-align-center white-text p-r-2 p-l-2">
           <div>
-            By staking your {frzSymbol}, you will earn a portion of penalties paid by other users. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be
+            By staking your {frzSymbol}, you will earn a portion of withdrawal fees. These penalties are paid in {frTokenSymbol} and {wrappedSymbol} and can be
             claimed on the 'REWARDS' tab.
           </div>
         </div>
@@ -193,7 +193,7 @@ function StakeAndBurn(props) {
             <h3 className="card-title m-t-1">UNSTAKE</h3>
             <CurrencyAmountAction label="AMOUNT" ActionButton={unstakeButton} />
           </section>
-          <section className="transparent-card taller flex-half two-value-card">
+          <section className="transparent-card taller flex-half">
             <div>
               <div>
                 <span className="font-35">{frzStaked ? parseFloat(frzStaked)?.toFixed(2) : "--"}</span>
@@ -207,6 +207,13 @@ function StakeAndBurn(props) {
                 <span className="p-l-1">{frzSymbol}</span>
               </div>
               <div>Total Staked</div>
+            </div>
+            <div>
+              <div>
+                <span className="font-35">{frzStakedShare ? frzStakedShare : "-- %"}</span>
+                <span className="p-l-1">{frzSymbol}</span>
+              </div>
+              <div>% Stake Share</div>
             </div>
             {/* penalty data is not simple to retrieve at this time
             <div>
@@ -249,7 +256,7 @@ function StakeAndBurn(props) {
 
     return (
       <div className="claim-tab text-align-center">
-        <div className="white-text p-r-2 p-l-2">
+        <div className="font-16 white-text p-r-2 p-l-2">
           <div>
             Claim the fees you've earned from staking your {frzSymbol} or burning your {frTokenSymbol}. Claim separately or all at once.
           </div>

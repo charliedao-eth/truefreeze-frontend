@@ -20,9 +20,6 @@ const styles = {
     backgroundColor: "rgb(244, 244, 244)",
     cursor: "pointer",
   },
-  text: {
-    color: "#21BF96",
-  },
   connector: {
     alignItems: "center",
     display: "flex",
@@ -52,7 +49,7 @@ function Account() {
     return (
       <>
         <div onClick={() => setIsAuthModalVisible(true)}>
-          <p style={styles.text}>Connect wallet</p>
+          <p className={`header-item ${(!isAuthenticated || !account) ? "pulsing wallet-disconnected" : "wallet-connected"}`}>Connect wallet</p>
         </div>
         <Modal
           visible={isAuthModalVisible}

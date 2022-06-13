@@ -31,6 +31,21 @@ export default function useToken({ contract }) {
   })();
   const [frzStaked, setFrzStaked] = useState("");
   const [frzTotalStaked, setFrzTotalStaked] = useState("");
+  const frzStakedShare = (() => {
+    if (frTokenBurnt && frTokenTotalBurnt) {
+      try {
+        const yourStaked = parseFloat(frzStaked);
+        const totalStaked = parseFloat(frzTotalStaked) || 0.0000000000001; // prevent divide by zero
+        const percentShare = (yourStaked / totalStaked) * 100;
+
+        return percentShare >= 0 ? percentShare.toFixed(4) : "";
+      } catch (err) {
+        console.error("Error. Could not calculate FRZ staked share: ");
+        console.error(err);
+      }
+    }
+    return "";
+  })();
   // TODO \/ this data is not simple to retrieve. do it later
   // const [frTokenTotalPenalities, setFrTokenTotalPenalities] = useState("");
   // const [wrappedTokenTotalPenalities, setWrappedTokenTotalPenalities] = useState("");
@@ -89,20 +104,6 @@ export default function useToken({ contract }) {
     return await Moralis.executeFunction(options);
   };
 
-  /*
-  DONE wrappedTokenBalance
-
-  frTokenBurnt
-  frTokenTotalBurnt
-  frzFlowShare
-  
-  frzStaked
-  frzTotalStaked
-  
-  frTokenTotalPenalities
-  wrappedTokenTotalPenalities
-
-  */
   const _frTokenBurnt = async ({ contract, account }) => {
     const options = {
       contractAddress: contract.frTokenStaking.address,
@@ -371,6 +372,7 @@ export default function useToken({ contract }) {
       frzFlowShare,
       frzStaked,
       frzTotalStaked,
+      frzStakedShare,
       rewardTokens,
       tokenMetadata,
     },

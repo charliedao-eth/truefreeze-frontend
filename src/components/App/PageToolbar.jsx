@@ -12,7 +12,7 @@ export default function PageToolbar(props) {
           <div>
             <b>WALLET</b>
           </div>
-          <div>0x...{account?.substring(account?.length - 4, account?.length)}</div>
+          <div>{account ? ("0x..." + account?.substring(account?.length - 4, account?.length)) : "--"}</div>
         </div>
         <div>
           <div>
@@ -25,7 +25,7 @@ export default function PageToolbar(props) {
       <div className="curriencies inline-flex flex-align--right">
         <div className="frToken-holdings m-r-1">
           <div>
-            <b>{tokenMetadata?.frToken?.symbol || "--"}</b>
+            <b>{tokenMetadata?.frToken?.symbol || "FRTOKEN"}</b>
           </div>
           <div>{frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}</div>
         </div>
