@@ -111,12 +111,7 @@ function Lock(props) {
       costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, timeLocked * 0.67),
       costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, timeLocked * 0.75),
     ];
-    const wethPenalties = [
-      0.0025 * amountLocked,
-      0.0025 * amountLocked,
-      0.0025 * amountLocked,
-      0.0025 * amountLocked,
-    ];
+    const wethPenalties = [0.0025 * amountLocked, 0.0025 * amountLocked, 0.0025 * amountLocked, 0.0025 * amountLocked];
 
     const dataSource = [
       {
