@@ -84,10 +84,11 @@ function Lock(props) {
 
   function renderHelpfulTable() {
     const padSingleNum = (numStr) => ((numStr + "")?.length === 1 ? "0" + numStr : numStr);
-    const tinyNum = (num, digitz = 2) => (num?.toFixed?.(digitz) / 1) || num;
+    const tinyNum = (num, digitz = 2) => num?.toFixed?.(digitz) / 1 || num;
     const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
-    const generateDateStringInXDays = (days) => { // use a number, this ain't typescripe
+    const generateDateStringInXDays = (days) => {
+      // use a number, this ain't typescripe
       days = parseInt(days);
       const date = dateInXDays(days);
       const day = date.getDate();
@@ -96,10 +97,10 @@ function Lock(props) {
 
       const dateString = `${year}-${padSingleNum(month)}-${padSingleNum(day)}`;
       return dateString;
-    }
+    };
 
     const lockDateString = generateDateStringInXDays(0);
-    const fittyDateString = generateDateStringInXDays(timeLocked * 0.50);
+    const fittyDateString = generateDateStringInXDays(timeLocked * 0.5);
     const breakevenDateString = generateDateStringInXDays(timeLocked * 0.67);
     const seventyFiveDateString = generateDateStringInXDays(timeLocked * 0.75);
     const maturityDateString = generateDateStringInXDays(timeLocked);
@@ -116,7 +117,7 @@ function Lock(props) {
         key: "1",
         progress: "50%",
         date: fittyDateString,
-        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.50)),
+        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.5)),
         wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
       },
       {
@@ -142,7 +143,7 @@ function Lock(props) {
       },
     ];
 
-    const columns = [ 
+    const columns = [
       {
         title: "Progress",
         dataIndex: "progress",
