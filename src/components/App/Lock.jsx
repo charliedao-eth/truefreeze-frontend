@@ -84,58 +84,70 @@ function Lock(props) {
 
   function renderHelpfulTable() {
     const padSingleNum = (numStr) => ((numStr + "")?.length === 1 ? "0" + numStr : numStr);
+    const tinyNum = (num, digitz = 2) => (num?.toFixed?.(digitz) / 1) || num;
     const dateInXDays = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 
-    const lockDate = new Date(); // today
-    const breakevenDate = dateInXDays(parseInt(timeLocked) * 0.667);
-    const maturityDate = dateInXDays(parseInt(timeLocked));
+    const generateDateStringInXDays = (days) => { // use a number, this ain't typescripe
+      days = parseInt(days);
+      const date = dateInXDays(days);
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // getMonth() returns month from 0 to 11
+      const year = date.getFullYear();
 
-    const lockDay = lockDate.getDate();
-    const lockMonth = lockDate.getMonth() + 1; // getMonth() returns month from 0 to 11
-    const lockYear = lockDate.getFullYear();
+      const dateString = `${year}-${padSingleNum(month)}-${padSingleNum(day)}`;
+      return dateString;
+    }
 
-    const breakevenDay = breakevenDate.getDate();
-    const breakevenMonth = breakevenDate.getMonth() + 1; // getMonth() returns month from 0 to 11
-    const breakevenYear = breakevenDate.getFullYear();
+    const lockDateString = generateDateStringInXDays(0);
+    const fittyDateString = generateDateStringInXDays(timeLocked * 0.50);
+    const breakevenDateString = generateDateStringInXDays(timeLocked * 0.67);
+    const seventyFiveDateString = generateDateStringInXDays(timeLocked * 0.75);
+    const maturityDateString = generateDateStringInXDays(timeLocked);
 
-    const maturityDay = maturityDate.getDate();
-    const maturityMonth = maturityDate.getMonth() + 1; // getMonth() returns month from 0 to 11
-    const maturityYear = maturityDate.getFullYear();
-
-    const lockDateString = `${lockYear}-${padSingleNum(lockMonth)}-${padSingleNum(lockDay)}`;
-    const breakevenDateString = `${breakevenYear}-${padSingleNum(breakevenMonth)}-${padSingleNum(breakevenDay)}`;
-    const maturityDateString = `${maturityYear}-${padSingleNum(maturityMonth)}-${padSingleNum(maturityDay)}`;
-
-    /*
-    Date | frETH Fee | WETH Penalty 
-    (Today) YYYY-MM-DD | 120 frETH | 0.25% WETH
-    (2/3rds of way) YYYY-MM-DD | 100 frETH | 0.25% WETH 
-    Maturity Date YYYY-MM-DD | 0 frETH | 0% WETH
-  
-  
-    */
     const dataSource = [
       {
         key: "0",
-        date: `(Today) ${lockDateString}`,
-        frTokenFee: costToWithdraw(amountLocked, timeLocked, 0),
-        wrappedPenalty: `${(0.0025 * amountLocked)?.toFixed(2) / 1} ${wrappedSymbol} (0.25%)`,
+        progress: "0%",
+        date: lockDateString,
+        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, 0)),
+        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
       },
       {
         key: "1",
-        date: `(2/3ds of way) ${breakevenDateString}`,
-        frTokenFee: costToWithdraw(amountLocked, timeLocked, timeLocked * 0.67),
-        wrappedPenalty: `${(0.0025 * amountLocked)?.toFixed(2) / 1} ${wrappedSymbol} (0.25%)`,
+        progress: "50%",
+        date: fittyDateString,
+        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.50)),
+        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
       },
       {
         key: "2",
-        date: `Maturity date ${maturityDateString}`,
+        progress: "67%",
+        date: breakevenDateString,
+        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.67)),
+        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+      },
+      {
+        key: "3",
+        progress: "75%",
+        date: seventyFiveDateString,
+        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.75)),
+        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+      },
+      {
+        key: "4",
+        progress: "100%",
+        date: maturityDateString,
         frTokenFee: 0,
         wrappedPenalty: `0 ${wrappedSymbol}`,
       },
     ];
 
-    const columns = [
+    const columns = [ 
+      {
+        title: "Progress",
+        dataIndex: "progress",
+        key: "progress",
+      },
       {
         title: "Date",
         dataIndex: "date",
@@ -147,7 +159,7 @@ function Lock(props) {
         key: "frTokenFee",
       },
       {
-        title: `${wrappedSymbol} Penalty`,
+        title: `${wrappedSymbol} Penalty (0.25%)`,
         dataIndex: "wrappedPenalty",
         key: "wrappedPenalty",
       },
