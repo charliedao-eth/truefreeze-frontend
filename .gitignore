@@ -27,6 +27,8 @@ yarn-error.log*
 
 node_modules
 .env
+.env*
+wrangler_old_dev.toml
 coverage
 coverage.json
 typechain
