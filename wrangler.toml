@@ -12,3 +12,8 @@ bucket = "./build"
 
 [build]
     command = "yarn run build"
+
+[vars]
+REACT_APP_MORALIS_APPLICATION_ID = "CBpJYHbr7dwiMXGkqly8I4LFNtkZU0weADUP3UrF"
+REACT_APP_MORALIS_SERVER_URL = "https://dcfjavlowgmp.usemoralis.com:2053/server"
+GENERATE_SOURCEMAP=true
