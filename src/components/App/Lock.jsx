@@ -105,34 +105,47 @@ function Lock(props) {
     const seventyFiveDateString = generateDateStringInXDays(timeLocked * 0.75);
     const maturityDateString = generateDateStringInXDays(timeLocked);
 
+    const frTokenFees = [
+      costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, 0),
+      costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, timeLocked * 0.5),
+      costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, timeLocked * 0.67),
+      costToWithdraw(ethToFrEthEarned(amountLocked, timeLocked), timeLocked, timeLocked * 0.75),
+    ];
+    const wethPenalties = [
+      0.0025 * amountLocked,
+      0.0025 * amountLocked,
+      0.0025 * amountLocked,
+      0.0025 * amountLocked,
+    ];
+
     const dataSource = [
       {
         key: "0",
         progress: "0%",
         date: lockDateString,
-        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, 0)),
-        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+        frTokenFee: tinyNum(frTokenFees[0]),
+        wrappedPenalty: `${tinyNum(wethPenalties[0])} ${wrappedSymbol}`,
       },
       {
         key: "1",
         progress: "50%",
         date: fittyDateString,
-        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.5)),
-        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+        frTokenFee: tinyNum(frTokenFees[1]),
+        wrappedPenalty: `${tinyNum(wethPenalties[1])} ${wrappedSymbol}`,
       },
       {
         key: "2",
         progress: "67%",
         date: breakevenDateString,
-        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.67)),
-        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+        frTokenFee: tinyNum(frTokenFees[2]),
+        wrappedPenalty: `${tinyNum(wethPenalties[2])} ${wrappedSymbol}`,
       },
       {
         key: "3",
         progress: "75%",
         date: seventyFiveDateString,
-        frTokenFee: tinyNum(costToWithdraw(amountLocked, timeLocked, timeLocked * 0.75)),
-        wrappedPenalty: `${tinyNum(0.0025 * amountLocked)} ${wrappedSymbol}`,
+        frTokenFee: tinyNum(frTokenFees[3]),
+        wrappedPenalty: `${tinyNum(wethPenalties[3])} ${wrappedSymbol}`,
       },
       {
         key: "4",
