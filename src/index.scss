@@ -208,10 +208,22 @@ select {
 }
 
 .ant-layout-footer.footer {
+  align-items: center;
   background: none;
   display: flex;
+  flex-direction: column;
+  gap: 1em;
   justify-content: center;
   text-align: center;
+  
+  .footer-links {
+    display: flex;
+    gap: 1em;
+
+    .footer-item {
+      font-weight: 400;
+    }
+  }
 
   .tf-logo {
     max-width: 200px;
@@ -453,7 +465,7 @@ p.m-t-1 {
     }
   }
 
-  .header-item {
+  .header-item, .footer-item {
     color: #27f2bf;
     font-size: 18px;
     font-weight: 600;

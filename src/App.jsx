@@ -22,6 +22,9 @@ import gradientBgGreen from "./assets/gradientbggreen.png";
 import gradientBgRed from "./assets/gradientbgred.png";
 
 export const DOCS_URL = "https://deepfreezellc.gitbook.io/true-freeze";
+export const FAQS_URL = "https://deepfreezellc.gitbook.io/true-freeze/faqs";
+export const AUDIT_URL = "https://deepfreezellc.gitbook.io/true-freeze/key-info/audited-by-solidity.finance";
+export const LIQUIDITY_URL = "https://curve.fi/factory-crypto/65";
 
 ConfigProvider.config({
   theme: {
@@ -148,6 +151,17 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           {props.useFooter !== false && (
             <Footer className="footer slow-show">
               <Logo url="/app" />
+              <div className="footer-links">
+                <a className="footer-item" href={FAQS_URL} rel="noreferrer" target="_blank">
+                  FAQs
+                </a>
+                <a className="footer-item" href={AUDIT_URL} rel="noreferrer" target="_blank">
+                  Audit
+                </a>
+                <a className="footer-item" href={LIQUIDITY_URL} rel="noreferrer" target="_blank">
+                  Liquidity
+                </a>
+              </div>
             </Footer>
           )}
         </Fragment>
@@ -171,6 +185,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           </Menu.Item>
         </Menu>
         <div style={styles.headerRight}>
+          <a className="header-item" href={"/claim"}>
+            Claim
+          </a>
           <a className="header-item" href={DOCS_URL}>
             Docs
           </a>
@@ -185,6 +202,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
     <Header style={styles.header}>
       <Logo />
       <div style={styles.headerRight}>
+        <a className="header-item" href={"/claim"}>
+          Claim
+        </a>
         <a className="header-item" href={DOCS_URL}>
           Docs
         </a>

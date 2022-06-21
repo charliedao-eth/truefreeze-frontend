@@ -4,7 +4,7 @@ main = "./site-worker.js"
 compatibility_date = "2022-05-06"
 
 kv_namespaces = [
-    { binding = "MERKLE", id = "fe4dccc804044f4ea43f91c58db82e4b" }
+    { binding = "MERKLE", id = "fe4dccc804044f4ea43f91c58db82e4b", preview_id = "2b91cd119e064fccb2633cd949ea7107" }
 ]
 
 [site]
