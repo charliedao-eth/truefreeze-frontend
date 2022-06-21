@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@craco/craco": "^6.4.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -24,10 +25,10 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=true react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "GENERATE_SOURCEMAP=true craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "connect": "moralis-admin-cli connect-local-devchain",
     "watch:events": "moralis-admin-cli add-contract",
     "lint:check": "eslint .",
