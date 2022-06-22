@@ -162,7 +162,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
                   Liquidity
                 </a>
               </div>
-              <a href="/compatibility" className="legalese">Having trouble? Try compatibility mode.</a>
+              <a href="/compatibility" className="legalese">
+                Having trouble? Try compatibility mode.
+              </a>
             </Footer>
           )}
         </Fragment>
@@ -259,7 +261,9 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
           <Switch>
             <Route exact path="/compatibility">
               <div className="compatibility-mode p-1">
-                <a href="/app"><CaretLeftFilled/> Exit compatibility mode</a>
+                <a href="/app">
+                  <CaretLeftFilled /> Exit compatibility mode
+                </a>
                 <h2>Lock</h2>
                 <Lock tokens={tokens} contract={contract} compatibilityMode={true} />
                 <h2>My Freezers</h2>

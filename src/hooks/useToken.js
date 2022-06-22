@@ -350,8 +350,8 @@ export default function useToken({ contract }) {
       FRZ: tokenMetadataResults?.[1],
       wrappedToken: tokenMetadataResults?.[2],
     };
-    tokenMetadataResults.FRZ = {...tokenMetadataResults.FRZ, address: contract?.FRZ?.address}
-    tokenMetadataResults.frToken = {...tokenMetadataResults.frToken, address: contract?.frToken?.address}
+    tokenMetadataResults.FRZ = { ...tokenMetadataResults.FRZ, address: contract?.FRZ?.address };
+    tokenMetadataResults.frToken = { ...tokenMetadataResults.frToken, address: contract?.frToken?.address };
     tokenMetadataResults.wrappedToken = { ...tokenMetadataResults.wrappedToken, address: wrappedTokenMetadata?.tokenAddress };
     setRewardTokens(rewardTokenResults); // [] indicates failure or no data
     setTokenMetadata(tokenMetadataResults || null);

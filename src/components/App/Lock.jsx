@@ -21,7 +21,7 @@ const CONTRACT_MAX_DAYS = 1100;
  */
 
 function Lock(props) {
-  const { contract, tokens, compatibilityMode:CM = false } = props;
+  const { contract, tokens, compatibilityMode: CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { methods } = tokens;
   const { checkThenAllowWrapped } = methods;
@@ -269,11 +269,11 @@ function Lock(props) {
             )}
           </Button>
         </section>
-        {
-          !CM && (<section className="lock-chart flex-half">
+        {!CM && (
+          <section className="lock-chart flex-half">
             <ErrorBoundary fallback={<WarningTwoTone />}>{renderHelpfulTable()}</ErrorBoundary>
-          </section>)
-        }
+          </section>
+        )}
       </div>
     </div>
   );

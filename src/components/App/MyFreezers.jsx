@@ -11,7 +11,7 @@ import PageToolbar from "./PageToolbar";
  */
 
 function MyFreezers(props) {
-  const { contract, tokens, compatibilityMode:CM = false } = props;
+  const { contract, tokens, compatibilityMode: CM = false } = props;
   const { Moralis, account, isAuthenticated, chainId } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { tokenMetadata } = tokenData;
@@ -184,7 +184,14 @@ function MyFreezers(props) {
         className="page-scroll-container"
       />
       <div className="m-t-1 flex justify-center">
-        <a className="white-button" rel="noreferrer" target={"_blank"} href={`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${contract.nonFungiblePositionManager.address?.toLowerCase()}`}>BUY FREEZER ON MARKETPLACE</a>
+        <a
+          className="white-button"
+          rel="noreferrer"
+          target={"_blank"}
+          href={`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${contract.nonFungiblePositionManager.address?.toLowerCase()}`}
+        >
+          BUY FREEZER ON MARKETPLACE
+        </a>
       </div>
     </div>
   );

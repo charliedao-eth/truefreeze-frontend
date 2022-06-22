@@ -10,7 +10,7 @@ import claimImage from "../../assets/claim_image.png";
  */
 
 function Claim(props) {
-  const { contract, compatibilityMode:CM = false } = props;
+  const { contract, compatibilityMode: CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const [alreadyClaimed, setAlreadyClaimed] = useState(null);
   const [isClaiming, setIsClaiming] = useState(false);

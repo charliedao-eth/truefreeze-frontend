@@ -14,7 +14,7 @@ import { Loading3QuartersOutlined } from "@ant-design/icons";
 const { TabPane } = Tabs;
 
 function StakeAndBurn(props) {
-  const { contract, tokens, compatibilityMode:CM = false } = props;
+  const { contract, tokens, compatibilityMode: CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, frzStakedShare, rewardTokens, tokenMetadata } = tokenData;

@@ -1,9 +1,8 @@
 import { useMoralis } from "react-moralis";
-import {message} from "antd";
+import { message } from "antd";
 import frethIcon from "../../assets/frethicon.png";
 import frzIcon from "../../assets/frzicon.png";
 import ethIcon from "../../assets/ethicon.png";
-
 
 export default function PageToolbar(props) {
   const { tokens } = props;
@@ -14,22 +13,22 @@ export default function PageToolbar(props) {
   const frzSymbol = tokenMetadata?.FRZ?.symbol;
   const frTokenSymbol = tokenMetadata?.frToken?.symbol;
 
-  const addTokenToWallet = async ({address, symbol, decimals = 18, image}) => {
+  const addTokenToWallet = async ({ address, symbol, decimals = 18, image }) => {
     try {
       const addSuccess = await window?.ethereum?.request({
-        method: 'wallet_watchAsset',
+        method: "wallet_watchAsset",
         params: {
-          type: 'ERC20',
+          type: "ERC20",
           options: {
             address,
             symbol,
             decimals,
             image,
-          }
-        }
+          },
+        },
       });
 
-      if(addSuccess) {
+      if (addSuccess) {
         message.success({
           content: symbol + " added to your wallet.",
           duration: 3,
@@ -48,9 +47,9 @@ export default function PageToolbar(props) {
     }
   };
 
-  const addFrTokenToWallet = () => addTokenToWallet({address: tokenMetadata?.frToken?.address, symbol: frTokenSymbol, image: frethIcon});
-  const addFRZToWallet = () => addTokenToWallet({address: tokenMetadata?.FRZ?.address, symbol: frzSymbol, image: frzIcon});
-  const addWrappedToWallet = () => addTokenToWallet({address: tokenMetadata?.wrappedToken?.address, symbol: wrappedSymbol, image: ethIcon});
+  const addFrTokenToWallet = () => addTokenToWallet({ address: tokenMetadata?.frToken?.address, symbol: frTokenSymbol, image: frethIcon });
+  const addFRZToWallet = () => addTokenToWallet({ address: tokenMetadata?.FRZ?.address, symbol: frzSymbol, image: frzIcon });
+  const addWrappedToWallet = () => addTokenToWallet({ address: tokenMetadata?.wrappedToken?.address, symbol: wrappedSymbol, image: ethIcon });
 
   return (
     <section className="page-toolbar white-text m-b-1">
