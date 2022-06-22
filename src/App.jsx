@@ -265,8 +265,8 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
                   <CaretLeftFilled /> Exit compatibility mode
                 </a>
                 <div className="flex space-between m-b-1 m-t-1">
-                  <Account />
                   <Chains supportedChainIds={supportedChainIds} />
+                  <Account />
                 </div>
                 <h2>Lock</h2>
                 <Lock tokens={tokens} contract={contract} compatibilityMode={true} />
