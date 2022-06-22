@@ -1,5 +1,6 @@
 import { useMoralis } from "react-moralis";
 import { message } from "antd";
+import { getChainName } from "helpers/networks";
 import NFTBalance from "components/NFTBalance";
 import PageToolbar from "./PageToolbar";
 
@@ -10,8 +11,8 @@ import PageToolbar from "./PageToolbar";
  */
 
 function MyFreezers(props) {
-  const { contract, tokens } = props;
-  const { Moralis, account, isAuthenticated } = useMoralis();
+  const { contract, tokens, compatibilityMode:CM = false } = props;
+  const { Moralis, account, isAuthenticated, chainId } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { tokenMetadata } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
@@ -174,12 +175,7 @@ function MyFreezers(props) {
 
   return (
     <div className="appPageContent myfreezers">
-      <PageToolbar tokens={tokens}>
-        {/*TODO <div className="sorting inline-flex space-between center notReady">
-          <span className="m-r-1">TIME</span>
-          <span>ETH</span>
-        </div>*/}
-      </PageToolbar>
+      {!CM && <PageToolbar tokens={tokens} />}
       <NFTBalance
         filterByContractAddress={contract.nonFungiblePositionManager.address}
         unlockFreezer={unlockFreezer}
@@ -187,6 +183,9 @@ function MyFreezers(props) {
         fetchUnlockCostAndFees={fetchUnlockCostAndFees}
         className="page-scroll-container"
       />
+      <div className="m-t-1 flex justify-center">
+        <a className="white-button" rel="noreferrer" target={"_blank"} href={`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${contract.nonFungiblePositionManager.address?.toLowerCase()}`}>BUY FREEZER ON MARKETPLACE</a>
+      </div>
     </div>
   );
 }

@@ -21,7 +21,7 @@ const CONTRACT_MAX_DAYS = 1100;
  */
 
 function Lock(props) {
-  const { contract, tokens } = props;
+  const { contract, tokens, compatibilityMode:CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { methods } = tokens;
   const { checkThenAllowWrapped } = methods;
@@ -187,7 +187,7 @@ function Lock(props) {
   return (
     <div className="appPageContent lock-page">
       <PageToolbar tokens={tokens} />
-      <div className="flex justify-center m-t-2">
+      <div className="flex justify-center m-t-2 cm--flex-column">
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
@@ -269,9 +269,11 @@ function Lock(props) {
             )}
           </Button>
         </section>
-        <section className="lock-chart flex-half">
-          <ErrorBoundary fallback={<WarningTwoTone />}>{renderHelpfulTable()}</ErrorBoundary>
-        </section>
+        {
+          !CM && (<section className="lock-chart flex-half">
+            <ErrorBoundary fallback={<WarningTwoTone />}>{renderHelpfulTable()}</ErrorBoundary>
+          </section>)
+        }
       </div>
     </div>
   );

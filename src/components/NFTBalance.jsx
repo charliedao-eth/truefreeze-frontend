@@ -138,9 +138,9 @@ function NFTBalance({ filterByContractAddress = "", fetchProgressAndImages, fetc
         hoverable
         actions={[
           <Tooltip title="View On Marketplace">
-            <EyeOutlined onClick={() => window.open(`https://app.nft.org/${getChainName(chainId)}/buy?contractId=${nft.token_address}`, "_blank")} />
+            <EyeOutlined onClick={() => window.open(`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${nft.token_address?.toLowerCase()}`, "_blank")} />
           </Tooltip>,
-          <Tooltip title="Sell NFT" onClick={() => window.open(`https://app.nft.org/${getChainName(chainId)}/nft/${nft.token_address}/${nft.token_id}`, "_blank")}>
+          <Tooltip title="Sell NFT" onClick={() => window.open(`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/nft/${nft.token_address?.toLowerCase()}/${nft.token_id}`, "_blank")}>
             <ShoppingCartOutlined />
             &nbsp;SELL
           </Tooltip>,

@@ -13,7 +13,7 @@ import MyFreezers from "components/App/MyFreezers";
 import StakeAndBurn from "components/App/StakeAndBurn";
 
 import { Layout, Menu, ConfigProvider, message, Skeleton, Button } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { CaretLeftFilled, CloseOutlined } from "@ant-design/icons";
 import "antd/dist/antd.variable.min.css";
 const { Header, Footer } = Layout;
 import logoSVG from "./assets/truefreezelogo.svg";
@@ -162,6 +162,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
                   Liquidity
                 </a>
               </div>
+              <a href="/compatibility" className="legalese">Having trouble? Try compatibility mode.</a>
             </Footer>
           )}
         </Fragment>
@@ -256,6 +257,18 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
       <Layout style={{ height: "100vh", overflow: "auto" }} className="truefreeze gradient-bg">
         <Router>
           <Switch>
+            <Route exact path="/compatibility">
+              <div className="compatibility-mode p-1">
+                <a href="/app"><CaretLeftFilled/> Exit compatibility mode</a>
+                <h2>Lock</h2>
+                <Lock tokens={tokens} contract={contract} compatibilityMode={true} />
+                <h2>My Freezers</h2>
+                <MyFreezers tokens={tokens} contract={contract} compatibilityMode={true} />
+                <h2>Burn, stake, and rewards</h2>
+                <StakeAndBurn tokens={tokens} contract={contract} compatibilityMode={true} />
+                {isTokenDataInitialized && <Claim contract={contract} compatibilityMode={true} />}
+              </div>
+            </Route>
             <Route exact path="/landing">
               <WrapWithLayout useAppHeader={false}>
                 <Landing />

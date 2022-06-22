@@ -14,7 +14,7 @@ import { Loading3QuartersOutlined } from "@ant-design/icons";
 const { TabPane } = Tabs;
 
 function StakeAndBurn(props) {
-  const { contract, tokens } = props;
+  const { contract, tokens, compatibilityMode:CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, frzStakedShare, rewardTokens, tokenMetadata } = tokenData;
@@ -136,7 +136,7 @@ function StakeAndBurn(props) {
           <div>In exchange, you earn a flow of {frzSymbol}.</div>
           <div>Staked {frzSymbol} will earn you a portion of early withdrawal fees.</div>
         </div>
-        <div className="flex justify-center m-t-2">
+        <div className="flex justify-center m-t-2 cm--flex-column">
           <section className="translucent-card flex-half m-r-2">
             <img src={burnIcon} className="card-icon" />
             <h3 className="card-title">BURN</h3>
@@ -185,7 +185,7 @@ function StakeAndBurn(props) {
             'REWARDS' tab.
           </div>
         </div>
-        <div className="flex justify-center m-t-2">
+        <div className="flex justify-center m-t-2 cm--flex-column">
           <section className="translucent-card taller flex-half m-r-2">
             <img src={lockIcon} className="card-icon" />
             <h3 className="card-title">STAKE</h3>
@@ -261,7 +261,7 @@ function StakeAndBurn(props) {
             Claim the fees you've earned from staking your {frzSymbol} or burning your {frTokenSymbol}. Claim separately or all at once.
           </div>
         </div>
-        <div className="flex justify-center text-align-center m-t-2">
+        <div className="flex justify-center text-align-center m-t-2 cm--flex-column">
           <div className="transparent-card flex flex-row center">
             <div className="claim-row">
               <div className="transparent-card small">
@@ -316,6 +316,16 @@ function StakeAndBurn(props) {
     } else {
       document.querySelector(".gradient-bg")?.classList.add("gradient-bg-blue");
     }
+  }
+
+  if (CM) {
+    return (
+      <div className="appPageContent stakeandburn">
+        <Burn />
+        <Stake />
+        <ClaimRewards />
+      </div>
+    );
   }
 
   return (
