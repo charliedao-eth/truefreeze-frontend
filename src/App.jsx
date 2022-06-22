@@ -264,7 +264,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
                 <a href="/app">
                   <CaretLeftFilled /> Exit compatibility mode
                 </a>
-                <div className="flex space-between m-b-1">
+                <div className="flex space-between m-b-1 m-t-1">
                   <Account />
                   <Chains supportedChainIds={supportedChainIds} />
                 </div>
