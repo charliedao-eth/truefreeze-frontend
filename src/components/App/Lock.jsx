@@ -9,6 +9,7 @@ import { LoadingOutlined, WarningTwoTone } from "@ant-design/icons";
 import React from "react";
 import { DOCS_URL } from "App";
 import { ErrorBoundary } from "react-error-boundary";
+import { noScience } from "helpers/formatters";
 
 // Lock limits on UI
 const CONTRACT_MIN_DAYS = 1;
@@ -23,7 +24,7 @@ const CONTRACT_MAX_DAYS = 1100;
 function Lock(props) {
   const { contract, tokens, compatibilityMode: CM = false } = props;
   const { Moralis, account, isAuthenticated } = useMoralis();
-  const { methods } = tokens;
+  const { methods, isInitialized } = tokens;
   const { checkThenAllowWrapped } = methods;
   const { wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
   const [isLocking, setIsLocking] = useState(false);
@@ -43,7 +44,7 @@ function Lock(props) {
 
     setIsLocking(true);
 
-    amount = Moralis.Units.ETH(amount);
+    amount = Moralis.Units.ETH(noScience(amount));
 
     try {
       await checkThenAllowWrapped({
@@ -191,7 +192,7 @@ function Lock(props) {
         <section className="translucent-card tall flex-half m-r-2">
           <img src={lockIcon} className="card-icon" />
           <h3 className="card-title">Lock</h3>
-          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val) || "")} value={amountLocked} label="AMOUNT" />
+          <CustomNumberInput onAmountChange={(val) => setAmountLocked(parseFloat(val) || "")} value={amountLocked} label="AMOUNT" disabled={!isInitialized} title={isInitialized ? "" : "Please wait while token data loads"}/>
           <div>
             <div>TIME</div>
             <div className="inline-flex flex-row bottom">
@@ -203,6 +204,8 @@ function Lock(props) {
                 max={CONTRACT_MAX_DAYS}
                 defaultValue={timeLocked}
                 onChange={setTimeLocked}
+                disabled={!isInitialized}
+                title={isInitialized ? "" : "Please wait while token data loads"}
               />
               <span className="white-text flex-half align-left p-l-1">DAYS</span>
             </div>

@@ -48,8 +48,8 @@ function Account() {
   if (!isAuthenticated || !account) {
     return (
       <>
-        <div onClick={() => setIsAuthModalVisible(true)}>
-          <p className={`header-item ${!isAuthenticated || !account ? "pulsing wallet-disconnected" : "wallet-connected"}`}>Connect wallet</p>
+        <div className="header-item" onClick={() => setIsAuthModalVisible(true)}>
+          <p className={`${!isAuthenticated || !account ? "pulsing wallet-disconnected" : "wallet-connected"}`}>Connect wallet</p>
         </div>
         <Modal
           visible={isAuthModalVisible}

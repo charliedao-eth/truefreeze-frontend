@@ -133,18 +133,33 @@ function NFTBalance({ filterByContractAddress = "", fetchProgressAndImages, fetc
     const progressAmount = unlockProgress?.[nft.token_id]; // fancy way to say "access all these props/functions but return undefined if any are missing"
     const backupImage = imageBackups?.[nft?.token_id];
 
+    const nftCollectionUrl = `https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${nft.token_address?.toLowerCase()}`;
+    const nftTokenUrl = `https://app.nft.org/${getChainName(chainId?.toLowerCase())}/nft/${nft.token_address?.toLowerCase()}/${nft.token_id}`;
+    
+    // example metadata shape: { ..., "attributes": [{"trait_type": "Amount locked", "value":1.00},{"display_type": "date", "trait_type": "Locking date", "value":1655749277},{"display_type": "date", "trait_type": "Maturity date", "value":1750789277}]}' }
+    const lockDateObj = nft?.metadata?.attributes?.find((attribute) => attribute?.["trait_type"] === "Locking date");
+    let isNewlyMinted = false;
+    if (lockDateObj) {
+      const lockDate = new Date(lockDateObj?.value); // this is in seconds, not ms
+      const SINGLE_DAY_IN_MS = 1 * 24 * 60 * 60 * 1000;
+      if (lockDate && (Date.now() - (lockDate * 1000)  <  SINGLE_DAY_IN_MS)) { // is it less than a day old?
+        isNewlyMinted = true;
+      }
+    }
+    const sellUrl = isNewlyMinted ? nftCollectionUrl : nftTokenUrl; // new NFTs are not yet indexed by nft.org so we redirect to the general collection
+
     return (
       <Card
         hoverable
         actions={[
           <Tooltip title="View On Marketplace">
             <EyeOutlined
-              onClick={() => window.open(`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${nft.token_address?.toLowerCase()}`, "_blank")}
+              onClick={() => window.open(nftCollectionUrl, "_blank")}
             />
           </Tooltip>,
           <Tooltip
             title="Sell NFT"
-            onClick={() => window.open(`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/nft/${nft.token_address?.toLowerCase()}/${nft.token_id}`, "_blank")}
+            onClick={() => window.open(sellUrl, "_blank")}
           >
             <ShoppingCartOutlined />
             &nbsp;SELL

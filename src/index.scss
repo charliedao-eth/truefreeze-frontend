@@ -229,6 +229,7 @@ select {
     max-width: 200px;
 
     img {
+      min-width: 80px;
       max-width: 100%;
     }
   }
@@ -465,6 +466,24 @@ p.m-t-1 {
     }
   }
 
+  .tf-header {
+    align-items: center;
+    background: none;
+    border-bottom: 1px solid #FFFFFF;
+    display: flex;
+    gap: 20px;
+    height: 125px;
+    justify-content: space-around;
+    padding: 40px 20px 20px 20px;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+
+    .tf-logo {
+      min-width: 80px;
+    }
+  }
+
   .header-item, .footer-item {
     color: #27f2bf;
     font-size: 18px;
@@ -475,8 +494,13 @@ p.m-t-1 {
       cursor: pointer;
     }
 
-    &.wallet-disconnected {
+    .wallet-disconnected {
       color: darken(#27f2bf, 5%);
+      line-height: 1.5em;
+      min-height: 64px; // this is a fragile, crappy fix
+      text-align: center;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -549,6 +573,14 @@ p.m-t-1 {
 
     &:hover {
       color: #BBBBBB;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .truefreeze {
+    .header-item {
+      font-size: 14px;
     }
   }
 }

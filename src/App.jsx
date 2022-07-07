@@ -44,18 +44,6 @@ const styles = {
     marginTop: "130px",
     padding: "10px",
   },
-  header: {
-    position: "fixed",
-    zIndex: 1,
-    width: "100%",
-    height: "125px",
-    background: "none",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottom: "1px solid #FFFFFF",
-    padding: "40px 100px 20px 100px",
-  },
   headerRight: {
     display: "flex",
     gap: "20px",
@@ -174,7 +162,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
 
   const AppHeader = (props) => {
     return (
-      <Header style={styles.header}>
+      <Header className="tf-header">
         <Logo />
         <Menu mode="horizontal" selectedKeys={props.selectedNav} style={styles.navbar}>
           <Menu.Item key="lock">
@@ -202,7 +190,7 @@ const App = ({ IS_PRODUCTION_MODE = true }) => {
   };
 
   const GenericHeader = () => (
-    <Header style={styles.header}>
+    <Header className="tf-header">
       <Logo />
       <div style={styles.headerRight}>
         <a className="header-item" href={"/claim"}>
