@@ -16,7 +16,7 @@ export const c2 = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 2,
 });
 
-export const noScience = (num) => num.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 }); // avoids scientific notation when long decimals call .toString
+export const noScience = (num) => num.toLocaleString("en-US", { useGrouping: false, maximumFractionDigits: 20 }); // avoids scientific notation when long decimals call .toString
 
 /**
  * Returns a string of form "abc...xyz"
