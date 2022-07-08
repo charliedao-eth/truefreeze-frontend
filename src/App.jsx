@@ -24,7 +24,7 @@ import gradientBgRed from "./assets/gradientbgred.png";
 export const DOCS_URL = "https://deepfreezellc.gitbook.io/true-freeze";
 export const FAQS_URL = "https://deepfreezellc.gitbook.io/true-freeze/faqs";
 export const AUDIT_URL = "https://deepfreezellc.gitbook.io/true-freeze/key-info/audited-by-solidity.finance";
-export const LIQUIDITY_URL = "https://curve.fi/factory-crypto/65";
+export const LIQUIDITY_URL = "https://curve.fi/factory-crypto/65/deposit";
 
 ConfigProvider.config({
   theme: {
