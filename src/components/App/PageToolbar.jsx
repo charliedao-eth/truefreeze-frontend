@@ -64,7 +64,7 @@ export default function PageToolbar(props) {
           <div title={`Click to add ${wrappedSymbol} to your wallet.`} onClick={addWrappedToWallet}>
             <b>{wrappedSymbol || "WRAPPED"}</b>
           </div>
-          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(2) : "--"}</div>
+          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(4) : "--"}</div>
         </div>
       </div>
       {props.children}
