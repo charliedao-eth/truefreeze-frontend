@@ -64,7 +64,7 @@ export default function PageToolbar(props) {
           <div title={`Click to add ${wrappedSymbol} to your wallet.`} onClick={addWrappedToWallet}>
             <b>{wrappedSymbol || "WRAPPED"}</b>
           </div>
-          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance ? parseFloat(wrappedTokenBalance)?.toFixed(4) : "--"}</div>
+          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance?.slice ? wrappedTokenBalance.slice(0,6) : "--"}</div>
         </div>
       </div>
       {props.children}
@@ -73,13 +73,13 @@ export default function PageToolbar(props) {
           <div title={`Click to add ${frTokenSymbol} to your wallet.`} onClick={addFrTokenToWallet}>
             <b>{frTokenSymbol || "FRTOKEN"}</b>
           </div>
-          <div title={frTokenBalance || ""}>{frTokenBalance ? parseFloat(frTokenBalance)?.toFixed(2) : "--"}</div>
+          <div title={frTokenBalance || ""}>{frTokenBalance?.slice ? frTokenBalance.slice(0,6) : "--"}</div>
         </div>
         <div className="frz-holdings">
           <div title={`Click to add ${frzSymbol} to your wallet.`} onClick={addFRZToWallet}>
             <b>{frzSymbol || "FRZ"}</b>
           </div>
-          <div title={frzBalance || ""}>{frzBalance ? parseFloat(frzBalance)?.toFixed(2) : "--"}</div>
+          <div title={frzBalance || ""}>{frzBalance?.slice ? frzBalance.slice(0,6) : "--"}</div>
         </div>
       </div>
     </section>
