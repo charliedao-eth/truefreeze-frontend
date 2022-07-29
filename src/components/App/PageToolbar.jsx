@@ -51,6 +51,15 @@ export default function PageToolbar(props) {
   const addFRZToWallet = () => addTokenToWallet({ address: tokenMetadata?.FRZ?.address, symbol: frzSymbol, image: frzIcon });
   const addWrappedToWallet = () => addTokenToWallet({ address: tokenMetadata?.wrappedToken?.address, symbol: wrappedSymbol, image: ethIcon });
 
+  // used to format currencies
+  function maxPlaces(str, places) {
+    if(!str?.slice || str?.indexOf('.') < 0) {
+      return str;
+    }
+    const [prefix, suffix] = str.split('.');
+    return prefix + "." + suffix.slice(0,places);
+  }
+
   return (
     <section className="page-toolbar white-text m-b-1">
       <div className="wallet-info flex">
@@ -64,7 +73,7 @@ export default function PageToolbar(props) {
           <div title={`Click to add ${wrappedSymbol} to your wallet.`} onClick={addWrappedToWallet}>
             <b>{wrappedSymbol || "WRAPPED"}</b>
           </div>
-          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance?.slice ? wrappedTokenBalance.slice(0,6) : "--"}</div>
+          <div title={wrappedTokenBalance || ""}>{wrappedTokenBalance?.slice ? maxPlaces(wrappedTokenBalance, 4) : "--"}</div>
         </div>
       </div>
       {props.children}
@@ -73,13 +82,13 @@ export default function PageToolbar(props) {
           <div title={`Click to add ${frTokenSymbol} to your wallet.`} onClick={addFrTokenToWallet}>
             <b>{frTokenSymbol || "FRTOKEN"}</b>
           </div>
-          <div title={frTokenBalance || ""}>{frTokenBalance?.slice ? frTokenBalance.slice(0,6) : "--"}</div>
+          <div title={frTokenBalance || ""}>{frTokenBalance?.slice ? maxPlaces(frTokenBalance, 4) : "--"}</div>
         </div>
         <div className="frz-holdings">
           <div title={`Click to add ${frzSymbol} to your wallet.`} onClick={addFRZToWallet}>
             <b>{frzSymbol || "FRZ"}</b>
           </div>
-          <div title={frzBalance || ""}>{frzBalance?.slice ? frzBalance.slice(0,6) : "--"}</div>
+          <div title={frzBalance || ""}>{frzBalance?.slice ? maxPlaces(frzBalance, 4) : "--"}</div>
         </div>
       </div>
     </section>
