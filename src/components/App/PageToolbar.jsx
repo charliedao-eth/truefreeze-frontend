@@ -53,11 +53,11 @@ export default function PageToolbar(props) {
 
   // used to format currencies
   function maxPlaces(str, places) {
-    if (!str?.slice || str?.indexOf(".") < 0) {
+    if(!str?.slice || str?.indexOf('.') < 0) {
       return str;
     }
-    const [prefix, suffix] = str.split(".");
-    return prefix + "." + suffix.slice(0, places);
+    const [prefix, suffix] = str.split('.');
+    return prefix + "." + suffix.slice(0,places);
   }
 
   return (

@@ -23,7 +23,7 @@ const CONTRACT_MAX_DAYS = 1100;
 
 function Lock(props) {
   const { contract, tokens, compatibilityMode: CM = false } = props;
-  const { Moralis, account, isWeb3Enabled } = useMoralis();
+  const { Moralis, account, isAuthenticated } = useMoralis();
   const { methods, isInitialized } = tokens;
   const { checkThenAllowWrapped } = methods;
   const { wrappedTokenBalance, tokenMetadata } = tokens.tokenData;
@@ -181,7 +181,7 @@ function Lock(props) {
   }
 
   let isLoaded = true;
-  if (!props.address && (!account || !isWeb3Enabled)) {
+  if (!props.address && (!account || !isAuthenticated)) {
     isLoaded = false;
   }
 
