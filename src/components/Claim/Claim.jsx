@@ -11,7 +11,7 @@ import claimImage from "../../assets/claim_image.png";
 
 function Claim(props) {
   const { contract, compatibilityMode: CM = false } = props;
-  const { Moralis, account, isAuthenticated } = useMoralis();
+  const { Moralis, account, isWeb3Enabled } = useMoralis();
   const [alreadyClaimed, setAlreadyClaimed] = useState(null);
   const [isClaiming, setIsClaiming] = useState(false);
   const [userClaimData, setUserClaimData] = useState(null);
@@ -37,7 +37,7 @@ function Claim(props) {
     })();
   }, [account]);
 
-  if (alreadyClaimed === null || !contract || !account || !isAuthenticated) {
+  if (alreadyClaimed === null || !contract || !account || !isWeb3Enabled) {
     return (
       <div className="appPageContent">
         <div className="page-skeleton-wrapper slow-show">

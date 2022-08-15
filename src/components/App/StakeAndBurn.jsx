@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 
 function StakeAndBurn(props) {
   const { contract, tokens, compatibilityMode: CM = false } = props;
-  const { Moralis, account, isAuthenticated } = useMoralis();
+  const { Moralis, account, isWeb3Enabled } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { frTokenBurnt, frTokenTotalBurnt, frzFlowShare, frzStaked, frzTotalStaked, frzStakedShare, rewardTokens, tokenMetadata } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowFrz, refreshTokenData } = methods;
@@ -26,7 +26,7 @@ function StakeAndBurn(props) {
 
   useEffect(() => changeBg("burn"), []); // trigger the bg change to the default special gradient
 
-  if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
+  if (!isInitialized || (!props.address && (!account || !isWeb3Enabled))) {
     return <div className="appPageContent" />;
   }
 

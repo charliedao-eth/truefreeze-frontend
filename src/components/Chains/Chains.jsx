@@ -89,7 +89,7 @@ const menuItems = [
 
 function Chains({ supportedChainIds }) {
   const { switchNetwork, chainId, chain } = useChain();
-  const { isAuthenticated } = useMoralis();
+  const { isWeb3Enabled } = useMoralis();
   const [selected, setSelected] = useState({});
 
   console.log("chain", chain);
@@ -116,7 +116,7 @@ function Chains({ supportedChainIds }) {
     </Menu>
   );
 
-  if (!chainId || !isAuthenticated) return null;
+  if (!chainId || !isWeb3Enabled) return null;
 
   return (
     <div>

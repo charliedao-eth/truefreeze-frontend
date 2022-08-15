@@ -41,15 +41,15 @@ const styles = {
 };
 
 function Account() {
-  const { authenticate, isAuthenticated, account, chainId, logout } = useMoralis();
+  const {isWeb3Enabled, account, chainId, logout, enableWeb3 } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
 
-  if (!isAuthenticated || !account) {
+  if ( !account) {
     return (
       <>
         <div className="header-item" onClick={() => setIsAuthModalVisible(true)}>
-          <p className={`${!isAuthenticated || !account ? "pulsing wallet-disconnected" : "wallet-connected"}`}>Connect wallet</p>
+          <p className={`${!isWeb3Enabled || !account ? "pulsing wallet-disconnected" : "wallet-connected"}`}>Connect wallet</p>
         </div>
         <Modal
           visible={isAuthModalVisible}
@@ -81,7 +81,7 @@ function Account() {
                 key={key}
                 onClick={async () => {
                   try {
-                    await authenticate({ provider: connectorId });
+                    await enableWeb3({ provider: connectorId });
                     window.localStorage.setItem("connectorId", connectorId);
                     setIsAuthModalVisible(false);
                   } catch (e) {

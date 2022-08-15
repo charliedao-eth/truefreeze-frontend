@@ -12,12 +12,12 @@ import PageToolbar from "./PageToolbar";
 
 function MyFreezers(props) {
   const { contract, tokens, compatibilityMode: CM = false } = props;
-  const { Moralis, account, isAuthenticated, chainId } = useMoralis();
+  const { Moralis, account, isWeb3Enabled } = useMoralis();
   const { isInitialized, methods, tokenData } = tokens;
   const { tokenMetadata } = tokenData;
   const { checkThenAllowFrToken, checkThenAllowWrapped } = methods;
 
-  if (!isInitialized || (!props.address && (!account || !isAuthenticated))) {
+  if (!isInitialized || (!props.address && (!account || !isWeb3Enabled))) {
     return <div className="appPageContent" />;
   }
 
@@ -188,7 +188,7 @@ function MyFreezers(props) {
           className="white-button"
           rel="noreferrer"
           target={"_blank"}
-          href={`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${contract.nonFungiblePositionManager.address?.toLowerCase()}`}
+          href={`https://x2y2.io/collection/truefreeze`}
         >
           BUY FREEZER ON MARKETPLACE
         </a>
