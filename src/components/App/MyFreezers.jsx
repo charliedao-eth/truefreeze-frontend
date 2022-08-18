@@ -188,7 +188,7 @@ function MyFreezers(props) {
           className="white-button"
           rel="noreferrer"
           target={"_blank"}
-          href={`https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${contract.nonFungiblePositionManager.address?.toLowerCase()}`}
+          href={`https://x2y2.io/collection/truefreeze`}
         >
           BUY FREEZER ON MARKETPLACE
         </a>

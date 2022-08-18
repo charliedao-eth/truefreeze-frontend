@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
 import { Button, Card, Image, Tooltip, Modal, Skeleton, message } from "antd";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { getChainName } from "helpers/networks";
+import { getNativeByChain } from "helpers/networks";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 
 const styles = {
@@ -133,8 +133,8 @@ function NFTBalance({ filterByContractAddress = "", fetchProgressAndImages, fetc
     const progressAmount = unlockProgress?.[nft.token_id]; // fancy way to say "access all these props/functions but return undefined if any are missing"
     const backupImage = imageBackups?.[nft?.token_id];
 
-    const nftCollectionUrl = `https://app.nft.org/${getChainName(chainId?.toLowerCase())}/?orderTokenAddress=${nft.token_address?.toLowerCase()}`;
-    const nftTokenUrl = `https://app.nft.org/${getChainName(chainId?.toLowerCase())}/nft/${nft.token_address?.toLowerCase()}/${nft.token_id}`;
+    const nftCollectionUrl = `https://x2y2.io/collection/truefreeze`;
+    const nftTokenUrl = `https://x2y2.io/${getNativeByChain(chainId?.toLowerCase())?.toLowerCase()}/${nft.token_address?.toLowerCase()}/${nft.token_id}`;
 
     // example metadata shape: { ..., "attributes": [{"trait_type": "Amount locked", "value":1.00},{"display_type": "date", "trait_type": "Locking date", "value":1655749277},{"display_type": "date", "trait_type": "Maturity date", "value":1750789277}]}' }
     const lockDateObj = nft?.metadata?.attributes?.find((attribute) => attribute?.["trait_type"] === "Locking date");
